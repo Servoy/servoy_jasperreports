@@ -1,0 +1,122 @@
+<?xml version='1.0'?>
+<project name="user-build for the servoy_jasperreports plugin " basedir="." default="build">
+	<property file="servoy_jasperreports.properties"/>	
+	<property name="plugins" value="plugins"/>
+	<property name="servoy_jasperreports" value="servoy_jasperreports"/>
+	<property name="path2JR" value="${pathToJasperReportsEngineJar}"/>
+	<property name="jasper_reports_project" value="${pathToJasperReportsLibs}"/>
+	<property name="lib" value="lib"/>
+			
+	
+	<!-- telling ant where to find ant-contrib -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath> 
+	    <pathelement location="${lib}/ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>
+
+	
+	<target name="clean">
+		<delete dir="${plugins}"/>
+	</target>
+	
+	<target name="init" depends="clean">
+		<mkdir dir="${plugins}"/>
+		<mkdir dir="${plugins}/${servoy_jasperreports}"/>
+		<copy todir="${plugins}" file="${lib}/servoy_jasperreports.jar"/>
+	</target>
+	
+	<target name="build" depends="init">
+		<antcall target="createJnlpFileHeader"/>
+		<antcall target="addJRjar"/>
+		<antcall target="forAllLibs"/>
+		<antcall target="createJnlpFileEnd"/>
+	</target>
+	
+	<!-- adding the jasper reports enginer jar -->
+	<target name="addJRjar">
+		<propertyregex property="JasperReports_JAR_Name"
+	              	input="${pathToJasperReportsEngineJar}"
+		            regexp="([\sa-zA-Z0-9._-]*)\.jar"
+					select="\1"
+					casesensitive="false" />
+		<copy todir="${plugins}/${servoy_jasperreports}" file="${pathToJasperReportsEngineJar}"/>				
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/${plugins}/${servoy_jasperreports}/${JasperReports_JAR_Name}.jar&quot; download=&quot;eager&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+	</target>
+	
+	<target name="createJnlpFileHeader">
+		<echo file="${plugins}/servoy_jasperreports.jar.jnlp" append="false"/>
+		<echo message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&lt;jnlp spec=&quot;1.0+&quot; codebase=&quot;%%serverURL%%&quot; href=&quot;/servoy-client/${plugins}/servoy_jasperreports.jar.jnlp&quot;&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&lt;information&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&lt;title&gt;Servoy Client Plugins&lt;/title&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&lt;vendor&gt;Servoy and Others&lt;/vendor&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&lt;/information&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&lt;resources&gt; ${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		
+		<!-- the default jar files that are needed -->
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/plugins/servoy_jasperreports.jar&quot; download=&quot;eager&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-collections.jar&quot; download=&quot;lazy&quot; part=&quot;commons-collections&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.collections.*&quot; part=&quot;commons-collections&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-logging.jar&quot; download=&quot;lazy&quot; part=&quot;commons-logging&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.logging.*&quot; part=&quot;commons-logging&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-dbcp.jar&quot; download=&quot;lazy&quot; part=&quot;commons-dbcp&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.dbcp.*&quot; part=&quot;commons-dbcp&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.jocl.*&quot; part=&quot;commons-dbcp&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+	</target>
+
+	<!-- adding all the libs from the property file -->
+	<target name="forAllLibs">
+		<foreach list="${libs}" target="loop" param="var" delimiter=","/>
+	</target>
+	
+	<target name="loop">
+		<if>		
+			<contains string="${var}" substring="#"/>
+			<then>
+			</then>
+		 	<else>
+		   		<property name="dvarpath" value="${var}.path"/>
+		 		<propertycopy name="current_JAR_path" from="${dvarpath}"/>
+		 		<property name="dvarpack" value="${var}.package"/>
+		 		<propertycopy name="current_JAR_packages" from="${dvarpack}"/>
+		 		<property name="dvarver" value="${var}.version"/>
+		 		<propertycopy name="current_JAR_version" from="${dvarver}"/>
+		 		<copy todir="${plugins}/${servoy_jasperreports}" file="${pathToJasperReportsLibs}/${current_JAR_path}"/>	
+		 		<antcall target="createJnlpLine"/>
+		 	</else>
+		</if>
+	</target>
+	
+	<target name="createJnlpLine">
+		<propertyregex property="var_jar_name"
+		              input="${current_JAR_path}"
+		              regexp="([\sa-zA-Z0-9._-]*)\.jar"
+		              select="\1"
+		              casesensitive="false" />
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/${plugins}/${servoy_jasperreports}/${var_jar_name}.jar&quot; download=&quot;lazy&quot; part=&quot;${var}&quot; version=&quot;${current_JAR_version}&quot;/&gt; ${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<antcall target="loopPackageValues"/>
+	</target>
+			
+	<target name="loopPackageValues">
+		<foreach list="${current_JAR_packages}" target="makePackageLine" param="packval" delimiter=","/>
+	</target>
+	
+	<!-- adding the jars from the properties file -->
+	<target name="makePackageLine">
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;${packval}&quot; part=&quot;${var}&quot; recursive=&quot;true&quot;/&gt; ${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+	</target>
+	
+	<target name="createJnlpFileEnd">
+		<echo message="&#x0009;&lt;/resources&gt; ${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&lt;component-desc&gt;&lt;/component-desc&gt; ${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&lt;security&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&lt;all-permissions/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&lt;/security&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&lt;/jnlp&gt;" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+	</target>
+
+</project>

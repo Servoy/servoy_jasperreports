@@ -1,0 +1,70 @@
+<?xml version='1.0'?>
+<project name="servoy_jasperreports" default="plugin" basedir=".">
+
+	<property file="servoy.properties"/>
+	<property name="project_name" value="${ant.project.name}"/>  
+	<property name="src" value="src"/>
+	<property name="lib" value="lib"/>
+	<property name="build" value="build"/>
+	<property name="install" value="install"/>
+	<property name="jar" value="${project_name}.jar"/>
+	<property name="servoy_lib" value="servoy_lib"/>
+	<property name="resources" value="resources"/>
+	
+	<path id="classpath">
+        <fileset dir="${servoy_lib}">
+			<include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+	</path>
+
+    <target name="init" depends="clean">
+	    <mkdir dir="${build}"/>
+		<mkdir dir="${install}"/>
+		<mkdir dir="${install}/${lib}"/>
+	</target>
+
+	<target name="clean">
+	    <delete dir="${build}"/>
+		<delete dir="${install}"/>
+	</target>
+
+	<target name="plugin" depends="jar">
+		<copy todir="${install}"> 
+			<fileset dir="${resources}">
+		    	<include name="servoy_jasperreports.properties"/>
+				<include name="configure.xml"/>
+			</fileset>
+		    <fileset dir="${basedir}">
+		    	<include name="install.txt"/>
+		    	<include name="upgrade.txt"/>		    	
+		    </fileset>
+	    </copy>
+		<copy file="${resources}/ant-contrib-1.0b3.jar" todir="${install}/${lib}"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${install}/${lib}/${jar}" basedir="${build}"/>
+	</target>
+
+	<!-- copy and compile all .java files from ${src} to ${build}  -->
+	<target name="compile" depends="init">
+		<!-- first copy just the image directory -->
+		<copy todir="${build}">
+	    	<fileset dir="${src}">
+	    		 <exclude name="**/*.java"/>
+	    	</fileset>
+	    </copy>		
+		<!-- compile the java classes  -->
+		<javac encoding="ISO-8859-1" srcdir="${src}" destdir="${build}" target="1.5" source="1.5" debug="on">
+			<classpath refid="classpath"/>
+		</javac>		
+		<!-- create server skeletons and stubs  -->
+		<rmic classname="com.servoy.plugins.jasperreports.JasperReportsServer" base="${build}/">
+			<classpath refid="classpath"/> 
+		</rmic>
+	</target>
+  
+</project>

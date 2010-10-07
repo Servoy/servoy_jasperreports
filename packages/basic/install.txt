@@ -1,0 +1,71 @@
+/*
+ * ============================================================================
+ * GNU Lesser General Public License
+ * ============================================================================
+ *
+ * Servoy - Smart Technology For Smart Clients.
+ * Copyright © 1997-2009 Servoy BV http://www.servoy.com
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * Servoy B.V.
+ * De Brand 26
+ * 3823 LJ Amersfoort
+ * The Netherlands 
+ * http://www.servoy.com
+ */
+ CONTENT:
+ This zipfile contains the JasperReports plugin for Servoy, version 3.0. 
+ It is packages for Servoy 4.1.x and contains JasperReports engine version 3.6.0
+ 
+ For more information about Servoy, visit http://www.servoy.com
+ For more information about JasperReports, visit: http://jasperforge.org/website/jasperreportswebsite/trunk/documentation.html
+  
+ INSTALLATION:
+ Unpack the plugins directory in this zipfile into the plugins directory of your Servoy application server.
+ 
+ DEPENDANCIES:
+ The JasperReport engine depends on external libraries. 
+ See http://jasperforge.org/website/jasperreportswebsite/trunk/requirements.html for more information
+ 
+ Some of these libraries are included in this package. 
+    * Jakarta Commons BeanUtils Component (version 1.7 or later) http://jakarta.apache.org/commons/beanutils/
+    * Jakarta Commons Javaflow (Sandbox version) http://jakarta.apache.org/commons/sandbox/javaflow/
+    * Jakarta Commons Digester Component (version 1.7 or later) http://jakarta.apache.org/commons/digester/
+    * Eclipse JDT Java Compiler (recommended) http://www.eclipse.org/jdt/
+    * iText - Free Java-PDF library by Bruno Lowagie and Paulo Soares (version 1.3.1 or later) http://www.lowagie.com/iText/
+
+	Note: An earlier version of the iText library is also shipped with the PDF output plugin of Servoy (located in ../plugins/pdf_output). 
+	Remove this to prevent conflicts if both plugins are installed
+
+ Other are part of the default installation of Servoy:
+    * Jakarta Commons Collections Component (version 2.1 or later) http://jakarta.apache.org/commons/collections/
+    * Jakarta Commons Logging Component (version 1.0 or later) http://jakarta.apache.org/commons/logging/
+
+ NOTE: If you are using iReport 3.6.0, the default expression language for a new report is Groovy. This build does not contain support for Groovy.
+ 
+ EXCEL AND CHART SUPPORT
+ Additionally, when requiring Chart and Excel support, download the required libraries from http://jasperforge.org/website/jasperreportswebsite/trunk/requirements.html and place them in the ../plugins/servoy_jasperreports folder
+ 
+ IREPORTS:
+ The most used editor to build reports using JasperReports is iReports. For more information about iReports: http://jasperforge.org/projects/ireport
+ 
+ UPGRADING THE JASPERREPORT ENGINE:
+ The JasperReports engine can be upgraded separatly when a new version of the engine is released. 
+ To do so, download the new engine from http://jasperforge.org/website/jasperreportswebsite/trunk/ and place the jasperreports-x.x.x.jar file into the ../plugins/servoy_jasperreports folder and remove the old jar from there.
+ Also update the reference in the plugins jnlp file (../plugins/servoy_jasperreports.jar.jnlp)
+ 
+ INFORMATION, FEATURE REQUESTS, BUG REPORTS:
+ http://code.google.com/p/servoy-jasperreports-plugin/

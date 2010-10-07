@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
+	<classpathentry kind="lib" path="servoy_lib/j2db.jar"/>
+	<classpathentry kind="lib" path="servoy_lib/j2dbdev.jar" sourcepath="/com.servoy.eclipse.designer"/>
+	<classpathentry kind="lib" path="servoy_lib/js.jar"/>
+	<classpathentry kind="lib" path="servoy_lib/wicket.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-3.7.1.jar" sourcepath="D:/Work_Site/ServoyJasperReports/JasperReportsDir/JasperReports_3_7_1/jasperreports-3.7.1/src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
