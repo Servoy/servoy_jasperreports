@@ -38,7 +38,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 /**
  * Run reports.
  */
-public interface IJasperReportRunner {
+public interface IJasperReportRunner { 
 
 	public byte[] jasperReport(Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws RemoteException, IOException, JRException;
 
