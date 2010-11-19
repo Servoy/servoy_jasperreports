@@ -90,12 +90,12 @@ public class JasperReportRunner implements IJasperReportRunner {
 		this.jasperReportsService = jasperReportsService;
 	}
 
-	public byte[] jasperReport(Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws IOException, JRException {
-		JasperPrint jasperPrint = getJasperPrint(source, report, parameters, repdir, extraDirs);
+	public byte[] jasperReport(String clientID, Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws IOException, Exception {
+		JasperPrint jasperPrint = getJasperPrint(clientID, source, report, parameters, repdir, extraDirs);
 		return getJasperBytes(type, jasperPrint, extraDirs);
 	}
 
-	public JasperPrint getJasperPrint(Object source, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, JRException {
+	public JasperPrint getJasperPrint(String clientID, Object source, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception {
 		if (source == null) {
 			throw new IllegalArgumentException("no data source");
 		}
@@ -110,7 +110,7 @@ public class JasperReportRunner implements IJasperReportRunner {
 
 		Debug.trace("JasperTrace: Directory: " + repdir);
 		
-		JasperReport jasperReport = jasperReportsService.getJasperReport(report, repdir);
+		JasperReport jasperReport = jasperReportsService.getJasperReport(clientID, report, repdir);
 
 		return getJasperPrint(jasperReport, null, (JRDataSource) source, parameters, repdir, extraDirs);
 	}
@@ -329,15 +329,5 @@ public class JasperReportRunner implements IJasperReportRunner {
 		}
 		return file;
 	}
-	
-//	public static Image loadImage(String image) throws JRException, RemoteException {
-//		IJasperReportsService jasperReportsService = JasperReportsProvider.jasperReportLocalService.get();
-//		if (jasperReportsService == null)
-//		{	
-//			return null;
-//		}
-//		byte[] imgBytes = jasperReportsService.loadImage(image);
-//		return JRImageLoader.loadImage(imgBytes);
-//	}
 
 }

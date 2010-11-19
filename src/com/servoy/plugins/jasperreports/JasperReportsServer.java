@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -70,8 +71,8 @@ import com.servoy.j2db.util.Debug;
  * Iserver impl.
  */
 public class JasperReportsServer implements IJasperReportsService, IServerPlugin {
+	
 	private Properties settings;
-
 	private IServerAccess application;
 
 	// must have default constructor
@@ -108,8 +109,10 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		settings = null;
 	}
 
-	public JasperReport getJasperReport(String report, String repdir) throws JRException { //andrei2-FIX: server - compile the report
-
+	public JasperReport getJasperReport(String clientID, String report, String repdir) throws Exception { 
+		
+		if (!hasAccess(clientID)) return null;
+		
 		JasperReport jasperReport = null;
 
 		if (report == null) {
@@ -179,26 +182,41 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return jasperReport;
 	}
 
-	public byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs) throws IOException, JRException { 
+	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs) throws Exception { 
+		
+		if (!hasAccess(clientID)) return null;
+		
 		boolean serviceSet = false;
-		if (JasperReportsProvider.jasperReportLocalService.get() == null) {
+		if (JasperReportsProvider.jasperReportsLocalService.get() == null) {
 			// called from smart client over rmi
 			serviceSet = true;
-			JasperReportsProvider.jasperReportLocalService.set(this);
+			JasperReportsProvider.jasperReportsLocalService.set(this);
 		}
+		
+		boolean clientIdSet = false; //clientId setting for the server threadLocal
+		if (JasperReportsProvider.jasperReportsLocalClientID.get() == null) {
+			clientIdSet = true;
+			JasperReportsProvider.jasperReportsLocalClientID.set(clientID);
+		}
+		
 		try {
 			return JasperReportRunner.getJasperBytes(type, jasperPrint,	extraDirs);
-
 		} finally {
+			
 			if (serviceSet) {
-				JasperReportsProvider.jasperReportLocalService.set(null);
+				JasperReportsProvider.jasperReportsLocalService.set(null);
+			}
+			if (clientIdSet) {
+				JasperReportsProvider.jasperReportsLocalClientID.set(null);
 			}
 		}
 	}
 	
-	public JasperPrint getJasperPrint(Object source, String report, Map parameters, String repdir, String extraDirs) throws JRException {
+	public JasperPrint getJasperPrint(String clientID, Object source, String report, Map parameters, String repdir, String extraDirs) throws Exception {
+		
 		String dbalias = null;
 		JRDataSource jrds = null;
+		
 		if (source == null) {
 			throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
 		}
@@ -216,11 +234,17 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 		
 		boolean serviceSet = false;
-		if (JasperReportsProvider.jasperReportLocalService.get() == null) {
+		if (JasperReportsProvider.jasperReportsLocalService.get() == null) {
 			serviceSet = true;
-			JasperReportsProvider.jasperReportLocalService.set(this);
+			JasperReportsProvider.jasperReportsLocalService.set(this);
 		}
 
+		boolean clientIdSet = false; //clientId setting for the server threadLocal
+		if (JasperReportsProvider.jasperReportsLocalClientID.get() == null) {
+			clientIdSet = true;
+			JasperReportsProvider.jasperReportsLocalClientID.set(clientID);
+		}
+		
 		try {
 			if (dbalias != null) {
 				Debug.trace("JasperTrace: getconnection for: " + dbalias);
@@ -233,7 +257,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 			Debug.trace("JasperTrace: Directory: " + repdir);
 			
-			JasperReport jasperReport = getJasperReport(report, repdir);
+			JasperReport jasperReport = getJasperReport(clientID, report, repdir);
 			
 			return JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, repdir, extraDirs);
 
@@ -246,13 +270,17 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 				}
 				
 			if (serviceSet) {
-				JasperReportsProvider.jasperReportLocalService.set(null);
+				JasperReportsProvider.jasperReportsLocalService.set(null);
+			}
+			
+			if (clientIdSet) {
+				JasperReportsProvider.jasperReportsLocalClientID.set(null);
 			}
 		}
 	}
 
-	public byte[] jasperReport(Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws IOException, JRException {
-		JasperPrint jasperPrint = getJasperPrint(source, report, parameters, repdir, extraDirs);
+	public byte[] jasperReport(String clientID, Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws Exception {
+		JasperPrint jasperPrint = getJasperPrint(clientID, source, report, parameters, repdir, extraDirs);
 		return JasperReportRunner.getJasperBytes(type, jasperPrint, extraDirs);
 	}
 
@@ -270,8 +298,10 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return path;
 	}
 
-	public boolean jasperCompile(String report, String destination, String repdir) throws JRException {
+	public boolean jasperCompile(String clientID, String report, String destination, String repdir) throws Exception {
 
+		if (!hasAccess(clientID)) return false;
+		
 		String compiledFile = null;
 
 		if (report == null) {
@@ -313,7 +343,10 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return (compiledFile != null);
 	}
 
-	public boolean writeFile(String filenm, Object obj, String repdir) throws IOException {
+	public boolean writeFile(String clientID, String filenm, Object obj, String repdir) throws Exception {
+		
+		if (!hasAccess(clientID)) return false;
+		
 		// make directory unix style
 		String jasperDirectory = JasperReportRunner.adjustFileUnix(repdir);
 
@@ -332,7 +365,10 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return true;
 	}
 	
-	public boolean deleteFile(String filenm, String repdir) throws IOException {
+	public boolean deleteFile(String clientID, String filenm, String repdir) throws Exception {
+		
+		if (!hasAccess(clientID)) return false;
+		
 		// make directory unix style
 		String jasperDirectory = JasperReportRunner.adjustFileUnix(repdir);
 		String report = JasperReportRunner.adjustFileUnix(jasperDirectory + '/' + filenm);
@@ -352,7 +388,10 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return true;
 	}
 
-	public byte[] readFile(String filenm, String repdir) throws IOException {
+	public byte[] readFile(String clientID, String filenm, String repdir) throws Exception {
+		
+		if (!hasAccess(clientID)) return null;
+		
 		// make directory unix style
 		String jasperDirectory = JasperReportRunner.adjustFileUnix(repdir);
 
@@ -377,11 +416,22 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return buffer;
 	}
 
-	public String getReportDirectory() {
+	/**
+	 * Getting the reports directory, which has been set from the AdminServer page.
+	 * 
+	 * @return the path to the reports' directory
+	 */
+	public String getReportDirectory() throws Exception {
 		return settings.getProperty("directory.jasper.report");
 	}
 	
-	public String getExtraDirectories() {
+	/**
+	 * Getting the additional resource directories, needed for handling different report needed resources. 
+	 * This value can be set from the AdminServer page.
+	 * 
+	 * @return the path to the additional resource directories
+	 */
+	public String getExtraDirectories() throws Exception {
 		return settings.getProperty("directories.jasper.extra");
 	}
 
@@ -493,7 +543,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return req;
 	}
 
-	public String[] getReports(boolean compiled, boolean uncompiled) throws FileNotFoundException {
+	public String[] getReports(String clientID, boolean compiled, boolean uncompiled) throws Exception {
+		
 		String reportsdir = getReportDirectory();
 
 		List files = getFileListing(new File(reportsdir), compiled, uncompiled);
@@ -587,9 +638,9 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return result;
 	}
 
-	public JSDataSet getReportParameters(String report, String repdir) throws JRException {
+	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws Exception {
 
-		JasperReport jasperReport = getJasperReport(report, repdir);
+		JasperReport jasperReport = getJasperReport(clientID, report, repdir);
 
 		BufferedDataSet bds = new BufferedDataSet(new String[]{"Name","Type","Description"}, new ArrayList<Object[]>());
 
@@ -617,7 +668,9 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return jsds;
 	}
 
-	public void saveByteArrayToFile(String filename, byte[] buffer, String reportsDir) throws IOException {
+	public void saveByteArrayToFile(String clientID, String filename, byte[] buffer, String reportsDir) throws Exception {
+		
+		if (!hasAccess(clientID)) throw new Exception("Unauthorized client access.");
 
 		String file = adjustFile(filename);
 		String repd = adjustFile(reportsDir);
@@ -634,10 +687,52 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
-	public byte[] loadImage(String img) throws JRException {
+	public byte[] loadImage(String clientID, String img) throws Exception {
 		String xtraDir = this.getExtraDirectories();
 		String filePath2LoadFrom = xtraDir + img;
 		return JRLoader.loadBytesFromLocation(filePath2LoadFrom);
 	}
-
+	
+	/**
+	 * Checking if the client application has access for server side operations execution.
+	 * 
+	 * @param clientId the client application's id
+	 * 
+	 * @return <b>true</b>, if either we are not in a 5.2.x container, or if we are (in 5.2.x or above) and have access<br>
+	 * 	<b>false</b>, otherwise (if we are in a 5.2.x environment and do not have access)
+	 */
+	private final boolean hasAccess(String clientId) throws Exception {
+		
+		boolean hasIsServerProcess = false;
+		boolean hasIsAuthenticated = false;
+		Class<?> c = Class.forName("com.servoy.j2db.plugins.IServerAccess");
+		Method[] interfaceMethods = c.getMethods();
+		for (Method m : interfaceMethods) {
+			if (("isServerProcess").equals(m.getName())) {
+				hasIsServerProcess = true;
+			} 
+			else if (("isAuthenticated").equals(m.getName())) {
+				hasIsAuthenticated = true;
+			} 
+		}
+		
+		if (hasIsServerProcess && hasIsAuthenticated) {
+			//"We are in 5.2.x or above"
+			Method methodIsServerProcess = application.getClass().getMethod("isServerProcess", String.class);
+			boolean isServerProcess = ((Boolean)methodIsServerProcess.invoke(application, clientId)).booleanValue();
+			Method methodIsAuthenticated = application.getClass().getMethod("isAuthenticated", String.class);
+			boolean isAuthenticated = ((Boolean)methodIsAuthenticated.invoke(application, clientId)).booleanValue();
+			if (isServerProcess || isAuthenticated) { 
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			//"we are not in a 5.2.x environment"
+			return true;
+		}
+	}
+	
 }

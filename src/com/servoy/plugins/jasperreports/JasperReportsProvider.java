@@ -66,74 +66,101 @@ import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
 /**
- * IScriptObject impl.
- * For external library dependencies, see:
- * http://www.jasperforge.org/jaspersoft/opensource/business_intelligence/jasperreports/requirements.html
+ * IScriptObject impl. For external library dependencies, see:
+ * http://www.jasperforge
+ * .org/jaspersoft/opensource/business_intelligence/jasperreports
+ * /requirements.html
  */
 public class JasperReportsProvider implements IScriptObject {
 	private JasperReportsPlugin plugin;
 
 	private IJasperReportsService jasperReportService = null;
-	protected static ThreadLocal<IJasperReportsService> jasperReportLocalService = new ThreadLocal<IJasperReportsService>(); 
-	
+	protected static ThreadLocal<IJasperReportsService> jasperReportsLocalService = new ThreadLocal<IJasperReportsService>();
+	protected static ThreadLocal<String> jasperReportsLocalClientID = new ThreadLocal<String>();
+
 	private static final int PARAMETER = 1;
 
 	private static final int TOOLTIP = 2;
 
 	private static final int EXAMPLE = 3;
-	
+
 	private String[] viewerExportFormats = null;
 
 	private static final String PROPERTIES[][][] = {
-		// methodname, parameters, tooltip, example
-		{
-			{ "runReport" },
-			{ "source(serverName|foundset)", "reportFileName ", "exportFileName / boolean showPrintDialog / printerName", "outputFormat", "parameters", "[locale]", "[moveTableOfContents]" },
-			{ "Execute a Report" }, {} },
-			{ { "writeFileToReportsDir" }, { "reportFileName", "JSFile reportFile" }, { "Store a reportFile on the Server" },
-				{ "// .jasper or .jrxml files can be used\n" + 
-				"var file = plugins.file.readFile('e:\\\\temp\\\\sample.jasper');\n" + 
-				"plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file);\n" + 
-				"// Writes to a subfolder from the reports directory. All the folders from the path must exist.\n" +
-				"plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.jasper', file);\n"} },
-			{ { "deleteFileFromReportsDir" },
-				{ "reportFileName" },
-				{ "Delete a reportFile from the Server" },
-				{ "var reportFile2Delete = 'myCustomerReport.jrxml';\n" +
-				  "plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);\n" } },
-			{ { "readFileFromReportsDir" }, { "reportFileName" }, { "Retrieve a reportFile from the Server" },
-				{ "var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper');\n" + 
-				"// Subfolders can be used to read files.\n" + 
-				"var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir\\\\myCustomerReport.jasper');"} },
-			{ { "compileReport" }, { "reportFileName", "[destinationFileName]"}, { "Compile a Jasper Reports .jrxml file to a .jasper file." },
-				{ "// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name.\n" +
-				"// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file.\n" +
-				"var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml');\n" +
-				"// The report name as a relative path. The file will be searched relative to the ReportDirectory.\n" +
-				"var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml');\n" +
-				"var success = plugins.jasperPluginRMI.compileReport('\\\\subdir\\\\myCustomerReport2.jrxml');\n" +
-				"// To specify a different destination file than the original filaname, the second parameter can be incouded.\n" +
-				"// If it is relative, the file will be created relative to the ReportDirectory.\n" + 
-				"var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');"} },
-			{ { "getReports"}, {"filter"}, {"Retrieve a String array of available reports, based on the reports directory."},
-				{"// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports\n// No parameter or any string return all the reports\nvar result = plugins.jasperPluginRMI.getReports('NONCOMPILED');\napplication.output(result[0]);"}},
-			{ { "getReportParameters"}, {"report"}, {"Retrieve a JSDataSet with the parameters except the system defined ones."},
-				{"var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml');\nvar csv = ds.getAsText(',','\\n','\"',true);\napplication.output(csv);"}},
-			{ { "reportDirectory" }, { }, { "Property for retrieving the reports directory from the server." },
-				{ "// By defaul the value is read from the adim page Server Plugins, the directory.jasper.report property.\n// If the client modifies the reportDirectory property, this value will be used instead of the default one for the whole client session and only for this client. Each client session has it's own reportDirectory value." }},
-			{ { "viewerExportFormats"}, {}, {"Get or set the Jasper Viewer's export formats" }, {
-				"var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;\n" +
-				"application.output(defaultExportFormats);\n" + 
-				"// use the default export constants of the plugin, of the OUTPUT_FORMAT constants node;\n" +
-				"// the following formats are availabe for setting the viewer export formats:\n " +
-				"// PDF, JRPRINT, RTF, ODT, HTML, XLS_1_SHEET, XLS, CSV, XML\n" +
-				"// and there is an extra Xml with Embedded Images export type available for the Viewer, denoted by 'xml_embd_img' \n" +
-				"// the first export format in the list will be the default one displayed in the Save dialog of the Viewer.\n" +
-				"plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];"
-			}}
-	};
+			// methodname, parameters, tooltip, example
+			{
+					{ "runReport" },
+					{
+							"source(serverName|foundset)",
+							"reportFileName ",
+							"exportFileName / boolean showPrintDialog / printerName",
+							"outputFormat", "parameters", "[locale]",
+							"[moveTableOfContents]" }, { "Execute a Report" },
+					{} },
+			{
+					{ "writeFileToReportsDir" },
+					{ "reportFileName", "JSFile reportFile" },
+					{ "Store a reportFile on the Server" },
+					{ "// .jasper or .jrxml files can be used\n"
+							+ "var file = plugins.file.readFile('e:\\\\temp\\\\sample.jasper');\n"
+							+ "plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file);\n"
+							+ "// Writes to a subfolder from the reports directory. All the folders from the path must exist.\n"
+							+ "plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.jasper', file);\n" } },
+			{
+					{ "deleteFileFromReportsDir" },
+					{ "reportFileName" },
+					{ "Delete a reportFile from the Server" },
+					{ "var reportFile2Delete = 'myCustomerReport.jrxml';\n"
+							+ "plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);\n" } },
+			{
+					{ "readFileFromReportsDir" },
+					{ "reportFileName" },
+					{ "Retrieve a reportFile from the Server" },
+					{ "var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper');\n"
+							+ "// Subfolders can be used to read files.\n"
+							+ "var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir\\\\myCustomerReport.jasper');" } },
+			{
+					{ "compileReport" },
+					{ "reportFileName", "[destinationFileName]" },
+					{ "Compile a Jasper Reports .jrxml file to a .jasper file." },
+					{ "// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name.\n"
+							+ "// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file.\n"
+							+ "var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml');\n"
+							+ "// The report name as a relative path. The file will be searched relative to the ReportDirectory.\n"
+							+ "var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml');\n"
+							+ "var success = plugins.jasperPluginRMI.compileReport('\\\\subdir\\\\myCustomerReport2.jrxml');\n"
+							+ "// To specify a different destination file than the original filaname, the second parameter can be incouded.\n"
+							+ "// If it is relative, the file will be created relative to the ReportDirectory.\n"
+							+ "var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');" } },
+			{
+					{ "getReports" },
+					{ "filter" },
+					{ "Retrieve a String array of available reports, based on the reports directory." },
+					{ "// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports\n// No parameter or any string return all the reports\nvar result = plugins.jasperPluginRMI.getReports('NONCOMPILED');\napplication.output(result[0]);" } },
+			{
+					{ "getReportParameters" },
+					{ "report" },
+					{ "Retrieve a JSDataSet with the parameters except the system defined ones." },
+					{ "var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml');\nvar csv = ds.getAsText(',','\\n','\"',true);\napplication.output(csv);" } },
+			{
+					{ "reportDirectory" },
+					{},
+					{ "Property for retrieving the reports directory from the server." },
+					{ "// By defaul the value is read from the adim page Server Plugins, the directory.jasper.report property.\n// If the client modifies the reportDirectory property, this value will be used instead of the default one for the whole client session and only for this client. Each client session has it's own reportDirectory value." } },
+			{
+					{ "viewerExportFormats" },
+					{},
+					{ "Get or set the Jasper Viewer's export formats" },
+					{ "var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;\n"
+							+ "application.output(defaultExportFormats);\n"
+							+ "// use the default export constants of the plugin, of the OUTPUT_FORMAT constants node;\n"
+							+ "// the following formats are availabe for setting the viewer export formats:\n "
+							+ "// PDF, JRPRINT, RTF, ODT, HTML, XLS_1_SHEET, XLS, CSV, XML\n"
+							+ "// and there is an extra Xml with Embedded Images export type available for the Viewer, denoted by 'xml_embd_img' \n"
+							+ "// the first export format in the list will be the default one displayed in the Save dialog of the Viewer.\n"
+							+ "plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];" } } };
 
-	JasperReportsProvider(JasperReportsPlugin p) throws Exception{
+	JasperReportsProvider(JasperReportsPlugin p) throws Exception {
 		plugin = p;
 	}
 
@@ -152,17 +179,13 @@ public class JasperReportsProvider implements IScriptObject {
 			return false;
 		else if ("".equals(methodName)) {
 			return true;
-		}
-		else if ("jasperReport".equals(methodName)) {
+		} else if ("jasperReport".equals(methodName)) {
 			return true;
-		}
-		else if ("jasperCompile".equals(methodName)) {
+		} else if ("jasperCompile".equals(methodName)) {
 			return true;
-		}
-		else if ("writeFile".equals(methodName)) {
+		} else if ("writeFile".equals(methodName)) {
 			return true;
-		}
-		else if ("readFile".equals(methodName)) {
+		} else if ("readFile".equals(methodName)) {
 			return true;
 		}
 
@@ -260,12 +283,14 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	public Class[] getAllReturnedTypes() {
-		return new Class[] {OUTPUT_FORMAT.class};
+		return new Class[] { OUTPUT_FORMAT.class };
 	}
 
 	/**
 	 * Fix for bug ID 6255588 from Sun bug database
-	 * @param job print job that the fix applies to
+	 * 
+	 * @param job
+	 *            print job that the fix applies to
 	 */
 	public static void initPrinterJobFields(PrinterJob job) {
 		Class clazz = job.getClass();
@@ -273,7 +298,8 @@ public class JasperReportsProvider implements IScriptObject {
 			Class printServiceClass = Class.forName("javax.print.PrintService");
 			Method method = clazz.getMethod("getPrintService", (Class[]) null);
 			Object printService = method.invoke(job, (Object[]) null);
-			method = clazz.getMethod("setPrintService", new Class[] { printServiceClass });
+			method = clazz.getMethod("setPrintService",
+					new Class[] { printServiceClass });
 			method.invoke(job, new Object[] { printService });
 		} catch (NoSuchMethodException e) {
 		} catch (IllegalAccessException e) {
@@ -282,7 +308,8 @@ public class JasperReportsProvider implements IScriptObject {
 		}
 	}
 
-	public boolean setPrintService(PrinterJob printJob, String printer) throws Exception {
+	public boolean setPrintService(PrinterJob printJob, String printer)
+			throws Exception {
 		PrintService[] service = PrinterJob.lookupPrintServices();
 		// enable if on list otherwise error
 		boolean match = false;
@@ -303,44 +330,64 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 *	@deprecated
-	 *	@see	js_runReport(String dbalias, String report, Object arg, String type, Object parameters)
+	 * @deprecated
+	 * @see js_runReport(String dbalias, String report, Object arg, String type,
+	 *      Object parameters)
 	 */
-	public byte[] js_jasperReport(String dbalias, String report, Object arg, String type, Object parameters) throws Exception {
+	public byte[] js_jasperReport(String dbalias, String report, Object arg,
+			String type, Object parameters) throws Exception {
 		return js_runReport(dbalias, report, arg, type, parameters, null);
 	}
 
 	/**
-	 *	@deprecated
-	 *	@see	js_runReport(String dbalias, String report, Object arg, String type, Object parameters, String localeString)
+	 * @deprecated
+	 * @see js_runReport(String dbalias, String report, Object arg, String type,
+	 *      Object parameters, String localeString)
 	 */
-	public byte[] js_jasperReport(String dbalias, String report, Object arg, String type, Object parameters, String localeString) throws Exception {
-		return js_runReport(dbalias, report, arg, type, parameters, localeString);
+	public byte[] js_jasperReport(String dbalias, String report, Object arg,
+			String type, Object parameters, String localeString)
+			throws Exception {
+		return js_runReport(dbalias, report, arg, type, parameters,
+				localeString);
 	}
 
-	public byte[] js_runReport(Object source, String report, Object arg, String type, Object parameters) throws Exception {
+	public byte[] js_runReport(Object source, String report, Object arg,
+			String type, Object parameters) throws Exception {
 		return js_runReport(source, report, arg, type, parameters, null);
 	}
 
-	public byte[] js_runReport(Object source, String report, Object arg, String type, Object parameters, String localeString) throws Exception {
-		return js_runReport(source, report, arg, type, parameters, localeString, false);
+	public byte[] js_runReport(Object source, String report, Object arg,
+			String type, Object parameters, String localeString)
+			throws Exception {
+		return js_runReport(source, report, arg, type, parameters,
+				localeString, false);
 	}
-	public byte[] js_runReport(Object source, String report, Object arg, String type, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception {
-		return runReport(source, report, arg, type, parameters, localeString, moveTableOfContent);
+
+	public byte[] js_runReport(Object source, String report, Object arg,
+			String type, Object parameters, String localeString,
+			Boolean moveTableOfContent) throws Exception {
+		return runReport(source, report, arg, type, parameters, localeString,
+				moveTableOfContent);
 	}
-	
-	private byte[] runReport(Object source, String report, Object arg, String type, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception {
+
+	private byte[] runReport(Object source, String report, Object arg,
+			String type, Object parameters, String localeString,
+			Boolean moveTableOfContent) throws Exception {
 
 		// Check if the directory.jasper.report setting has not yet been set.
 		String pluginReportsDirectory = plugin.getJasperReportsDirectory();
-		if (pluginReportsDirectory == null || (pluginReportsDirectory != null && ("").equals(pluginReportsDirectory.trim())))
-		{
-			throw new Exception("Your jasper.report.directory setting has not been set.\nReport running will abort."); 
+		if (pluginReportsDirectory == null
+				|| (pluginReportsDirectory != null && ("")
+						.equals(pluginReportsDirectory.trim()))) {
+			throw new Exception(
+					"Your jasper.report.directory setting has not been set.\nReport running will abort.");
 		}
-		
-		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin.getIClientPluginAccess());
 
-		Map params = (Map) JSArgumentsUnwrap.unwrapJSObject(parameters, plugin.getIClientPluginAccess());
+		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin
+				.getIClientPluginAccess());
+
+		Map params = (Map) JSArgumentsUnwrap.unwrapJSObject(parameters, plugin
+				.getIClientPluginAccess());
 		if (params == null)
 			params = new HashMap();
 		boolean showPrintDialog = false;
@@ -352,14 +399,16 @@ public class JasperReportsProvider implements IScriptObject {
 			showPrintDialog = Utils.getAsBoolean(arg);
 		} else {
 			if (arg != null)
-				file = arg.toString(); //To support passing in a JSFile object
-			else nooutput = true;
+				file = arg.toString(); // To support passing in a JSFile object
+			else
+				nooutput = true;
 		}
 
 		if (source == null) {
 			throw new Exception("No data source <null> has been provided");
 		}
 		Debug.trace("JasperTrace: JasperReport initialize");
+
 		// create if not yet created
 		if (jasperReportService == null) {
 			try {
@@ -370,26 +419,25 @@ public class JasperReportsProvider implements IScriptObject {
 			}
 		}
 
-		IJasperReportRunner jasperReportRunner; 
-		if (source instanceof String)
-		{
+		IJasperReportRunner jasperReportRunner;
+		if (source instanceof String) {
 			jasperReportRunner = jasperReportService; // run report remote
+		} else if (source instanceof JRDataSource) {
+			jasperReportRunner = new JasperReportRunner(jasperReportService); // run
+																				// reports
+																				// in
+																				// client
+		} else {
+			throw new Exception("Unsupported data source: " + source.getClass());
 		}
-		else if (source instanceof JRDataSource)
-		{
-			jasperReportRunner = new JasperReportRunner(jasperReportService); // run reports in client
-		}
-		else
-		{
-			throw new Exception("Unsupported data source: "+source.getClass());
-		}
-		
+
 		// in case the server is not started in developer
 		if (jasperReportService != null) {
 
 			// needed before filling
-			jasperReportLocalService.set(jasperReportService);
-			
+			jasperReportsLocalService.set(jasperReportService);
+			jasperReportsLocalClientID.set(this.getPluginClientID());
+
 			ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
 			try {
 				Thread.currentThread().setContextClassLoader(plugin.getIClientPluginAccess().getPluginManager().getClassLoader());
@@ -408,122 +456,107 @@ public class JasperReportsProvider implements IScriptObject {
 				}
 
 				int applicationType = plugin.getIClientPluginAccess().getApplicationType();
-				JasperReportsI18NHandler.appendI18N(params, applicationType == IClientPluginAccess.WEB_CLIENT , plugin.getIClientPluginAccess(), localeString);
+				JasperReportsI18NHandler.appendI18N(params,	applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString); 
 
 				byte[] jsp = null;
 				// Report Viewer requested, or Report print in WC requested
-				
+
 				// Fill the report and get the JasperPrint instance.
-				// Also modify the JasperPrint in case you want to move the table of contents.
-				JasperPrint jp = jasperReportRunner.getJasperPrint(source, report, params, plugin.getJasperReportsDirectory(), plugin.getJasperExtraDirectories());
-				if(moveTableOfContent)
-				{
+				// Also modify the JasperPrint in case you want to move the
+				// table of contents.
+				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), source,
+						report, params, plugin.getJasperReportsDirectory(),	plugin.getJasperExtraDirectories());
+				if (moveTableOfContent) {
 					int iP = getInsertPage(jp);
-                	jp = moveTableOfContents(jp,iP);
+					jp = moveTableOfContents(jp, iP);
 				}
-				
-				
+
 				// 1. WebClient
 				if (applicationType == IClientPluginAccess.WEB_CLIENT) {
 
 					String mimeType = "application/octet-stream";
 					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT)) {
-						mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;			
-					} 
-					else if (type.equals(OUTPUT_FORMAT.PDF)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
-					}		 
-					else if (type.equals(OUTPUT_FORMAT.CSV)) {
+					} else if (type.equals(OUTPUT_FORMAT.PDF)) {
+						mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
+					} else if (type.equals(OUTPUT_FORMAT.CSV)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_CSV;
-					}						
-					else if (type.equals(OUTPUT_FORMAT.DOCX)) {
+					} else if (type.equals(OUTPUT_FORMAT.DOCX)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_DOCX;
-					}
-					else if(type.equals(OUTPUT_FORMAT.EXCEL)) {
+					} else if (type.equals(OUTPUT_FORMAT.EXCEL)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
-					}
-					else if(type.equals(OUTPUT_FORMAT.HTML)) {
+					} else if (type.equals(OUTPUT_FORMAT.HTML)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_HTML;
-					}
-					else if(type.equals(OUTPUT_FORMAT.ODS)) {
+					} else if (type.equals(OUTPUT_FORMAT.ODS)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_ODS;
-					}
-					else if(type.equals(OUTPUT_FORMAT.ODT)) {
+					} else if (type.equals(OUTPUT_FORMAT.ODT)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_ODT;
-					}
-					else if(type.equals(OUTPUT_FORMAT.RTF)) {
+					} else if (type.equals(OUTPUT_FORMAT.RTF)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_RTF;
-					}		
-					else if(type.equals(OUTPUT_FORMAT.TXT)) {
+					} else if (type.equals(OUTPUT_FORMAT.TXT)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_TXT;
-					}
-					else if(type.equals(OUTPUT_FORMAT.XHTML)) {
+					} else if (type.equals(OUTPUT_FORMAT.XHTML)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_XHTML;
-					}
-					else if(type.equals(OUTPUT_FORMAT.XLS)) {
+					} else if (type.equals(OUTPUT_FORMAT.XLS)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
-					}
-					else if(type.equals(OUTPUT_FORMAT.XLS_1_SHEET)) {
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS; 
-					}
-					else if(type.equals(OUTPUT_FORMAT.XML)) {
+					} else if (type.equals(OUTPUT_FORMAT.XLS_1_SHEET)) {
+						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
+					} else if (type.equals(OUTPUT_FORMAT.XML)) {
 						mimeType = JasperReportsWebViewer.MIME_TYPE_XML;
-					}
-					else {
+					} else {
 						throw new Exception("JasperTrace: Jasper Exception: Unsupported web client output format");
 					}
-					
+
 					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT)) {
 						jsp = JasperReportRunner.getJasperBytes("pdf", jp, plugin.getJasperExtraDirectories());
-						JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, "pdf", mimeType);
-					}
-					else {
+						JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, "pdf", 	mimeType);
+					} else {
 						jsp = JasperReportRunner.getJasperBytes(type, jp, plugin.getJasperExtraDirectories());
 						if (nooutput) {
 							JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, type, mimeType);
-						}
-						else {
+						} else {
 							saveByteArrayToFile(file, jsp);
 						}
 					}
-					
 				}
-				
+
 				// 2. SmartClient
-				else { 
-					
+				else {
+
 					// a. SmartClient "view"
 					if (type.toLowerCase().startsWith("view")) {
 						CustomizedJasperViewer jasperviewer;
-						
+
 						if (localeString != null) {
 							jasperviewer = new CustomizedJasperViewer(jp, false, new Locale(localeString));
-						}
-						else {
+						} else {
 							jasperviewer = new CustomizedJasperViewer(jp, false);
 						}
 
 						if (viewerExportFormats != null)
 							setViewerSaveContributors(jasperviewer.getJRViwer(), viewerExportFormats);
-						
-						if (jp != null && jp.getPages() != null && jp.getPages().size() > 0) {
+
+						if (jp != null && jp.getPages() != null
+								&& jp.getPages().size() > 0) {
 							jasperviewer.setVisible(true);
 							jasperviewer.setDefaultCloseOperation(JasperViewer.DISPOSE_ON_CLOSE);
 						} else {
 							jasperviewer.dispose();
 						}
 					}
-					
+
 					// b. SmartClient "print"
-					// Printing only supported in SC. Printing in WC handled previously though PDF push
+					// Printing only supported in SC. Printing in WC handled
+					// previously though PDF push
 					else if (type.toLowerCase().startsWith("print")) {
 						// Shows print dialog before printing (if arg is true/"true")
-						if (showPrintDialog || file.equalsIgnoreCase("true") || file == null) {
+						if (showPrintDialog || file.equalsIgnoreCase("true")
+								|| file == null) {
 							JasperPrintManager.printReport(jp, true);
 						}
 						// Skips print dialog (if arg is false/"false" or null)
-						else if ((!showPrintDialog && file.equals("")) //also equivalent to arg == null 
-								|| file.equalsIgnoreCase("false") 
+						else if ((!showPrintDialog && file.equals("")) // also equivalent to arg == null
+								|| file.equalsIgnoreCase("false")
 								|| file.equalsIgnoreCase("default")) {
 							JasperPrintManager.printReport(jp, false);
 						}
@@ -535,20 +568,22 @@ public class JasperReportsProvider implements IScriptObject {
 							initPrinterJobFields(printJob);
 							/*
 							 * or another workaround try {
-							 * printerJob.setPrintService(printerJob.getPrintService()); }
-							 * catch (PrinterException e) {}
+							 * printerJob.setPrintService
+							 * (printerJob.getPrintService()); } catch
+							 * (PrinterException e) {}
 							 */
-	
+
 							if (setPrintService(printJob, file)) {
 								JasperReportsPrinter.printPages(jp, printJob);
 							} else {
 								Debug.trace("JasperTrace: unable to specify printer: " + file);
 							}
 						}
-					// 3. SmartClient other output formats
+						// 3. SmartClient other output formats
 					} else {
 						if (!nooutput) {
-							jsp = jasperReportService.getJasperBytes(type, jp, plugin.getJasperExtraDirectories());
+							jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(),
+									type, jp, plugin.getJasperExtraDirectories());
 							saveByteArrayToFile(file, jsp);
 						}
 					}
@@ -561,14 +596,16 @@ public class JasperReportsProvider implements IScriptObject {
 			} finally {
 				Thread.currentThread().setContextClassLoader(savedCl);
 				// cleanup
-				jasperReportLocalService.set(null);
+				jasperReportsLocalService.set(null);
+				jasperReportsLocalClientID.set(null);
 			}
 		}
 		Debug.error("JasperTrace: Jasper Exception: No service running");
 		throw new Exception("JasperTrace: Jasper Exception: No service running");
 	}
-	
-	public void saveByteArrayToFile(String filename, byte[] buffertje) throws Exception {
+
+	public void saveByteArrayToFile(String filename, byte[] buffertje)
+			throws Exception {
 		FileOutputStream fos = new FileOutputStream(filename);
 		fos.write(buffertje);
 		fos.flush();
@@ -579,7 +616,8 @@ public class JasperReportsProvider implements IScriptObject {
 		return js_compileReport(report, null);
 	}
 
-	public boolean js_compileReport(String report, String destination) throws Error, Exception {
+	public boolean js_compileReport(String report, String destination)
+			throws Error, Exception {
 
 		Debug.trace("JasperTrace: JasperCompile initialize");
 		boolean compiled = false;
@@ -588,7 +626,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: JasperCompile starting");
-			compiled = jasperReportService.jasperCompile(report, destination, plugin.getJasperReportsDirectory());
+			compiled = jasperReportService.jasperCompile(plugin.getIClientPluginAccess().getClientID(), report, destination, plugin.getJasperReportsDirectory());
 			Debug.trace("JasperTrace: JasperCompile finished");
 		} catch (Error err) {
 			Debug.error(err);
@@ -601,39 +639,40 @@ public class JasperReportsProvider implements IScriptObject {
 		return compiled;
 	}
 
-
 	/**
-	 *	@deprecated
-	 *	@see	js_compileReport(String report)
+	 * @deprecated
+	 * @see js_compileReport(String report)
 	 */
 	public boolean js_jasperCompile(String report) throws Error, Exception {
 		return js_compileReport(report);
 	}
 
 	/**
-	 *	@param forceRecompile 
-	 * 	@deprecated
-	 *	@see	js_compileReport(String report)
+	 * @param forceRecompile
+	 * @deprecated
+	 * @see js_compileReport(String report)
 	 */
-	public boolean js_jasperCompile(String report, boolean forceRecompile) throws Error, Exception {
+	public boolean js_jasperCompile(String report, boolean forceRecompile)
+			throws Error, Exception {
 		return js_compileReport(report);
 	}
 
 	/**
-	 *	@deprecated
-	 *	@see	js_writeFileToReportsDir(String filenm, Object obj)
-	 */ 
+	 * @deprecated
+	 * @see js_writeFileToReportsDir(String filenm, Object obj)
+	 */
 	public boolean js_writeFile(String filenm, Object obj) throws Exception {
 		return js_writeFileToReportsDir(filenm, obj);
 	}
 
-	public boolean js_writeFileToReportsDir(String filenm, Object obj) throws Exception {
+	public boolean js_writeFileToReportsDir(String filenm, Object obj)
+			throws Exception {
 
 		connectJasperService();
 
 		try {
 			Debug.trace("JasperTrace: JasperWriteFile starting");
-			boolean b = jasperReportService.writeFile(filenm, obj, plugin.getJasperReportsDirectory());
+			boolean b = jasperReportService.writeFile(plugin.getIClientPluginAccess().getClientID(), filenm, obj, plugin.getJasperReportsDirectory());
 			Debug.trace("JasperTrace: JasperWriteFile finished");
 			return b;
 		} catch (Exception e) {
@@ -641,14 +680,14 @@ public class JasperReportsProvider implements IScriptObject {
 			return false;
 		}
 	}
-	
+
 	public boolean js_deleteFileFromReportsDir(String filenm) throws Exception {
-		
+
 		connectJasperService();
-		
+
 		try {
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir starting");
-			boolean b = jasperReportService.deleteFile(filenm, plugin.getJasperReportsDirectory());
+			boolean b = jasperReportService.deleteFile(plugin.getIClientPluginAccess().getClientID(), filenm, plugin.getJasperReportsDirectory());
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir finished");
 			return b;
 		} catch (Exception e) {
@@ -658,9 +697,9 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 *	@deprecated
-	 *	@see	js_readFileFromReportsDir(String filenm)
-	 */    
+	 * @deprecated
+	 * @see js_readFileFromReportsDir(String filenm)
+	 */
 	public byte[] js_readFile(String filenm) throws Exception {
 		return js_readFileFromReportsDir(filenm);
 	}
@@ -673,7 +712,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: JasperReadFile starting");
-			b = jasperReportService.readFile(filenm, plugin.getJasperReportsDirectory());
+			b = jasperReportService.readFile(plugin.getIClientPluginAccess().getClientID(), filenm, plugin.getJasperReportsDirectory());
 			Debug.trace("JasperTrace: JasperReadFile finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -682,22 +721,22 @@ public class JasperReportsProvider implements IScriptObject {
 		return b;
 	}
 
-	public String js_getReportDirectory() throws Exception {	
+	public String js_getReportDirectory() throws Exception {
 		return plugin.getJasperReportsDirectory();
 	}
 
 	public void js_setReportDirectory(String jasperDirectorie) throws Exception {
 		plugin.setJasperReportsDirectory(jasperDirectorie);
 	}
-	
-	public String js_getExtraDirectories() throws Exception {	
+
+	public String js_getExtraDirectories() throws Exception {
 		return plugin.getJasperExtraDirectories();
 	}
 
-	public void js_setExtraDirectories(String extraDirectories) throws Exception {
+	public void js_setExtraDirectories(String extraDirectories)
+			throws Exception {
 		plugin.setJasperExtraDirectories(extraDirectories);
 	}
-	
 
 	public void connectJasperService() throws Exception {
 
@@ -708,7 +747,8 @@ public class JasperReportsProvider implements IScriptObject {
 				jasperReportService = (IJasperReportsService) plugin.getIClientPluginAccess().getServerService("servoy.IJasperReportService");
 			} catch (Exception ex) {
 				Debug.error(ex);
-				throw new Exception("JasperTrace: Jasper Exception: Cannot connect to service-server");
+				throw new Exception(
+						"JasperTrace: Jasper Exception: Cannot connect to service-server");
 			}
 		}
 
@@ -736,7 +776,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	private String[] getReports(boolean compiled, boolean uncompiled)
-	throws Exception {
+			throws Exception {
 
 		String[] reports = null;
 
@@ -744,7 +784,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: getReports starting");
-			reports = jasperReportService.getReports(compiled, uncompiled);
+			reports = jasperReportService.getReports(plugin.getIClientPluginAccess().getClientID(), compiled, uncompiled);
 			Debug.trace("JasperTrace: getReports finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -762,7 +802,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: getReportParameters starting");
-			ds = jasperReportService.getReportParameters(report, plugin.getJasperReportsDirectory());
+			ds = jasperReportService.getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, plugin.getJasperReportsDirectory());
 			Debug.trace("JasperTrace: getReportParameters finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -776,45 +816,53 @@ public class JasperReportsProvider implements IScriptObject {
 		return "3.1_b4";
 
 		/*
-		 * Added destination optional parameter for compileReport method
-		 * Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile -> readFileFromReportsDir, writeFile -> writeFileToReportsDir methods and deprecated the old ones.
-		 * Updated methods comments to reflect changes and functionality.
-		 * Changed jasperReport to accept null output for using only the array return value.
-		 * 
+		 * Added destination optional parameter for compileReport method Renamed
+		 * jasperReport -> runReport, jasperCompile -> compileReport, readFile
+		 * -> readFileFromReportsDir, writeFile -> writeFileToReportsDir methods
+		 * and deprecated the old ones. Updated methods comments to reflect
+		 * changes and functionality. Changed jasperReport to accept null output
+		 * for using only the array return value.
 		 */
 	}
-	
+
 	/**
-	 * @param ver  
+	 * @param ver
 	 */
-	public void js_setPluginVersion(String ver){
+	public void js_setPluginVersion(String ver) {
 		// DO NOTHING. READ ONLY PROPERTY.
 	}
-	
+
 	/**
-	 * This sets the Jasper Viewer's save contributors, that is the (only) export formats of the
-	 * Jasper Viewer. The first item in the list be the default selected export format.
-	 * Feature request from <a href="http://code.google.com/p/servoy-jasperreports-plugin/issues/detail?id=35">Google issue 35</a>. 
+	 * This sets the Jasper Viewer's save contributors, that is the (only)
+	 * export formats of the Jasper Viewer. The first item in the list be the
+	 * default selected export format. Feature request from <a href=
+	 * "http://code.google.com/p/servoy-jasperreports-plugin/issues/detail?id=35"
+	 * >Google issue 35</a>.
 	 * 
-	 * @param saveContribs the list of desired export formats; the first one will be the default export format.
+	 * @param saveContribs
+	 *            the list of desired export formats; the first one will be the
+	 *            default export format.
 	 */
-	public void js_setViewerExportFormats(String[] saveContribs) throws Exception {
+	public void js_setViewerExportFormats(String[] saveContribs)
+			throws Exception {
 		viewerExportFormats = saveContribs;
 	}
-	
 
 	/**
 	 * Sets the save contributors for the JasperViewer's JRViewer instance.
 	 * 
-	 * @param jrv the JRViewer for which we set the save contributors
-	 * @param saveContributors the save contributors to be set; the first one will be the (default) first one in the
-	 * 			"Save as type" list of the "Save" dialog.
+	 * @param jrv
+	 *            the JRViewer for which we set the save contributors
+	 * @param saveContributors
+	 *            the save contributors to be set; the first one will be the
+	 *            (default) first one in the "Save as type" list of the "Save"
+	 *            dialog.
 	 */
-	private void setViewerSaveContributors(JRViewer jrv, String[] saveContributors) {
-		
+	private void setViewerSaveContributors(JRViewer jrv,
+			String[] saveContributors) {
+
 		List<String> defContribs = new ArrayList<String>();
-		for (String s : saveContributors)
-		{
+		for (String s : saveContributors) {
 			if (OUTPUT_FORMAT.PDF.equals(s))
 				defContribs.add("net.sf.jasperreports.view.save.JRPdfSaveContributor");
 			else if (OUTPUT_FORMAT.JRPRINT.equals(s))
@@ -822,9 +870,9 @@ public class JasperReportsProvider implements IScriptObject {
 			else if (OUTPUT_FORMAT.ODT.equals(s))
 				defContribs.add("net.sf.jasperreports.view.save.JROdtSaveContributor");
 			else if (OUTPUT_FORMAT.RTF.equals(s))
-				defContribs.add("net.sf.jasperreports.view.save.JRRtfSaveContributor");	
+				defContribs.add("net.sf.jasperreports.view.save.JRRtfSaveContributor");
 			else if (OUTPUT_FORMAT.HTML.equals(s))
-				defContribs.add("net.sf.jasperreports.view.save.JRHtmlSaveContributor");		
+				defContribs.add("net.sf.jasperreports.view.save.JRHtmlSaveContributor");
 			else if (OUTPUT_FORMAT.XLS_1_SHEET.equals(s))
 				defContribs.add("net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor");
 			else if (OUTPUT_FORMAT.XLS.equals(s))
@@ -836,28 +884,28 @@ public class JasperReportsProvider implements IScriptObject {
 			else if ("xml_embd_img".equals(s))
 				defContribs.add("net.sf.jasperreports.view.save.JREmbeddedImagesXmlSaveContributor");
 		}
-		
+
 		// the default save contributors
 		String[] DEFAULT_CONTRIBUTORS = new String[defContribs.size()];
 		DEFAULT_CONTRIBUTORS = defContribs.toArray(DEFAULT_CONTRIBUTORS);
-	            
+
 		JRSaveContributor[] jrSaveContribs = new JRSaveContributor[DEFAULT_CONTRIBUTORS.length];
 		for (int i = 0; i < DEFAULT_CONTRIBUTORS.length; i++) {
 			try {
 				Class saveContribClass = JRClassLoader.loadClassForName(DEFAULT_CONTRIBUTORS[i]);
-				ResourceBundle jrViewerResBundel = ResourceBundle.getBundle("net/sf/jasperreports/view/viewer", jrv.getLocale());
+				ResourceBundle jrViewerResBundel = ResourceBundle.getBundle(
+						"net/sf/jasperreports/view/viewer", jrv.getLocale());
 				Constructor constructor = saveContribClass.getConstructor(new Class[] { Locale.class, ResourceBundle.class });
-				JRSaveContributor saveContrib = (JRSaveContributor) constructor.newInstance(new Object[] { jrv.getLocale(),jrViewerResBundel });
+				JRSaveContributor saveContrib = (JRSaveContributor) constructor.newInstance(new Object[] { jrv.getLocale(), jrViewerResBundel });
 				jrSaveContribs[i] = saveContrib;
 			} catch (Exception e) {
 				Debug.error(e);
 			}
 		}
-		
+
 		jrv.setSaveContributors(jrSaveContribs);
 	}
-	
-	
+
 	/**
 	 * Returns the list of export formats for the Jasper Viewer.
 	 * 
@@ -866,22 +914,21 @@ public class JasperReportsProvider implements IScriptObject {
 	public String[] js_getViewerExportFormats() throws Exception {
 		return viewerExportFormats;
 	}
-	
+
 	/**
 	 * 
 	 * @param jasperPrint
 	 * @return the Page, where the moved page(s) will be inserted
-	 * @performs Iterates over the JasperPrint pages searching for the FIRST appearence of the String:
-	 *  "HIDDEN TEXT TO MARK THE INSERT PAGE"; and returning that particular page
-	 *  the Pages to move will be placed in the right order beginning at this page
+	 * @performs Iterates over the JasperPrint pages searching for the FIRST
+	 *           appearence of the String:
+	 *           "HIDDEN TEXT TO MARK THE INSERT PAGE"; and returning that
+	 *           particular page the Pages to move will be placed in the right
+	 *           order beginning at this page
 	 */
-	private static int getInsertPage(JasperPrint jasperPrint)
-	{
-		if (jasperPrint != null)
-		{
+	private static int getInsertPage(JasperPrint jasperPrint) {
+		if (jasperPrint != null) {
 			List pages = jasperPrint.getPages();
-			if (pages != null && pages.size() > 0)
-			{
+			if (pages != null && pages.size() > 0) {
 				String key = "HIDDEN TEXT TO MARK THE INSERT PAGE";
 				JRPrintPage page = null;
 				Collection elements = null;
@@ -927,21 +974,19 @@ public class JasperReportsProvider implements IScriptObject {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * 
-	 * @param JasperPrint Object - jasperPrint
+	 * @param JasperPrint
+	 *            Object - jasperPrint
 	 * @param int - insertPage (where to insert)
 	 * @return JasperPrint Object
 	 * @performs The Moving
 	 */
-	private static JasperPrint moveTableOfContents(JasperPrint jasperPrint, int insertPage)
-	{
-		if (jasperPrint != null)
-		{
+	private static JasperPrint moveTableOfContents(JasperPrint jasperPrint, int insertPage) {
+		if (jasperPrint != null) {
 			List pages = jasperPrint.getPages();
-			if (pages != null && pages.size() > 0)
-			{
+			if (pages != null && pages.size() > 0) {
 				// finding WHAT to insert
 				String key = "HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS";
 				JRPrintPage page = null;
@@ -950,20 +995,16 @@ public class JasperReportsProvider implements IScriptObject {
 				JRPrintElement element = null;
 				int i = pages.size() - 1;
 				boolean isFound = false;
-				while(i >= 0 && !isFound)
-				{
-					page = (JRPrintPage)pages.get(i);
+				while (i >= 0 && !isFound) {
+					page = (JRPrintPage) pages.get(i);
 					elements = page.getElements();
-					if (elements != null && elements.size() > 0)
-					{
+					if (elements != null && elements.size() > 0) {
 						it = elements.iterator();
-						while(it.hasNext() && !isFound)
-						{
-							element = (JRPrintElement)it.next();
-							if (element instanceof JRPrintText)
-							{
-								if ( key.equals( ((JRPrintText)element).getText() ) )
-								{
+						while (it.hasNext() && !isFound) {
+							element = (JRPrintElement) it.next();
+							if (element instanceof JRPrintText) {
+								if (key.equals(((JRPrintText) element)
+										.getText())) {
 									isFound = true;
 									break;
 								}
@@ -972,54 +1013,58 @@ public class JasperReportsProvider implements IScriptObject {
 					}
 					i--;
 				}
-	
-				if (isFound)
-				{      
-					for(int j = i + 1; j < pages.size(); j++)
-					{
+
+				if (isFound) {
+					for (int j = i + 1; j < pages.size(); j++) {
 						jasperPrint.addPage(insertPage, jasperPrint.removePage(j));
 						insertPage++;
 					}
 				}
 			}
 		}
-	
+
 		return jasperPrint;
 	}
-	public static byte[] getBytes(Object obj) throws java.io.IOException{
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    ObjectOutputStream oos = new ObjectOutputStream(bos);
-	    oos.writeObject(obj);
-	    oos.flush();
-	    oos.close();
-	    bos.close();
-	    byte [] data = bos.toByteArray();
-	    return data;
+
+	public static byte[] getBytes(Object obj) throws java.io.IOException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(obj);
+		oos.flush();
+		oos.close();
+		bos.close();
+		byte[] data = bos.toByteArray();
+		return data;
 	}
-	
+
+	public String getPluginClientID() {
+		return plugin.getIClientPluginAccess().getClientID();
+	}
+
 	/**
-	 * Modified JasperViewer, so that we have access to the JRViewer instance inside.
-	 *
+	 * Modified JasperViewer, so that we have access to the JRViewer instance
+	 * inside.
+	 * 
 	 */
 	public class CustomizedJasperViewer extends JasperViewer {
 
 		private static final long serialVersionUID = 1L;
-		
+
 		public CustomizedJasperViewer(JasperPrint jasperPrint, boolean isExitOnClose, Locale locale) {
 			super(jasperPrint, isExitOnClose, locale);
 		}
-		
+
 		public CustomizedJasperViewer(JasperPrint jasperPrint, boolean isExitOnClose) {
 			super(jasperPrint, isExitOnClose);
 		}
-		
+
 		public void setJRViewer(JRViewer jrv) {
 			super.viewer = jrv;
 		}
-		
+
 		public JRViewer getJRViwer() {
 			return super.viewer;
 		}
 	}
-	
+
 }

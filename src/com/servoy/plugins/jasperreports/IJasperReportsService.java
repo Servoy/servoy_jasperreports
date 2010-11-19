@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
@@ -44,27 +43,28 @@ import com.servoy.j2db.dataprocessing.JSDataSet;
  */
 public interface IJasperReportsService extends IJasperReportRunner, Remote {
 
-	public boolean jasperCompile(String report, String destination, String repdir) throws RemoteException, JRException;
+	public boolean jasperCompile(String clientID, String report, String destination, String repdir) throws RemoteException, Exception;
 
-	public boolean writeFile(String filenm, Object obj, String repdir) throws RemoteException, IOException;
+	public boolean writeFile(String clientID, String filenm, Object obj, String repdir) throws RemoteException, Exception;
 	
-	public boolean deleteFile(String filenm, String repdir) throws RemoteException, IOException;
+	public boolean deleteFile(String clientID, String filenm, String repdir) throws RemoteException, Exception;
 
-	public byte[] readFile(String filenm, String repdir) throws RemoteException, IOException;
+	public byte[] readFile(String clientID, String filenm, String repdir) throws RemoteException, Exception;
 
-	public String getReportDirectory() throws RemoteException;
+	public String getReportDirectory() throws RemoteException, Exception;
 	
-	public String getExtraDirectories() throws RemoteException;
+	public String getExtraDirectories() throws RemoteException, Exception;
 
-	public String[] getReports(boolean compiled, boolean uncompiled) throws RemoteException, FileNotFoundException;
+	public String[] getReports(String clientID, boolean compiled, boolean uncompiled) throws RemoteException, Exception;
 
-	public JSDataSet getReportParameters(String report, String repdir) throws RemoteException, JRException;
+	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws RemoteException, Exception;
 
-	public void saveByteArrayToFile(String filename, byte[] buffer, String reportsDir) throws RemoteException, IOException;
+	public void saveByteArrayToFile(String clientID, String filename, byte[] buffer, String reportsDir) throws RemoteException, Exception;
 
-	public JasperReport getJasperReport(String report, String repdir) throws RemoteException, JRException;
+	public JasperReport getJasperReport(String clientID, String report, String repdir) throws RemoteException, Exception;
 	
-	public byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs) throws IOException, JRException, RemoteException;
+	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs) throws RemoteException, Exception;
 
-	public byte[] loadImage(String image) throws JRException, RemoteException;
+	public byte[] loadImage(String clientID, String image) throws RemoteException, Exception;
+
 }
