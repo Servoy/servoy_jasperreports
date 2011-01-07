@@ -65,7 +65,7 @@ public class JasperReportsWebViewer {
 				file = "report_" + sdf.format(cal.getTime()) + "." + ext;
 			}
 			String url = wapp.serveResource(file, jsp, mimeType);
-			wapp.showURL(url, "_blank", null);
+			wapp.showURL(url, "_self", null, 0);
 		}
 	}
 }
