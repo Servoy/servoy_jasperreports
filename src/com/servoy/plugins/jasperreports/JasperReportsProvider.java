@@ -379,8 +379,9 @@ public class JasperReportsProvider implements IScriptObject {
 		if (pluginReportsDirectory == null
 				|| (pluginReportsDirectory != null && ("")
 						.equals(pluginReportsDirectory.trim()))) {
-			throw new Exception(
-					"Your jasper.report.directory setting has not been set.\nReport running will abort.");
+			String noPluginDirMsg = "Your jasper.report.directory setting has not been set.\nReport running will abort.";
+			Debug.error(noPluginDirMsg);
+			throw new Exception(noPluginDirMsg);
 		}
 
 		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin

@@ -249,6 +249,18 @@ public class JasperReportRunner implements IJasperReportRunner {
 			}
 		}
 		
+		//explicit check if pageOutDir exists
+		String virtErrMsg = null;
+		File testDir = new File(pageOutDir);
+		if (!testDir.exists())
+		{
+			virtErrMsg = "The indicated PAGE_OUT_DIR path: '" + pageOutDir + "' is not a valid path.";
+			Debug.error(virtErrMsg);
+			throw new JRException(virtErrMsg);
+		}
+		else
+			testDir = null;
+		
 		// Virtualizers
 		JRAbstractLRUVirtualizer virtualizer = null;
 		if (VIRTUALIZER_FILE.equalsIgnoreCase(virtualizerType)) {
@@ -258,6 +270,11 @@ public class JasperReportRunner implements IJasperReportRunner {
 			virtualizer = new JRSwapFileVirtualizer(2, swapFile, true);
 		} else if (VIRTUALIZER_GZIP.equalsIgnoreCase(virtualizerType)) {
 			virtualizer = new JRGzipVirtualizer(2);
+		} else if (virtualizerType != null) {
+			//virtualizer type has been specified but is not of a supported type
+			virtErrMsg = "The virtualizer type specified '" + virtualizerType + "' is not supported.";
+			Debug.error(virtErrMsg);
+			throw new JRException(virtErrMsg);
 		}
 		if (virtualizer != null) {
 			parameters.put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
