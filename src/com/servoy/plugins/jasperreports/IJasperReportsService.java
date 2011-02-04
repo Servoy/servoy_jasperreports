@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Map;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -63,7 +64,7 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 
 	public JasperReport getJasperReport(String clientID, String report, String repdir) throws RemoteException, Exception;
 	
-	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs) throws RemoteException, Exception;
+	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws RemoteException, Exception;
 
 	public byte[] loadImage(String clientID, String image) throws RemoteException, Exception;
 

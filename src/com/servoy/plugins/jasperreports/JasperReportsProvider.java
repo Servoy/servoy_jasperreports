@@ -471,6 +471,8 @@ public class JasperReportsProvider implements IScriptObject {
 					int iP = getInsertPage(jp);
 					jp = moveTableOfContents(jp, iP);
 				}
+				
+				Map exporterParams = createExporterParametersMap(params);
 
 				// 1. WebClient
 				if (applicationType == IClientPluginAccess.WEB_CLIENT) {
@@ -509,10 +511,10 @@ public class JasperReportsProvider implements IScriptObject {
 					}
 
 					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT)) {
-						jsp = JasperReportRunner.getJasperBytes("pdf", jp, plugin.getJasperExtraDirectories());
+						jsp = JasperReportRunner.getJasperBytes("pdf", jp, plugin.getJasperExtraDirectories(),exporterParams);
 						JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, "pdf", 	mimeType);
 					} else {
-						jsp = JasperReportRunner.getJasperBytes(type, jp, plugin.getJasperExtraDirectories());
+						jsp = JasperReportRunner.getJasperBytes(type, jp, plugin.getJasperExtraDirectories(),exporterParams);
 						if (nooutput) {
 							JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, type, mimeType);
 						} else {
@@ -584,7 +586,7 @@ public class JasperReportsProvider implements IScriptObject {
 					} else {
 						if (!nooutput) {
 							jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(),
-									type, jp, plugin.getJasperExtraDirectories());
+									type, jp, plugin.getJasperExtraDirectories(), exporterParams);
 							saveByteArrayToFile(file, jsp);
 						}
 					}
@@ -1066,6 +1068,21 @@ public class JasperReportsProvider implements IScriptObject {
 		public JRViewer getJRViwer() {
 			return super.viewer;
 		}
+	}
+	
+	private Map createExporterParametersMap(Map p)
+	{
+		Map<String, Integer> aux = new HashMap<String, Integer>();
+		if (p == null) return null;
+		
+		if (p.containsKey("OFFSET_X")) aux.put("OFFSET_X", new Integer(((Double)p.get("OFFSET_X")).intValue()));
+		if (p.containsKey("OFFSET_Y")) aux.put("OFFSET_Y", new Integer(((Double)p.get("OFFSET_Y")).intValue()));
+		
+		if (p.containsKey("PAGE_INDEX")) aux.put("PAGE_INDEX", new Integer(((Double)p.get("PAGE_INDEX")).intValue()));
+		if (p.containsKey("START_PAGE_INDEX")) aux.put("START_PAGE_INDEX", new Integer(((Double)p.get("START_PAGE_INDEX")).intValue()));
+		if (p.containsKey("END_PAGE_INDEX")) aux.put("END_PAGE_INDEX", new Integer(((Double)p.get("END_PAGE_INDEX")).intValue())); 
+
+		return aux;
 	}
 
 }

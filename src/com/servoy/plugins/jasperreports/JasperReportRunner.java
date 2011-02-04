@@ -29,7 +29,6 @@
 
 package com.servoy.plugins.jasperreports;
 
-import java.awt.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -90,11 +89,6 @@ public class JasperReportRunner implements IJasperReportRunner {
 		this.jasperReportsService = jasperReportsService;
 	}
 
-	public byte[] jasperReport(String clientID, Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws IOException, Exception {
-		JasperPrint jasperPrint = getJasperPrint(clientID, source, report, parameters, repdir, extraDirs);
-		return getJasperBytes(type, jasperPrint, extraDirs);
-	}
-
 	public JasperPrint getJasperPrint(String clientID, Object source, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception {
 		if (source == null) {
 			throw new IllegalArgumentException("no data source");
@@ -116,7 +110,7 @@ public class JasperReportRunner implements IJasperReportRunner {
 	}
 
 	
-	public static byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs) throws IOException, JRException {
+	public static byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws IOException, JRException {
 		// exporting the report
 		if (type.equalsIgnoreCase(OUTPUT_FORMAT.JRPRINT)) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -187,6 +181,16 @@ public class JasperReportRunner implements IJasperReportRunner {
 		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, baos);
 		exporter.setParameter(JRExporterParameter.CHARACTER_ENCODING, "UTF-8");
+		 
+		if (exporterParameters != null)
+		{
+			if (exporterParameters.containsKey("PAGE_INDEX")) exporter.setParameter(JRExporterParameter.OFFSET_X,(Integer)exporterParameters.get("PAGE_INDEX"));
+			if (exporterParameters.containsKey("START_PAGE_INDEX")) exporter.setParameter(JRExporterParameter.START_PAGE_INDEX,(Integer)exporterParameters.get("START_PAGE_INDEX"));
+			if (exporterParameters.containsKey("END_PAGE_INDEX")) exporter.setParameter(JRExporterParameter.END_PAGE_INDEX,(Integer)exporterParameters.get("END_PAGE_INDEX"));
+			
+			if (exporterParameters.containsKey("OFFSET_X")) exporter.setParameter(JRExporterParameter.OFFSET_X,(Integer)exporterParameters.get("OFFSET_X"));
+			if (exporterParameters.containsKey("OFFSET_Y")) exporter.setParameter(JRExporterParameter.OFFSET_Y,(Integer)exporterParameters.get("OFFSET_Y"));
+		}
 		
 		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);	
 		if (al != null) {

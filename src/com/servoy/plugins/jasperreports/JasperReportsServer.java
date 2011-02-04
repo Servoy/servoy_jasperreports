@@ -182,7 +182,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return jasperReport;
 	}
 
-	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs) throws Exception { 
+	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs, Map exporterParams) throws Exception { 
 		
 		if (!hasAccess(clientID)) return null;
 		
@@ -200,7 +200,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 		
 		try {
-			return JasperReportRunner.getJasperBytes(type, jasperPrint,	extraDirs);
+			return JasperReportRunner.getJasperBytes(type, jasperPrint,	extraDirs, exporterParams);
 		} finally {
 			
 			if (serviceSet) {
@@ -277,11 +277,6 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 				JasperReportsProvider.jasperReportsLocalClientID.set(null);
 			}
 		}
-	}
-
-	public byte[] jasperReport(String clientID, Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws Exception {
-		JasperPrint jasperPrint = getJasperPrint(clientID, source, report, parameters, repdir, extraDirs);
-		return JasperReportRunner.getJasperBytes(type, jasperPrint, extraDirs);
 	}
 
 	private String getAbsolutePath(String path, String relativeDir)
@@ -703,35 +698,24 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	 */
 	private final boolean hasAccess(String clientId) throws Exception {
 		
-		boolean hasIsServerProcess = false;
-		boolean hasIsAuthenticated = false;
-		Class<?> c = Class.forName("com.servoy.j2db.plugins.IServerAccess");
-		Method[] interfaceMethods = c.getMethods();
-		for (Method m : interfaceMethods) {
-			if (("isServerProcess").equals(m.getName())) {
-				hasIsServerProcess = true;
-			} 
-			else if (("isAuthenticated").equals(m.getName())) {
-				hasIsAuthenticated = true;
-			} 
+		boolean isServerProcess = false;
+		boolean isAuthenticated = false;
+		
+		try {
+			Method methodIsServerProcess = IServerAccess.class.getMethod("isServerProcess", String.class);
+			Method methodIsAuthenticated = IServerAccess.class.getMethod("isAuthenticated", String.class);
+			isServerProcess = ((Boolean)methodIsServerProcess.invoke(application, clientId)).booleanValue();
+			isAuthenticated = ((Boolean)methodIsAuthenticated.invoke(application, clientId)).booleanValue();
+		} catch (NoSuchMethodException nsme) {
+			Debug.error(nsme.getMessage());
+			return false;
 		}
 		
-		if (hasIsServerProcess && hasIsAuthenticated) {
-			//"We are in 5.2.x or above"
-			Method methodIsServerProcess = application.getClass().getMethod("isServerProcess", String.class);
-			boolean isServerProcess = ((Boolean)methodIsServerProcess.invoke(application, clientId)).booleanValue();
-			Method methodIsAuthenticated = application.getClass().getMethod("isAuthenticated", String.class);
-			boolean isAuthenticated = ((Boolean)methodIsAuthenticated.invoke(application, clientId)).booleanValue();
-			if (isServerProcess || isAuthenticated) { 
-				return true;
-			}
-			else {
-				return false;
-			}
+		if (isServerProcess || isAuthenticated) { 
+			return true;
 		}
 		else {
-			//"we are not in a 5.2.x environment"
-			return true;
+			return false;
 		}
 	}
 	

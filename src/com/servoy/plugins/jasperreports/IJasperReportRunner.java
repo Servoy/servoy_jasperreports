@@ -40,7 +40,5 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public interface IJasperReportRunner { 
 
-	public byte[] jasperReport(String clientID, Object source, String report, String type, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception;
-
 	public JasperPrint getJasperPrint(String clientID, Object source, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception;
 }
