@@ -708,14 +708,14 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			isAuthenticated = ((Boolean)methodIsAuthenticated.invoke(application, clientId)).booleanValue();
 		} catch (NoSuchMethodException nsme) {
 			Debug.error(nsme.getMessage());
-			return false;
+			return true; 
 		}
 		
 		if (isServerProcess || isAuthenticated) { 
-			return true;
+			return true; //in 5.2.x and have access
 		}
 		else {
-			return false;
+			return false; //in 5.2.x and NO access
 		}
 	}
 	
