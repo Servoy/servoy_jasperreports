@@ -1075,12 +1075,12 @@ public class JasperReportsProvider implements IScriptObject {
 		Map<String, Integer> aux = new HashMap<String, Integer>();
 		if (p == null) return null;
 		
-		if (p.containsKey("OFFSET_X")) aux.put("OFFSET_X", new Integer(((Double)p.get("OFFSET_X")).intValue()));
-		if (p.containsKey("OFFSET_Y")) aux.put("OFFSET_Y", new Integer(((Double)p.get("OFFSET_Y")).intValue()));
+		if (p.containsKey(EXPORTER_PARAMETERS.OFFSET_X)) aux.put(EXPORTER_PARAMETERS.OFFSET_X, new Integer(((Double)p.get(EXPORTER_PARAMETERS.OFFSET_X)).intValue()));
+		if (p.containsKey(EXPORTER_PARAMETERS.OFFSET_Y)) aux.put(EXPORTER_PARAMETERS.OFFSET_Y, new Integer(((Double)p.get(EXPORTER_PARAMETERS.OFFSET_Y)).intValue()));
 		
-		if (p.containsKey("PAGE_INDEX")) aux.put("PAGE_INDEX", new Integer(((Double)p.get("PAGE_INDEX")).intValue()));
-		if (p.containsKey("START_PAGE_INDEX")) aux.put("START_PAGE_INDEX", new Integer(((Double)p.get("START_PAGE_INDEX")).intValue()));
-		if (p.containsKey("END_PAGE_INDEX")) aux.put("END_PAGE_INDEX", new Integer(((Double)p.get("END_PAGE_INDEX")).intValue())); 
+		if (p.containsKey(EXPORTER_PARAMETERS.PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.PAGE_INDEX, new Integer(((Double)p.get(EXPORTER_PARAMETERS.PAGE_INDEX)).intValue()));
+		if (p.containsKey(EXPORTER_PARAMETERS.START_PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.START_PAGE_INDEX, new Integer(((Double)p.get(EXPORTER_PARAMETERS.START_PAGE_INDEX)).intValue()));
+		if (p.containsKey(EXPORTER_PARAMETERS.END_PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.END_PAGE_INDEX, new Integer(((Double)p.get(EXPORTER_PARAMETERS.END_PAGE_INDEX)).intValue())); 
 
 		return aux;
 	}

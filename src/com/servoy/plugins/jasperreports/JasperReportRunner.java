@@ -184,12 +184,11 @@ public class JasperReportRunner implements IJasperReportRunner {
 		 
 		if (exporterParameters != null)
 		{
-			if (exporterParameters.containsKey("PAGE_INDEX")) exporter.setParameter(JRExporterParameter.OFFSET_X,(Integer)exporterParameters.get("PAGE_INDEX"));
-			if (exporterParameters.containsKey("START_PAGE_INDEX")) exporter.setParameter(JRExporterParameter.START_PAGE_INDEX,(Integer)exporterParameters.get("START_PAGE_INDEX"));
-			if (exporterParameters.containsKey("END_PAGE_INDEX")) exporter.setParameter(JRExporterParameter.END_PAGE_INDEX,(Integer)exporterParameters.get("END_PAGE_INDEX"));
-			
-			if (exporterParameters.containsKey("OFFSET_X")) exporter.setParameter(JRExporterParameter.OFFSET_X,(Integer)exporterParameters.get("OFFSET_X"));
-			if (exporterParameters.containsKey("OFFSET_Y")) exporter.setParameter(JRExporterParameter.OFFSET_Y,(Integer)exporterParameters.get("OFFSET_Y"));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.PAGE_INDEX))exporter.setParameter(JRExporterParameter.PAGE_INDEX, (Integer)exporterParameters.get(EXPORTER_PARAMETERS.PAGE_INDEX));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.START_PAGE_INDEX))exporter.setParameter(JRExporterParameter.START_PAGE_INDEX, (Integer)exporterParameters.get(EXPORTER_PARAMETERS.START_PAGE_INDEX));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.END_PAGE_INDEX))exporter.setParameter(JRExporterParameter.END_PAGE_INDEX,(Integer)exporterParameters.get(EXPORTER_PARAMETERS.END_PAGE_INDEX));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_X))exporter.setParameter(JRExporterParameter.OFFSET_X,(Integer)exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_X));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_Y))exporter.setParameter(JRExporterParameter.OFFSET_Y,(Integer)exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_Y));
 		}
 		
 		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);	
