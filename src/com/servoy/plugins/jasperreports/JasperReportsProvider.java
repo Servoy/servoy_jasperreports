@@ -609,10 +609,12 @@ public class JasperReportsProvider implements IScriptObject {
 
 	public void saveByteArrayToFile(String filename, byte[] buffertje)
 			throws Exception {
-		FileOutputStream fos = new FileOutputStream(filename);
-		fos.write(buffertje);
-		fos.flush();
-		fos.close();
+		if (filename != null && filename.trim().length() > 0) {
+			FileOutputStream fos = new FileOutputStream(filename);
+			fos.write(buffertje);
+			fos.flush();
+			fos.close();
+		}
 	}
 
 	public boolean js_compileReport(String report) throws Error, Exception {
