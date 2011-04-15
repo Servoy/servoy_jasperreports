@@ -219,7 +219,23 @@ public class JasperReportRunner implements IJasperReportRunner {
 		parameters.put("report_directory", jasperDirectory);
 		if (!jasperDirectory.endsWith("/"))
 			jasperDirectory = jasperDirectory + '/';
-		parameters.put("SUBREPORT_DIR", jasperDirectory);
+		
+		String subReportDir = (String)parameters.get("SUBREPORT_DIR");
+		if (subReportDir == null || subReportDir.equals(""))
+		{
+			//if the subreport directory is not set
+			parameters.put("SUBREPORT_DIR", jasperDirectory);
+		}
+		else
+		{
+			//if the path is relative
+			if (!(new File(subReportDir)).isAbsolute())
+			{
+				subReportDir = jasperDirectory + "/" + subReportDir; 
+				subReportDir = adjustFileUnix(subReportDir);
+				parameters.put("SUBREPORT_DIR", subReportDir);
+			}
+		}
 		
 		Debug.trace("JasperTrace: Extra Directories: " + extraDirs);
 		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);	

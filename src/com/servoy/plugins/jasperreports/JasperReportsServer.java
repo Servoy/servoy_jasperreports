@@ -682,10 +682,26 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
+	/**
+	 * TODO: add security checks
+	 */
 	public byte[] loadImage(String clientID, String img) throws Exception {
 		String xtraDir = this.getExtraDirectories();
 		String filePath2LoadFrom = xtraDir + img;
 		return JRLoader.loadBytesFromLocation(filePath2LoadFrom);
+	}
+	
+	/**
+	 * TODO: add security checks
+	 */
+	public JasperReport loadReport(String clientID, String location) throws Exception {
+		Object obj = JRLoader.loadObject(location);
+		JasperReport loadedReport = null;
+		if (obj instanceof JasperReport)
+		{
+			loadedReport = (JasperReport)obj;
+		}
+		return loadedReport;
 	}
 	
 	/**

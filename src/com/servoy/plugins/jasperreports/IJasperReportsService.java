@@ -67,5 +67,7 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws RemoteException, Exception;
 
 	public byte[] loadImage(String clientID, String image) throws RemoteException, Exception;
+	
+	public JasperReport loadReport(String clientID, String location) throws RemoteException, Exception;
 
 }

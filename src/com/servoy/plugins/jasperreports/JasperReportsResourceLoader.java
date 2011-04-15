@@ -1,9 +1,8 @@
 package com.servoy.plugins.jasperreports;
 
 import java.awt.Image;
-import java.rmi.RemoteException;
 
-import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRImageLoader;
 
 public class JasperReportsResourceLoader {
@@ -21,6 +20,21 @@ public class JasperReportsResourceLoader {
 		byte[] imgBytes = jasperReportsService.loadImage(jasperReportsClientId, image);
 		
 		return JRImageLoader.loadImage(imgBytes);
+	}
+	
+	public static JasperReport loadReport(String location) throws Exception {
+		
+		IJasperReportsService jasperReportsService = JasperReportsProvider.jasperReportsLocalService.get();
+		String jasperReportsClientId = JasperReportsProvider.jasperReportsLocalClientID.get();
+		
+		if (jasperReportsService == null || jasperReportsClientId == null)
+		{	
+			return null;
+		}
+		
+		JasperReport report = jasperReportsService.loadReport(jasperReportsClientId, location);
+				
+		return report;
 	}
 	
 }
