@@ -830,7 +830,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	public String js_getPluginVersion() {
-		return "3.1.0";
+		return "3.2.0";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed
