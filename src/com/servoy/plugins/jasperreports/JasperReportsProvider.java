@@ -55,6 +55,7 @@ import net.sf.jasperreports.engine.JRPrintText;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.util.JRClassLoader;
+import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.JRViewer;
 import net.sf.jasperreports.view.JasperViewer;
@@ -367,12 +368,20 @@ public class JasperReportsProvider implements IScriptObject {
 			String type, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception {
 		return runReport(source, report, arg, type, parameters, localeString,
-				moveTableOfContent);
+				moveTableOfContent, false);
 	}
 
-	private byte[] runReport(Object source, String report, Object arg,
+	// public, but not scriptable - just for the corresponding Bean's usage
+	public byte[] runReportForBean(Object source, String report, Object arg,
 			String type, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception {
+		return runReport(source, report, arg, type, parameters, localeString,
+				moveTableOfContent, true);
+	}
+	
+	private byte[] runReport(Object source, String report, Object arg,
+			String type, Object parameters, String localeString,
+			Boolean moveTableOfContent, Boolean returnJustJasperPrint) throws Exception {
 
 		// Check if the directory.jasper.report setting has not yet been set.
 		String pluginReportsDirectory = plugin.getJasperReportsDirectory();
@@ -384,13 +393,12 @@ public class JasperReportsProvider implements IScriptObject {
 			throw new Exception(noPluginDirMsg);
 		}
 
-		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin
-				.getIClientPluginAccess());
-
-		Map params = (Map) JSArgumentsUnwrap.unwrapJSObject(parameters, plugin
-				.getIClientPluginAccess());
+		// unwrapping of arguments
+		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin.getIClientPluginAccess());
+		Map params = (Map) JSArgumentsUnwrap.unwrapJSObject(parameters, plugin.getIClientPluginAccess());
 		if (params == null)
 			params = new HashMap();
+		
 		boolean showPrintDialog = false;
 		String file = "";
 		boolean nooutput = false;
@@ -420,14 +428,12 @@ public class JasperReportsProvider implements IScriptObject {
 			}
 		}
 
+		// check out type of data source (and how to run reports)
 		IJasperReportRunner jasperReportRunner;
 		if (source instanceof String) {
 			jasperReportRunner = jasperReportService; // run report remote
 		} else if (source instanceof JRDataSource) {
-			jasperReportRunner = new JasperReportRunner(jasperReportService); // run
-																				// reports
-																				// in
-																				// client
+			jasperReportRunner = new JasperReportRunner(jasperReportService); // run reports in client
 		} else {
 			throw new Exception("Unsupported data source: " + source.getClass());
 		}
@@ -456,15 +462,12 @@ public class JasperReportsProvider implements IScriptObject {
 					}
 				}
 
+				// handle i18n
 				int applicationType = plugin.getIClientPluginAccess().getApplicationType();
 				JasperReportsI18NHandler.appendI18N(params,	applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString); 
 
-				byte[] jsp = null;
-				// Report Viewer requested, or Report print in WC requested
-
 				// Fill the report and get the JasperPrint instance.
-				// Also modify the JasperPrint in case you want to move the
-				// table of contents.
+				// Also modify the JasperPrint in case you want to move the table of contents.
 				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), source,
 						report, params, plugin.getJasperReportsDirectory(),	plugin.getJasperExtraDirectories());
 				if (moveTableOfContent) {
@@ -472,7 +475,16 @@ public class JasperReportsProvider implements IScriptObject {
 					jp = moveTableOfContents(jp, iP);
 				}
 				
+				// this is for the JasperViewerServoyBean
+				if (returnJustJasperPrint)
+				{
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					JRSaver.saveObject(jp, baos);
+					return baos.toByteArray();
+				}
+				
 				Map exporterParams = createExporterParametersMap(params);
+				byte[] jsp = null;
 
 				// 1. WebClient
 				if (applicationType == IClientPluginAccess.WEB_CLIENT) {
@@ -537,7 +549,7 @@ public class JasperReportsProvider implements IScriptObject {
 						}
 
 						if (viewerExportFormats != null)
-							setViewerSaveContributors(jasperviewer.getJRViwer(), viewerExportFormats);
+							setViewerSaveContributors(jasperviewer.getJRViewer(), viewerExportFormats);
 
 						if (jp != null && jp.getPages() != null
 								&& jp.getPages().size() > 0) {
@@ -550,7 +562,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 					// b. SmartClient "print"
 					// Printing only supported in SC. Printing in WC handled
-					// previously though PDF push
+					// previously though PDF push.
 					else if (type.toLowerCase().startsWith("print")) {
 						// Shows print dialog before printing (if arg is true/"true")
 						if (showPrintDialog || file.equalsIgnoreCase("true")
@@ -1046,32 +1058,6 @@ public class JasperReportsProvider implements IScriptObject {
 		return plugin.getIClientPluginAccess().getClientID();
 	}
 
-	/**
-	 * Modified JasperViewer, so that we have access to the JRViewer instance
-	 * inside.
-	 * 
-	 */
-	public class CustomizedJasperViewer extends JasperViewer {
-
-		private static final long serialVersionUID = 1L;
-
-		public CustomizedJasperViewer(JasperPrint jasperPrint, boolean isExitOnClose, Locale locale) {
-			super(jasperPrint, isExitOnClose, locale);
-		}
-
-		public CustomizedJasperViewer(JasperPrint jasperPrint, boolean isExitOnClose) {
-			super(jasperPrint, isExitOnClose);
-		}
-
-		public void setJRViewer(JRViewer jrv) {
-			super.viewer = jrv;
-		}
-
-		public JRViewer getJRViwer() {
-			return super.viewer;
-		}
-	}
-	
 	private Map createExporterParametersMap(Map p)
 	{
 		Map<String, Integer> aux = new HashMap<String, Integer>();
@@ -1086,5 +1072,5 @@ public class JasperReportsProvider implements IScriptObject {
 
 		return aux;
 	}
-
+	
 }

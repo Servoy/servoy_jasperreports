@@ -10,6 +10,10 @@
 	<property name="jar" value="${project_name}.jar"/>
 	<property name="servoy_lib" value="servoy_lib"/>
 	<property name="resources" value="resources"/>
+	<property name="src_plugin" value="/com/servoy/plugins/jasperreports"/>
+	<property name="bean" value="/com/servoy/plugins/jasperreports/bean"/>
+	<property name="images" value="/com/servoy/plugins/jasperreports/images"/>
+		
 	
 	<path id="classpath">
         <fileset dir="${servoy_lib}">
@@ -46,7 +50,9 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar jarfile="${install}/${lib}/${jar}" basedir="${build}"/>
+		<jar jarfile="${install}/${lib}/${jar}" 
+			basedir="${build}"
+			excludes="${bean}/**"/>
 	</target>
 
 	<!-- copy and compile all .java files from ${src} to ${build}  -->
@@ -65,6 +71,14 @@
 		<rmic classname="com.servoy.plugins.jasperreports.JasperReportsServer" base="${build}/">
 			<classpath refid="classpath"/> 
 		</rmic>
+	</target>
+	
+	<target name="jrbean.jar" depends="compile">
+		<jar destfile="${install}/${lib}/jrbean.jar" 
+			manifest="${resources}/MANIFEST.MF"
+			basedir="${build}"
+			excludes="${src_plugin}/*.class,*.txt, ${images}/**"
+		/>
 	</target>
   
 </project>
