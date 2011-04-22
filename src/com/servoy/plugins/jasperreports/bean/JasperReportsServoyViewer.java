@@ -57,7 +57,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	}
 
 	public boolean stopUIEditing(boolean arg0) {
-		return false;
+		return true;
 	}
 
 	public void initialize(IClientPluginAccess app) {
