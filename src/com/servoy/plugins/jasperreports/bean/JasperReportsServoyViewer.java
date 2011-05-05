@@ -451,19 +451,6 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		return isTransparent();
 	}
 	
-	private void checkReportsDirectory() throws Exception
-	{
-		if (provider.js_getReportDirectory() == null) {
-			String serverSetting = service.getReportDirectory();
-			if (serverSetting == null || (serverSetting != null && ("").equals(serverSetting.trim()))) {
-				String noReportsDirMsg = "Your jasper.report.directory setting has not been set.\nReport running will abort.";
-				Debug.error(noReportsDirMsg);
-				throw new Exception(noReportsDirMsg);
-			}
-			provider.js_setReportDirectory(serverSetting);
-		}
-	}
-	
 	public void js_setReportsDirectory(String reportsDirectory) throws Exception {
 		provider.js_setReportDirectory(reportsDirectory);
 	}
@@ -498,15 +485,14 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	public void showReport(Object source, String report, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception{
 		
-		checkReportsDirectory();
 		byte[] jasperPrintAsByteArray = provider.runReportForBean(source, report, null, "view", parameters, localeString, moveTableOfContent);
 		InputStream jasperPrintAsStream = new ByteArrayInputStream(jasperPrintAsByteArray);
 		JasperPrint jp = (JasperPrint) JRLoader.loadObject(jasperPrintAsStream);
 		CustomizedJasperViewer myViewer = new CustomizedJasperViewer(jp, false);
 		JRViewer jrv = myViewer.getJRViewer();
-		add(jrv,BorderLayout.CENTER);
+		if (getComponents().length > 0) removeAll();
+		add(jrv, BorderLayout.CENTER);
+		this.validate();
 	}
-
-	
 
 }
