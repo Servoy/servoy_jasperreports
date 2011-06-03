@@ -49,72 +49,61 @@ import com.servoy.j2db.util.ServoyException;
 public class JRFoundSetDataSource implements JRRewindableDataSource {
 
 	private final IClientPluginAccess pluginAccess;
-	private final IFoundSet foundSet;
+	private final FoundsetWithIndex foundSet;
 
-	private Map<String, IFoundSet> relatedFoundSets;
+	private Map<String, FoundsetWithIndex> relatedFoundSets;
 
 	public  JRFoundSetDataSource (IClientPluginAccess pluginAccess, IFoundSet foundSet)
 	{
 		this.pluginAccess = pluginAccess;
-		this.foundSet = foundSet;
+		this.foundSet = new FoundsetWithIndex(foundSet);
 		moveFirst();
 	}
 
 	public boolean next() {
 	
-		IFoundSet deepestFoundSet = foundSet;
+		FoundsetWithIndex deepestFoundSet = foundSet;
 		String deepestPath = null;
 
-		int next;
 		if (relatedFoundSets == null)
 		{
 			// initial (or re-wound) state
-			relatedFoundSets = new HashMap<String, IFoundSet>();
-			next = 0;
+			relatedFoundSets = new HashMap<String, FoundsetWithIndex>();
 		}
 		else
 		{
 			// find the deepest foundset and progress that one
-			Iterator<Map.Entry<String, IFoundSet>> iterator = relatedFoundSets.entrySet().iterator();
+			Iterator<Map.Entry<String, FoundsetWithIndex>> iterator = relatedFoundSets.entrySet().iterator();
 			int maxDepth = 0;
 			while (iterator.hasNext())
 			{
-				Map.Entry<String, IFoundSet> entry = iterator.next();
+				Map.Entry<String, FoundsetWithIndex> entry = iterator.next();
 				int length = ((String)entry.getKey()).split("\\.").length;
 				if (length > maxDepth)
 				{
 					maxDepth = length;
-					deepestFoundSet = (IFoundSet) entry.getValue();
+					deepestFoundSet = entry.getValue();
 					deepestPath = (String) entry.getKey();
 				}
 			}
-
-			// progress 1 record
-			next = deepestFoundSet.getSelectedIndex()+1;
 		}
-
-		if (next >= deepestFoundSet.getSize())
+		
+		// progress 1 record
+		if (deepestFoundSet.advance())
 		{
-			// we are at the end of the deepest foundSset
-			if (deepestPath == null)
-			{
-				// we are in the main foundSet
-				return false;
-			}
-			// else we completed a related foundSet, progress the next deepest one
-			relatedFoundSets.remove(deepestPath);
-			return next();
+			// more data in the deepest foundSet
+			return true;
 		}
-
-		deepestFoundSet.setSelectedIndex(next);
-		if (next != deepestFoundSet.getSelectedIndex())
+		
+		// we are at the end of the deepest foundSset
+		if (deepestPath == null)
 		{
-			// could not progress to next record
+			// we are in the main foundSet
 			return false;
 		}
-
-		// more data in the deepest foundSet
-		return true;
+		// else we completed a related foundSet, progress the next deepest one
+		relatedFoundSets.remove(deepestPath);
+		return next();
 	}
 
 	public Object getFieldValue(JRField jrField) throws JRException {
@@ -165,7 +154,7 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 	 */
 	protected Object getDataProviderValue(String dataProviderId) throws ServoyException {
 
-		IFoundSet searchFoundSet = foundSet;
+		FoundsetWithIndex searchFoundSet = foundSet;
 		String searchName = dataProviderId;
 		if (!dataProviderId.startsWith("globals.")) // globals are not related fields
 		{
@@ -175,29 +164,28 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 			for (int i = 0; i < parts.length-1; i++)
 			{
 				path = (path==null)?parts[i]:(path + '.' + parts[i]);
-				IFoundSet relatedFoundSet = (IFoundSet) relatedFoundSets.get(path);
+				FoundsetWithIndex relatedFoundSet = relatedFoundSets.get(path);
 				if (relatedFoundSet == null)
 				{
-					IRecord record = searchFoundSet.getRecord(searchFoundSet.getSelectedIndex());
+					IRecord record = searchFoundSet.getCurrentRecord();
 					if (record == null)
 					{
 						return null;
 					}
-					relatedFoundSet = record.getRelatedFoundSet(parts[i], null);
-					if (relatedFoundSet == null)
+					IFoundSet rfs = record.getRelatedFoundSet(parts[i], null);
+					if (rfs == null)
 					{
 						return null;
 					}
-					relatedFoundSet = relatedFoundSet.copy(false);
-					relatedFoundSet.setSelectedIndex(0);
-					relatedFoundSets.put(path, relatedFoundSet);
+					relatedFoundSets.put(path, relatedFoundSet = new FoundsetWithIndex(rfs));
+					relatedFoundSet.advance(); // go to first record
 				}
 				searchFoundSet = relatedFoundSet;
 			}
 			searchName = parts[parts.length-1];
 		}
 
-		IRecord record = searchFoundSet.getRecord(searchFoundSet.getSelectedIndex());
+		IRecord record = searchFoundSet.getCurrentRecord();
 		if (record == null)
 		{
 			return null;
@@ -207,6 +195,41 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 
 	public void moveFirst() {
 		relatedFoundSets = null;
+		foundSet.rewind();
 	}
 
+	/**
+	 * 	Wrapper for foundset with current index.
+	 * 
+	 * @author rgansevles
+	 *
+	 */
+	public static class FoundsetWithIndex {
+
+		public final IFoundSet foundSet;
+		private int index;
+
+		public FoundsetWithIndex(IFoundSet foundSet) {
+			this.foundSet = foundSet;
+			rewind();
+		}
+		
+		public void rewind() {
+			this.index = -1;
+		}
+
+		public IRecord getCurrentRecord() {
+			return foundSet.getRecord(index);
+		}
+
+		public boolean advance()
+		{
+			if (foundSet.getSize() > index+1)
+			{
+				index++;
+				return true;
+			}
+			return false;
+		}
+	}
 }
