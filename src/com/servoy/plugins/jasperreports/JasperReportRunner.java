@@ -203,9 +203,19 @@ public class JasperReportRunner implements IJasperReportRunner {
 		}		
 		
 		exporter.exportReport();
+
+		// cleanup, if virtualizers have been used (NOTE: file virtualizer does cleanup itself)
+		if (virtualizer != null) 
+		{
+			virtualizer.cleanup();
+			virtualizer = null;
+		}
+		
 		return baos.toByteArray();
 	}
 	
+	
+	private static JRAbstractLRUVirtualizer virtualizer = null;
 	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map parameters, String repdir, String extraDirs) throws JRException {
 		// client - fill (the compiled) report
 		Debug.trace("JasperTrace: Directory: " + repdir);
@@ -281,7 +291,7 @@ public class JasperReportRunner implements IJasperReportRunner {
 			testDir = null;
 		
 		// Virtualizers
-		JRAbstractLRUVirtualizer virtualizer = null;
+		virtualizer = null;
 		if (VIRTUALIZER_FILE.equalsIgnoreCase(virtualizerType)) {
 			virtualizer = new JRFileVirtualizer(2, pageOutDir);
 		} else if (VIRTUALIZER_SWAP_FILE.equalsIgnoreCase(virtualizerType)) {
