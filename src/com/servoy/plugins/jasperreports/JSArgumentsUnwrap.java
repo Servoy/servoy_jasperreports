@@ -61,12 +61,7 @@ public class JSArgumentsUnwrap {
 		
 		if (o instanceof IFoundSet) {
 			// foundSets are used as data sources for sub-reports
-			try {
-				return new JRFoundSetDataSource(clientPluginAccess, ((IFoundSet)o).copy(false));
-			} catch (ServoyException e) {
-				Debug.error(e);
-				throw new JRException(e.getMessage());
-			}
+			return new JRFoundSetDataSource(clientPluginAccess, (IFoundSet)o);
 		}
 		
 		if (o instanceof ScriptableObject) {
