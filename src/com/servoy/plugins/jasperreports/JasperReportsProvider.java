@@ -380,7 +380,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 	
 	private byte[] runReport(Object source, String report, Object arg,
-			String type, Object parameters, String localeString,
+			String exportFormat, Object parameters, String localeString,
 			Boolean moveTableOfContent, Boolean returnJustJasperPrint) throws Exception {
 
 		// Check if the directory.jasper.report setting has not yet been set.
@@ -393,6 +393,8 @@ public class JasperReportsProvider implements IScriptObject {
 			throw new Exception(noPluginDirMsg);
 		}
 
+		String type = exportFormat.toLowerCase();
+		
 		// unwrapping of arguments
 		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin.getIClientPluginAccess());
 		Map params = (Map) JSArgumentsUnwrap.unwrapJSObject(parameters, plugin.getIClientPluginAccess());
