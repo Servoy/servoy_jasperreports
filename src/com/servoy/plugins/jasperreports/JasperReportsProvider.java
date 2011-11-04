@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.print.PrintService;
+import javax.swing.WindowConstants;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRPrintElement;
@@ -302,10 +303,8 @@ public class JasperReportsProvider implements IScriptObject {
 			method = clazz.getMethod("setPrintService",
 					new Class[] { printServiceClass });
 			method.invoke(job, new Object[] { printService });
-		} catch (NoSuchMethodException e) {
-		} catch (IllegalAccessException e) {
-		} catch (InvocationTargetException e) {
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
+			Debug.error(e);
 		}
 	}
 
@@ -361,14 +360,14 @@ public class JasperReportsProvider implements IScriptObject {
 			String type, Object parameters, String localeString)
 			throws Exception {
 		return js_runReport(source, report, arg, type, parameters,
-				localeString, false);
+				localeString, Boolean.FALSE);
 	}
 
 	public byte[] js_runReport(Object source, String report, Object arg,
 			String type, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception {
 		return runReport(source, report, arg, type, parameters, localeString,
-				moveTableOfContent, false);
+				Boolean.TRUE.equals(moveTableOfContent), false);
 	}
 
 	// public, but not scriptable - just for the corresponding Bean's usage
@@ -376,12 +375,12 @@ public class JasperReportsProvider implements IScriptObject {
 			String type, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception {
 		return runReport(source, report, arg, type, parameters, localeString,
-				moveTableOfContent, true);
+				Boolean.TRUE.equals(moveTableOfContent), true);
 	}
 	
 	private byte[] runReport(Object source, String report, Object arg,
 			String exportFormat, Object parameters, String localeString,
-			Boolean moveTableOfContent, Boolean returnJustJasperPrint) throws Exception {
+			boolean moveTableOfContent, boolean returnJustJasperPrint) throws Exception {
 
 		// Check if the directory.jasper.report setting has not yet been set.
 		String pluginReportsDirectory = plugin.getJasperReportsDirectory();
@@ -451,18 +450,6 @@ public class JasperReportsProvider implements IScriptObject {
 			try {
 				Thread.currentThread().setContextClassLoader(plugin.getIClientPluginAccess().getPluginManager().getClassLoader());
 				Debug.trace("JasperTrace: JasperReport service found");
-
-				if (parameters != null) {
-					for (Iterator iter = params.keySet().iterator(); iter.hasNext();) {
-						Object key = iter.next();
-						Object value = params.get(key);
-						if (value instanceof ByteArrayInputStream) {
-							byte[] buf = null;
-							ByteArrayInputStream is = (ByteArrayInputStream) value;
-							is.read(buf);
-						}
-					}
-				}
 
 				// handle i18n
 				int applicationType = plugin.getIClientPluginAccess().getApplicationType();
@@ -556,7 +543,7 @@ public class JasperReportsProvider implements IScriptObject {
 						if (jp != null && jp.getPages() != null
 								&& jp.getPages().size() > 0) {
 							jasperviewer.setVisible(true);
-							jasperviewer.setDefaultCloseOperation(JasperViewer.DISPOSE_ON_CLOSE);
+							jasperviewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						} else {
 							jasperviewer.dispose();
 						}
@@ -911,11 +898,11 @@ public class JasperReportsProvider implements IScriptObject {
 		JRSaveContributor[] jrSaveContribs = new JRSaveContributor[DEFAULT_CONTRIBUTORS.length];
 		for (int i = 0; i < DEFAULT_CONTRIBUTORS.length; i++) {
 			try {
-				Class saveContribClass = JRClassLoader.loadClassForName(DEFAULT_CONTRIBUTORS[i]);
+				Class<? extends JRSaveContributor> saveContribClass = JRClassLoader.loadClassForName(DEFAULT_CONTRIBUTORS[i]);
 				ResourceBundle jrViewerResBundel = ResourceBundle.getBundle(
 						"net/sf/jasperreports/view/viewer", jrv.getLocale());
-				Constructor constructor = saveContribClass.getConstructor(new Class[] { Locale.class, ResourceBundle.class });
-				JRSaveContributor saveContrib = (JRSaveContributor) constructor.newInstance(new Object[] { jrv.getLocale(), jrViewerResBundel });
+				Constructor<? extends JRSaveContributor>  constructor = saveContribClass.getConstructor(new Class[] { Locale.class, ResourceBundle.class });
+				JRSaveContributor saveContrib = constructor.newInstance(new Object[] { jrv.getLocale(), jrViewerResBundel });
 				jrSaveContribs[i] = saveContrib;
 			} catch (Exception e) {
 				Debug.error(e);
@@ -950,8 +937,6 @@ public class JasperReportsProvider implements IScriptObject {
 			if (pages != null && pages.size() > 0) {
 				String key = "HIDDEN TEXT TO MARK THE INSERT PAGE";
 				JRPrintPage page = null;
-				Collection elements = null;
-				Iterator it = null;
 				JRPrintElement element = null;
 				int i = pages.size() - 1;
 				int k = 0;
@@ -960,14 +945,12 @@ public class JasperReportsProvider implements IScriptObject {
 					while (!isFoundPageIndex) {
 
 						page = (JRPrintPage) pages.get(k);
-						elements = page.getElements();
+						Collection<JRPrintElement> elements = page.getElements();
 
 						if (elements != null && elements.size() > 0) {
-							it = elements.iterator();
-
+							Iterator<JRPrintElement> it = elements.iterator();
 							while (it.hasNext() && !isFoundPageIndex) {
-								element = (JRPrintElement) it.next();
-
+								element = it.next();
 								if (element instanceof JRPrintText) {
 									if (key.equals(((JRPrintText) element)
 											.getText())) {
@@ -1004,23 +987,21 @@ public class JasperReportsProvider implements IScriptObject {
 	 */
 	private static JasperPrint moveTableOfContents(JasperPrint jasperPrint, int insertPage) {
 		if (jasperPrint != null) {
-			List pages = jasperPrint.getPages();
+			List<JRPrintPage> pages = jasperPrint.getPages();
 			if (pages != null && pages.size() > 0) {
 				// finding WHAT to insert
 				String key = "HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS";
 				JRPrintPage page = null;
-				Collection elements = null;
-				Iterator it = null;
 				JRPrintElement element = null;
 				int i = pages.size() - 1;
 				boolean isFound = false;
 				while (i >= 0 && !isFound) {
 					page = (JRPrintPage) pages.get(i);
-					elements = page.getElements();
+					Collection<JRPrintElement> elements = page.getElements();
 					if (elements != null && elements.size() > 0) {
-						it = elements.iterator();
+						Iterator<JRPrintElement> it = elements.iterator();
 						while (it.hasNext() && !isFound) {
-							element = (JRPrintElement) it.next();
+							element = it.next();
 							if (element instanceof JRPrintText) {
 								if (key.equals(((JRPrintText) element)
 										.getText())) {
@@ -1060,7 +1041,7 @@ public class JasperReportsProvider implements IScriptObject {
 		return plugin.getIClientPluginAccess().getClientID();
 	}
 
-	private Map createExporterParametersMap(Map p)
+	private Map<String, Integer> createExporterParametersMap(Map p)
 	{
 		Map<String, Integer> aux = new HashMap<String, Integer>();
 		if (p == null) return null;
