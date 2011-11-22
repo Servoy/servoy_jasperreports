@@ -586,9 +586,9 @@ public class JasperReportsProvider implements IScriptObject {
 						}
 						// 3. SmartClient other output formats
 					} else {
+						jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(),
+								type, jp, plugin.getJasperExtraDirectories(), exporterParams);
 						if (!nooutput) {
-							jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(),
-									type, jp, plugin.getJasperExtraDirectories(), exporterParams);
 							saveByteArrayToFile(file, jsp);
 						}
 					}
