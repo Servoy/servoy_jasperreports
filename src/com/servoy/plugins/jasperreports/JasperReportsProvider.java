@@ -138,7 +138,8 @@ public class JasperReportsProvider implements IScriptObject {
 					{ "getReports" },
 					{ "filter" },
 					{ "Retrieve a String array of available reports, based on the reports directory." },
-					{ "// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports\n// No parameter or any string return all the reports\nvar result = plugins.jasperPluginRMI.getReports('NONCOMPILED');\napplication.output(result[0]);" } },
+					{ "// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports\n// No parameter returns all the reports\nvar result = plugins.jasperPluginRMI.getReports('NONCOMPILED');\napplication.output(result[0]);\n " 
+						+ "\n // using a string as the search filter\n//var result = plugins.jasperPluginRMI.getReports('*criteria*');\n//for(var i=0; i<result.length; i++)\n//application.output(result[i]);\n " } },
 			{
 					{ "getReportParameters" },
 					{ "report" },
@@ -771,16 +772,28 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	public String[] js_getReports(String filter) throws Exception {
-
 		if (filter.toUpperCase().compareTo("COMPILED") == 0) {
 			return getReports(true, false);
 		} else if (filter.toUpperCase().compareTo("NONCOMPILED") == 0) {
 			return getReports(false, true);
-		}
-
-		return getReports(true, true);
+		} else return getReports(filter);
 	}
+	
+	private String[] getReports(String filter)  throws Exception {
+		String[] reports = null;
+		connectJasperService();
 
+		try {
+			Debug.trace("JasperTrace: getReports starting");
+			reports = jasperReportService.getReports(plugin.getIClientPluginAccess().getClientID(), filter);
+			Debug.trace("JasperTrace: getReports finished");
+		} catch (Exception e) {
+			Debug.error(e);
+			throw new Exception(e.getMessage());
+		}
+		return reports;
+	}
+	
 	private String[] getReports(boolean compiled, boolean uncompiled)
 			throws Exception {
 

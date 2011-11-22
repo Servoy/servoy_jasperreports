@@ -60,6 +60,9 @@
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-collections.jar&quot; download=&quot;lazy&quot; part=&quot;commons-collections&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.collections.*&quot; part=&quot;commons-collections&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-io.jar&quot; download=&quot;lazy&quot; part=&quot;commons-io&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.io.*&quot; part=&quot;commons-io&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-logging.jar&quot; download=&quot;lazy&quot; part=&quot;commons-logging&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.logging.*&quot; part=&quot;commons-logging&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		

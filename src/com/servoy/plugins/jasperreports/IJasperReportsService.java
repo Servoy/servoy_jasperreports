@@ -57,6 +57,8 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 	public String getExtraDirectories() throws RemoteException, Exception;
 
 	public String[] getReports(String clientID, boolean compiled, boolean uncompiled) throws RemoteException, Exception;
+	
+	public String[] getReports(String clientID, String filter) throws RemoteException, Exception;
 
 	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws RemoteException, Exception;
 

@@ -49,6 +49,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
@@ -70,6 +73,7 @@ import com.servoy.j2db.util.Debug;
 /**
  * Iserver impl.
  */
+@SuppressWarnings("rawtypes")
 public class JasperReportsServer implements IJasperReportsService, IServerPlugin {
 	
 	private Properties settings;
@@ -538,12 +542,90 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return req;
 	}
 
-	public String[] getReports(String clientID, boolean compiled, boolean uncompiled) throws Exception {
-		
+	public String[] getReports(String clientID, String filePattern) throws Exception {
 		String reportsdir = getReportDirectory();
-
+		List files = getFileListing(new File(reportsdir), filePattern);
+		return getListOfFiles(files);
+	}
+	
+	public List getFileListing(File startingDirectory, String filePattern) throws FileNotFoundException
+	{
+		checkStartingDirectory(startingDirectory);
+		FileFilter wildcardFileFilter = new WildcardFileFilter(filePattern,IOCase.INSENSITIVE);
+		File[] filesAndDirs = startingDirectory.listFiles(wildcardFileFilter);
+		List filesDirs = Arrays.asList(filesAndDirs);
+		List result = new ArrayList();
+		
+		for (int i = 0; i < filesDirs.size(); i++) {
+			File file = (File) filesDirs.get(i);
+			if (!file.isFile()) {
+				List deeperList = getFileListing(file, filePattern);
+				result.addAll(deeperList);
+			} else {
+				result.add(file);
+			}
+		}
+		return result;
+	}
+	
+	public String[] getReports(String clientID, boolean compiled, boolean uncompiled) throws Exception {
+		String reportsdir = getReportDirectory();
 		List files = getFileListing(new File(reportsdir), compiled, uncompiled);
+		return getListOfFiles(files);
+	}
+	
+	private List getFileListing(File startingDirectory, boolean compiled,
+			boolean uncompiled) throws FileNotFoundException {
 
+		checkStartingDirectory(startingDirectory);
+		
+		List result = new ArrayList();
+
+		ArrayList extensions = new ArrayList();
+		if (compiled)
+			extensions.add(".JASPER");
+		if (uncompiled)
+			extensions.add(".JRXML");
+
+		FileFilter filter = new JasperFilter(extensions);
+		File[] filesAndDirs = startingDirectory.listFiles(filter);
+		List filesDirs = Arrays.asList(filesAndDirs);
+
+		for (int i = 0; i < filesDirs.size(); i++) {
+			File file = (File) filesDirs.get(i);
+			if (!file.isFile()) {
+				List deeperList = getFileListing(file, compiled, uncompiled);
+				result.addAll(deeperList);
+			} else {
+				result.add(file);
+			}
+		}
+
+		return result;
+	}
+	
+	private void checkStartingDirectory(File startingDirectory) throws FileNotFoundException
+	{
+		if (startingDirectory == null) {
+			throw new IllegalArgumentException("Directory should not be null.");
+		}
+		if (!startingDirectory.exists()) {
+			throw new FileNotFoundException("Directory does not exist: "
+					+ startingDirectory);
+		}
+		if (!startingDirectory.isDirectory()) {
+			throw new IllegalArgumentException("Is not a directory: "
+					+ startingDirectory);
+		}
+		if (!startingDirectory.canRead()) {
+			throw new IllegalArgumentException("Directory cannot be read: "
+					+ startingDirectory);
+		}
+	}
+	
+	public String[] getListOfFiles(List files) throws Exception
+	{
+		String reportsdir = getReportDirectory();
 		String[] list = new String[files.size()];
 
 		for (int i = 0; i < files.size(); i++) {
@@ -556,7 +638,6 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			
 			list[i] = filen;
 		}
-
 		return list;
 	}
 
@@ -585,52 +666,6 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			}
 			return (acc);
 		}
-	}
-
-	private List getFileListing(File startingDirectory, boolean compiled,
-			boolean uncompiled) throws FileNotFoundException {
-
-		if (startingDirectory == null) {
-			throw new IllegalArgumentException("Directory should not be null.");
-		}
-		if (!startingDirectory.exists()) {
-			throw new FileNotFoundException("Directory does not exist: "
-					+ startingDirectory);
-		}
-		if (!startingDirectory.isDirectory()) {
-			throw new IllegalArgumentException("Is not a directory: "
-					+ startingDirectory);
-		}
-		if (!startingDirectory.canRead()) {
-			throw new IllegalArgumentException("Directory cannot be read: "
-					+ startingDirectory);
-		}
-
-		List result = new ArrayList();
-
-		ArrayList extensions = new ArrayList();
-		if (compiled)
-			extensions.add(".JASPER");
-		if (uncompiled)
-			extensions.add(".JRXML");
-
-		FileFilter filter = new JasperFilter(extensions);
-		File[] filesAndDirs = startingDirectory.listFiles(filter);
-		List filesDirs = Arrays.asList(filesAndDirs);
-
-		for (int i = 0; i < filesDirs.size(); i++) {
-
-			File file = (File) filesDirs.get(i);
-
-			if (!file.isFile()) {
-				List deeperList = getFileListing(file, compiled, uncompiled);
-				result.addAll(deeperList);
-			} else {
-				result.add(file);
-			}
-		}
-
-		return result;
 	}
 
 	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws Exception {
