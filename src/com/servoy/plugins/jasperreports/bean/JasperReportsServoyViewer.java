@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -23,7 +25,7 @@ import com.servoy.j2db.scripting.IScriptObject;
 import com.servoy.j2db.util.ComponentFactoryHelper;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.PersistHelper;
-import com.servoy.plugins.jasperreports.CustomizedJasperViewer;
+import com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE;
 import com.servoy.plugins.jasperreports.IJasperReportsService;
 import com.servoy.plugins.jasperreports.JasperReportsPlugin;
 import com.servoy.plugins.jasperreports.JasperReportsProvider;
@@ -42,6 +44,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	private IJasperReportsService service = null;
 	private JasperReportsPlugin jasper = null;
 	private JasperReportsProvider provider = null;
+	protected String currentDisplayMode = null;
 	
 	public JasperReportsServoyViewer()
 	{
@@ -103,6 +106,10 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		{
 			return new String[] { "extraDirectories" };
 		}
+		else if ("displayMode".equals(methodName))
+		{
+			return new String[] { "displayMode" };
+		}
 		else if ("font".equals(methodName))
 		{
 			return new String[] { "fontString" };
@@ -159,6 +166,16 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 			retval.append(getToolTip(methodName));
 			retval.append("\n"); //$NON-NLS-1$
 			retval.append("%%elementName%%.border='LineBorder,4,#000000';\n");
+			return retval.toString();
+		}
+		else if ("displayMode".equals(methodName))
+		{
+			StringBuffer retval = new StringBuffer();
+			retval.append("//"); //$NON-NLS-1$
+			retval.append(getToolTip(methodName));
+			retval.append("\n"); //$NON-NLS-1$
+			retval.append("%%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;\n");
+			retval.append("%%elementName%%.showReport(myDataSource,\"/myReport.jrxml\",null);\n");
 			return retval.toString();
 		}
 		else if ("extraDirectories".equals(methodName))
@@ -261,6 +278,10 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		else if ("border".equals(methodName))
 		{
 			return "Sets or gets the border type, thickness and color of the Bean.";
+		}
+		else if ("displayMode".equals(methodName))
+		{
+			return "Sets or gets the display mode of the Bean.";
 		}
 		else if ("extraDirectories".equals(methodName))
 		{
@@ -400,6 +421,21 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		return ComponentFactoryHelper.createBorderString(getBorder());
 	}
 	
+	public String js_getDisplayMode() {
+		//make a pretty name for the display mode type
+		String disp = "";
+		for (String d : currentDisplayMode.split("_")) 
+		{ 
+			d = d.substring(0, 1).toUpperCase() + d.substring(1);
+			disp = disp + d + " ";
+		}
+		return disp.substring(0, disp.length() - 1);
+	}
+	
+	public void js_setDisplayMode(String displayMode) {
+		this.currentDisplayMode = displayMode;
+	}
+	
 	public void js_setFont(String fontString) {
 		if (fontString != null) {
 			setFont(PersistHelper.createFont(fontString));
@@ -481,6 +517,73 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		showReport(source, report, parameters, localeString, moveTableOfContent);
 	}
 	
+	protected JRViewerWrapper jrv;
+	private class JRViewerWrapper extends JRViewer
+	{
+		private static final long serialVersionUID = 1L;
+
+		public JRViewerWrapper(JasperPrint jp)
+		{
+			super(jp);
+		}
+		
+		public void btnFitPagePressed()
+		{
+			btnFitPage.setSelected(true);
+			btnActualSize.setSelected(false);
+			btnFitWidth.setSelected(false);
+			cmbZoom.setSelectedIndex(-1);
+		}
+		
+		public boolean isBtnFitPagePressed()
+		{
+			return btnFitPage.isSelected();
+		}
+		
+		public void selectBtnFitPage()
+		{
+			btnFitPage.setSelected(true);
+		}
+		
+		
+		public void btnFitWidthPressed()
+		{
+			btnFitWidth.setSelected(true);
+			btnFitPage.setSelected(false);
+			btnActualSize.setSelected(false);
+			cmbZoom.setSelectedIndex(-1);
+		}
+		
+		public boolean isBtnFitWidthPressed()
+		{
+			return btnFitWidth.isSelected();
+		}
+		
+		public void selectBtnFitWidth()
+		{
+			btnFitWidth.setSelected(true);
+		}
+		
+		public void btnActualSizePressed()
+		{
+			btnActualSize.setSelected(true);
+			btnFitPage.setSelected(false);
+			btnFitWidth.setSelected(false);
+			cmbZoom.setSelectedIndex(-1);
+			setZoomRatio(1);
+		}
+		
+		public boolean isBtnActualSizePressed()
+		{
+			return btnActualSize.isSelected();
+		}
+		
+		public void selectBtnActualSize()
+		{
+			btnActualSize.setSelected(true);
+		}
+	}
+	
 	// main functionality
 	public void showReport(Object source, String report, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception{
@@ -488,10 +591,47 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		byte[] jasperPrintAsByteArray = provider.runReportForBean(source, report, null, "view", parameters, localeString, moveTableOfContent);
 		InputStream jasperPrintAsStream = new ByteArrayInputStream(jasperPrintAsByteArray);
 		JasperPrint jp = (JasperPrint) JRLoader.loadObject(jasperPrintAsStream);
-		CustomizedJasperViewer myViewer = new CustomizedJasperViewer(jp, false);
-		JRViewer jrv = myViewer.getJRViewer();
+		jrv = new JRViewerWrapper(jp);
 		if (getComponents().length > 0) removeAll();
 		add(jrv, BorderLayout.CENTER);
+		
+		jrv.addComponentListener(new ComponentListener() {
+			public void componentResized(ComponentEvent e) { 
+				// no buttons selected (yet)
+				if (!jrv.isBtnActualSizePressed() && !jrv.isBtnFitPagePressed() && !jrv.isBtnFitWidthPressed())
+				{ 
+					if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE.equals(currentDisplayMode)) jrv.selectBtnFitPage();
+					else if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH.equals(currentDisplayMode)) jrv.selectBtnFitWidth();
+					else if (JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE.equals(currentDisplayMode)) jrv.selectBtnActualSize();
+				}
+
+				// if display mode set via scripting && button has been pressed, we resize accordingly
+				// else we resize with respect to the button pressed (we let the viewer do its job alone) 
+				if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE.equals(currentDisplayMode) && jrv.isBtnFitPagePressed())
+				{
+					jrv.setFitPageZoomRatio();
+					jrv.btnFitPagePressed();
+				}
+				else if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH.equals(currentDisplayMode) && jrv.isBtnFitWidthPressed())
+				{
+					jrv.setFitWidthZoomRatio();
+					jrv.btnFitWidthPressed();
+				}
+				else if (JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE.equals(currentDisplayMode) && jrv.isBtnActualSizePressed())
+				{
+					jrv.btnActualSizePressed();
+				}
+			}
+
+			public void componentMoved(ComponentEvent e) {
+			}
+
+			public void componentShown(ComponentEvent e) {
+			}
+
+			public void componentHidden(ComponentEvent e) {
+			}});
+		
 		this.validate();
 	}
 

@@ -285,7 +285,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	public Class[] getAllReturnedTypes() {
-		return new Class[] { OUTPUT_FORMAT.class };
+		return new Class[] { OUTPUT_FORMAT.class, JR_SVY_VIEWER_DISPLAY_MODE.class };
 	}
 
 	/**
