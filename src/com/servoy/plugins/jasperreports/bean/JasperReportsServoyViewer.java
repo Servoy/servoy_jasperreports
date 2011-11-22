@@ -45,6 +45,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	private JasperReportsPlugin jasper = null;
 	private JasperReportsProvider provider = null;
 	protected String currentDisplayMode = null;
+	private String[] beanViewerExportFormats = null;
 	
 	public JasperReportsServoyViewer()
 	{
@@ -97,6 +98,10 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		else if ("background".equals(methodName))
 		{
 			return new String[] { "background" };
+		}
+		else if ("beanViewerExportFormats".equals(methodName))
+		{
+			return new String[] { "beanViewerExportFormats" };
 		}
 		else if ("border".equals(methodName))
 		{
@@ -157,6 +162,16 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 			retval.append(getToolTip(methodName));
 			retval.append("\n"); //$NON-NLS-1$
 			retval.append("%%elementName%%.background='#00ff00';\n");
+			return retval.toString();
+		}
+		else if ("beanViewerExportFormats".equals(methodName))
+		{
+			StringBuffer retval = new StringBuffer();
+			retval.append("//"); //$NON-NLS-1$
+			retval.append(getToolTip(methodName));
+			retval.append("\n"); //$NON-NLS-1$
+			retval.append("//also see plugins.jasperPluginRMI.viewerExportFormats \n");
+			retval.append("%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];\n");
 			return retval.toString();
 		}
 		else if ("border".equals(methodName))
@@ -274,6 +289,10 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		else if ("background".equals(methodName))
 		{
 			return "Sets or gets the background color of the Bean.";
+		}
+		else if ("beanViewerExportFormats".equals(methodName))
+		{
+			return "Gets or gets the file save/export formats of the Bean's viewer.";
 		}
 		else if ("border".equals(methodName))
 		{
@@ -509,12 +528,20 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 
 	public void js_showReport(Object source, String report, Object parameters, String localeString)
 			throws Exception {
-		js_showReport(source, report, parameters,localeString, false);
+		js_showReport(source, report, parameters,localeString, Boolean.valueOf(false));
 	}
 	
 	public void js_showReport(Object source, String report, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception{
 		showReport(source, report, parameters, localeString, moveTableOfContent);
+	}
+	
+	public void js_setBeanViewerExportFormats(String[] saveContribs) throws Exception {
+		beanViewerExportFormats = saveContribs;
+	}
+	
+	public String[] js_getBeanViewerExportFormats() throws Exception {
+		return beanViewerExportFormats;
 	}
 	
 	protected JRViewerWrapper jrv;
@@ -631,6 +658,9 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 
 			public void componentHidden(ComponentEvent e) {
 			}});
+		
+		if (beanViewerExportFormats != null)
+			JasperReportsProvider.setViewerSaveContributors(jrv, beanViewerExportFormats);
 		
 		this.validate();
 	}

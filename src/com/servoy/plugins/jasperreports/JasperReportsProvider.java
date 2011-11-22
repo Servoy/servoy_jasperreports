@@ -864,7 +864,7 @@ public class JasperReportsProvider implements IScriptObject {
 	 *            (default) first one in the "Save as type" list of the "Save"
 	 *            dialog.
 	 */
-	private void setViewerSaveContributors(JRViewer jrv,
+	public static void setViewerSaveContributors(JRViewer jrv,
 			String[] saveContributors) {
 
 		List<String> defContribs = new ArrayList<String>();
