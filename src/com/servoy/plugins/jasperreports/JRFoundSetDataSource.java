@@ -44,7 +44,6 @@ import net.sf.jasperreports.engine.JRRewindableDataSource;
 import com.servoy.j2db.dataprocessing.IFoundSet;
 import com.servoy.j2db.dataprocessing.IRecord;
 import com.servoy.j2db.plugins.IClientPluginAccess;
-import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.ServoyException;
 import com.servoy.j2db.util.Utils;
 
@@ -133,30 +132,28 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 			throw new JRException(e);
 		}
 		
-		return JSArgumentsUnwrap.unwrapJSObject(convertToFieldValueClass(value,jrField), pluginAccess);
+		return convertToFieldValueClass(JSArgumentsUnwrap.unwrapJSObject(value, pluginAccess), jrField);
 	}
 	
-	@SuppressWarnings("boxing")
 	private Object convertToFieldValueClass(Object value, JRField jrf)
 	{
 		if (value == null) return value;
-		if ("java.lang.Boolean".equals(jrf.getValueClassName()) && !(value instanceof Boolean)) return Utils.getAsBoolean(value);
-		else if ("java.lang.Byte".equals(jrf.getValueClassName()) && !(value instanceof Byte)) return Byte.valueOf(value.toString());
-		else if ("java.lang.Double".equals(jrf.getValueClassName()) && !(value instanceof Double)) return Utils.getAsDouble(value);
-		else if ("java.lang.Float".equals(jrf.getValueClassName()) && !(value instanceof Float)) return Utils.getAsFloat(value);
-		else if ("java.lang.Integer".equals(jrf.getValueClassName()) && !(value instanceof Integer)) return Utils.getAsInteger(value);
-		else if ("java.lang.Long".equals(jrf.getValueClassName()) && !(value instanceof Long)) return Utils.getAsLong(value);
-		else if ("java.lang.Short".equals(jrf.getValueClassName()) && !(value instanceof Short)) return Short.valueOf(value.toString());
+		if ("java.lang.Boolean".equals(jrf.getValueClassName()) && !(value instanceof Boolean)) return Boolean.valueOf(Utils.getAsBoolean(value));
+		else if ("java.lang.Byte".equals(jrf.getValueClassName()) && !(value instanceof Byte))
+		{
+			if (value instanceof Number) return Byte.valueOf(((Number)value).byteValue());
+			else Byte.valueOf(value.toString());
+		}
+		else if ("java.lang.Double".equals(jrf.getValueClassName()) && !(value instanceof Double)) return Double.valueOf(Utils.getAsDouble(value));
+		else if ("java.lang.Float".equals(jrf.getValueClassName()) && !(value instanceof Float)) return Float.valueOf(Utils.getAsFloat(value));
+		else if ("java.lang.Integer".equals(jrf.getValueClassName()) && !(value instanceof Integer)) return Integer.valueOf(Utils.getAsInteger(value));
+		else if ("java.lang.Long".equals(jrf.getValueClassName()) && !(value instanceof Long)) return Long.valueOf(Utils.getAsLong(value));
+		else if ("java.lang.Short".equals(jrf.getValueClassName()) && !(value instanceof Short))
+		{
+			if (value instanceof Number) return Short.valueOf(((Number)value).shortValue());
+			else Short.valueOf(value.toString());
+		}
 		else if ("java.lang.String".equals(jrf.getValueClassName()) && !(value instanceof String)) return value.toString();
-		else if ("java.lang.Date".equals(jrf.getValueClassName()) && !(value instanceof Date))
-			try {
-				return DateFormat.getDateInstance().parse(value.toString());
-			} catch (ParseException e) {
-				Debug.error(e);
-				return value;
-			}
-		else if ("java.sql.Timestamp".equals(jrf.getValueClassName()) && !(value instanceof Timestamp)) return Timestamp.valueOf(value.toString());
-		else if ("java.sql.Time".equals(jrf.getValueClassName()) && !(value instanceof Time)) return Time.valueOf(value.toString());
 		return value;
 	}
 
