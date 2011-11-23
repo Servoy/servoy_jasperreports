@@ -142,7 +142,7 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 		else if ("java.lang.Byte".equals(jrf.getValueClassName()) && !(value instanceof Byte))
 		{
 			if (value instanceof Number) return Byte.valueOf(((Number)value).byteValue());
-			else Byte.valueOf(value.toString());
+			else return Byte.valueOf(value.toString());
 		}
 		else if ("java.lang.Double".equals(jrf.getValueClassName()) && !(value instanceof Double)) return Double.valueOf(Utils.getAsDouble(value));
 		else if ("java.lang.Float".equals(jrf.getValueClassName()) && !(value instanceof Float)) return Float.valueOf(Utils.getAsFloat(value));
@@ -151,7 +151,7 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 		else if ("java.lang.Short".equals(jrf.getValueClassName()) && !(value instanceof Short))
 		{
 			if (value instanceof Number) return Short.valueOf(((Number)value).shortValue());
-			else Short.valueOf(value.toString());
+			else return Short.valueOf(value.toString());
 		}
 		else if ("java.lang.String".equals(jrf.getValueClassName()) && !(value instanceof String)) return value.toString();
 		return value;
