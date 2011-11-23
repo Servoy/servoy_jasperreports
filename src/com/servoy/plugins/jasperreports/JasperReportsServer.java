@@ -69,6 +69,7 @@ import com.servoy.j2db.plugins.IServerPlugin;
 import com.servoy.j2db.plugins.PluginException;
 import com.servoy.j2db.preference.PreferencePanel;
 import com.servoy.j2db.util.Debug;
+import com.servoy.j2db.util.Utils;
 
 /**
  * Iserver impl.
@@ -252,9 +253,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		try {
 			if (dbalias != null) {
 				Debug.trace("JasperTrace: getconnection for: " + dbalias);
-				if (txid != null) conn = application.getDBServerConnection(dbalias, txid);
-				else conn = application.getDBServerConnection(dbalias);
-
+				conn = application.getDBServerConnection(dbalias, txid);
 				if (conn == null) {
 					throw new IllegalArgumentException("No connection returned for database: " + dbalias);
 				}
@@ -268,10 +267,10 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 		} finally {
 			if (conn != null)
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
+				if (txid != null) {
+					Utils.releaseConnection(conn);
+				} else {
+					Utils.closeConnection(conn);
 				}
 				
 			if (serviceSet) {
