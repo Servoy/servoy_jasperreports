@@ -216,7 +216,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
-	public JasperPrint getJasperPrint(String clientID, Object source, String report, Map parameters, String repdir, String extraDirs) throws Exception {
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws Exception {
 		
 		String dbalias = null;
 		JRDataSource jrds = null;
@@ -252,7 +252,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		try {
 			if (dbalias != null) {
 				Debug.trace("JasperTrace: getconnection for: " + dbalias);
-				conn = application.getDBServerConnection(dbalias);
+				if (txid != null) conn = application.getDBServerConnection(dbalias, txid);
+				else conn = application.getDBServerConnection(dbalias);
 
 				if (conn == null) {
 					throw new IllegalArgumentException("No connection returned for database: " + dbalias);

@@ -37,6 +37,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,6 +65,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import com.servoy.j2db.dataprocessing.JSDataSet;
 import com.servoy.j2db.plugins.IClientPluginAccess;
 import com.servoy.j2db.scripting.IScriptObject;
+import com.servoy.j2db.server.ApplicationServer;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
@@ -432,7 +434,9 @@ public class JasperReportsProvider implements IScriptObject {
 
 		// check out type of data source (and how to run reports)
 		IJasperReportRunner jasperReportRunner;
+		String txid = null;
 		if (source instanceof String) {
+			txid = plugin.getIClientPluginAccess().getTransactionID((String)source);
 			jasperReportRunner = jasperReportService; // run report remote
 		} else if (source instanceof JRDataSource) {
 			jasperReportRunner = new JasperReportRunner(jasperReportService); // run reports in client
@@ -458,8 +462,11 @@ public class JasperReportsProvider implements IScriptObject {
 
 				// Fill the report and get the JasperPrint instance.
 				// Also modify the JasperPrint in case you want to move the table of contents.
-				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), source,
-						report, params, plugin.getJasperReportsDirectory(),	plugin.getJasperExtraDirectories());
+				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin
+							.getIClientPluginAccess().getClientID(), source,
+							txid, report, params, plugin.getJasperReportsDirectory(),
+							plugin.getJasperExtraDirectories());
+				
 				if (moveTableOfContent) {
 					int iP = getInsertPage(jp);
 					jp = moveTableOfContents(jp, iP);

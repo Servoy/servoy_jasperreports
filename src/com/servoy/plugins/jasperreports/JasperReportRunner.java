@@ -89,7 +89,7 @@ public class JasperReportRunner implements IJasperReportRunner {
 		this.jasperReportsService = jasperReportsService;
 	}
 
-	public JasperPrint getJasperPrint(String clientID, Object source, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception {
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception {
 		if (source == null) {
 			throw new IllegalArgumentException("no data source");
 		}
