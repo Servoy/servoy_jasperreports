@@ -24,6 +24,7 @@
 		<mkdir dir="${plugins}"/>
 		<mkdir dir="${plugins}/${servoy_jasperreports}"/>
 		<copy todir="${plugins}" file="${lib}/servoy_jasperreports.jar"/>
+		<copy todir="${plugins}/${servoy_jasperreports}" file="${lib}/commons-io.jar"/>
 	</target>
 	
 	<target name="build" depends="init">
@@ -57,11 +58,11 @@
 		<!-- the default jar files that are needed -->
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/plugins/servoy_jasperreports.jar&quot; download=&quot;eager&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		
+		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/plugins/servoy_jasperreports/commons-io.jar&quot; download=&quot;lazy&quot; part=&quot;commons-io&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.io.*&quot; part=&quot;commons-io&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-collections.jar&quot; download=&quot;lazy&quot; part=&quot;commons-collections&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.collections.*&quot; part=&quot;commons-collections&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
-		
-		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-io.jar&quot; download=&quot;lazy&quot; part=&quot;commons-io&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
-		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.io.*&quot; part=&quot;commons-io&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-logging.jar&quot; download=&quot;lazy&quot; part=&quot;commons-logging&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.logging.*&quot; part=&quot;commons-logging&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
@@ -73,6 +74,7 @@
 
 	<!-- adding all the libs from the property file -->
 	<target name="forAllLibs">
+		
 		<foreach list="${libs}" target="loop" param="var" delimiter=","/>
 	</target>
 	
