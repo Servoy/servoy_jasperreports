@@ -60,12 +60,10 @@ import net.sf.jasperreports.engine.util.JRClassLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.JRViewer;
-import net.sf.jasperreports.view.JasperViewer;
 
 import com.servoy.j2db.dataprocessing.JSDataSet;
 import com.servoy.j2db.plugins.IClientPluginAccess;
 import com.servoy.j2db.scripting.IScriptObject;
-import com.servoy.j2db.server.ApplicationServer;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
@@ -165,8 +163,11 @@ public class JasperReportsProvider implements IScriptObject {
 							+ "// the first export format in the list will be the default one displayed in the Save dialog of the Viewer.\n"
 							+ "plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];" } } };
 
+	private String relativeReportDir;
+	
 	JasperReportsProvider(JasperReportsPlugin p) throws Exception {
 		plugin = p;
+		relativeReportDir = "";
 	}
 
 	public String[] getProperty(String methodName, int prop) {
@@ -192,8 +193,10 @@ public class JasperReportsProvider implements IScriptObject {
 			return true;
 		} else if ("readFile".equals(methodName)) {
 			return true;
+		} else if ("reportDirectory".equals(methodName)) {
+			return true;
 		}
-
+			
 		return false;
 	}
 
@@ -464,7 +467,7 @@ public class JasperReportsProvider implements IScriptObject {
 				// Also modify the JasperPrint in case you want to move the table of contents.
 				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin
 							.getIClientPluginAccess().getClientID(), source,
-							txid, report, params, plugin.getJasperReportsDirectory(),
+							txid, report, params, relativeReportDir,
 							plugin.getJasperExtraDirectories());
 				
 				if (moveTableOfContent) {
@@ -640,7 +643,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: JasperCompile starting");
-			compiled = jasperReportService.jasperCompile(plugin.getIClientPluginAccess().getClientID(), report, destination, plugin.getJasperReportsDirectory());
+			compiled = jasperReportService.jasperCompile(plugin.getIClientPluginAccess().getClientID(), report, destination, relativeReportDir);
 			Debug.trace("JasperTrace: JasperCompile finished");
 		} catch (Error err) {
 			Debug.error(err);
@@ -686,7 +689,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: JasperWriteFile starting");
-			boolean b = jasperReportService.writeFile(plugin.getIClientPluginAccess().getClientID(), filenm, obj, plugin.getJasperReportsDirectory());
+			boolean b = jasperReportService.writeFile(plugin.getIClientPluginAccess().getClientID(), filenm, obj, relativeReportDir);
 			Debug.trace("JasperTrace: JasperWriteFile finished");
 			return b;
 		} catch (Exception e) {
@@ -701,7 +704,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir starting");
-			boolean b = jasperReportService.deleteFile(plugin.getIClientPluginAccess().getClientID(), filenm, plugin.getJasperReportsDirectory());
+			boolean b = jasperReportService.deleteFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportDir);
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir finished");
 			return b;
 		} catch (Exception e) {
@@ -726,7 +729,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: JasperReadFile starting");
-			b = jasperReportService.readFile(plugin.getIClientPluginAccess().getClientID(), filenm, plugin.getJasperReportsDirectory());
+			b = jasperReportService.readFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportDir);
 			Debug.trace("JasperTrace: JasperReadFile finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -735,12 +738,29 @@ public class JasperReportsProvider implements IScriptObject {
 		return b;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String js_getReportDirectory() throws Exception {
 		return plugin.getJasperReportsDirectory();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void js_setReportDirectory(String jasperDirectorie) throws Exception {
-		plugin.setJasperReportsDirectory(jasperDirectorie);
+		js_setRelativeReportDirectory(jasperDirectorie);
+	}
+	
+	public String js_getRelativeReportDirectory() throws Exception {
+		return relativeReportDir;
+	}
+	
+	public void js_setRelativeReportDirectory(String relativeReportDirectory) throws Exception {
+		connectJasperService();
+		String checkedPath = jasperReportService.getCheckedRelativeReportPath(relativeReportDirectory);
+		relativeReportDir = relativeReportDirectory;
+		plugin.setJasperReportsDirectory(checkedPath);
 	}
 
 	public String js_getExtraDirectories() throws Exception {
@@ -828,7 +848,7 @@ public class JasperReportsProvider implements IScriptObject {
 
 		try {
 			Debug.trace("JasperTrace: getReportParameters starting");
-			ds = jasperReportService.getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, plugin.getJasperReportsDirectory());
+			ds = jasperReportService.getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, relativeReportDir);
 			Debug.trace("JasperTrace: getReportParameters finished");
 		} catch (Exception e) {
 			Debug.error(e);
