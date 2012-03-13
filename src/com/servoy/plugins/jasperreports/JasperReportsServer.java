@@ -118,7 +118,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 	public JasperReport getJasperReport(String clientID, String report, String repdir) throws Exception { 
 		
-		repdir = getCheckedRelativeReportPath(repdir);
+		repdir = getCheckedRelativeReportsPath(repdir);
 		
 		if (!hasAccess(clientID)) return null;
 		
@@ -223,7 +223,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	
 	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws Exception {
 		
-		repdir = getCheckedRelativeReportPath(repdir);
+		repdir = getCheckedRelativeReportsPath(repdir);
 		
 		String dbalias = null;
 		JRDataSource jrds = null;
@@ -305,7 +305,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 	public boolean jasperCompile(String clientID, String report, String destination, String repdir) throws Exception {
 
-		repdir = getCheckedRelativeReportPath(repdir);
+		repdir = getCheckedRelativeReportsPath(repdir);
 		
 		if (!hasAccess(clientID)) return false;
 		
@@ -352,7 +352,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 	public boolean writeFile(String clientID, String filenm, Object obj, String repdir) throws Exception {
 		
-		repdir = getCheckedRelativeReportPath(repdir);
+		repdir = getCheckedRelativeReportsPath(repdir);
 		
 		if (!hasAccess(clientID)) return false;
 		
@@ -376,7 +376,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	
 	public boolean deleteFile(String clientID, String filenm, String repdir) throws Exception {
 		
-		repdir = getCheckedRelativeReportPath(repdir);
+		repdir = getCheckedRelativeReportsPath(repdir);
 		
 		if (!hasAccess(clientID)) return false;
 		
@@ -404,7 +404,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		if (!hasAccess(clientID)) return null;
 		
 		// make directory unix style
-		repdir = getCheckedRelativeReportPath(repdir);
+		repdir = getCheckedRelativeReportsPath(repdir);
 		String jasperDirectory = JasperReportRunner.adjustFileUnix(repdir);
 
 		String report = JasperReportRunner.adjustFileUnix(jasperDirectory + '/' + filenm);
@@ -442,12 +442,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 //			setReportDirectory(repDir);
 			return null;
 		}
-		if (System.getProperty("os.name").startsWith("Windows"))
-		{
-			//drive letter problem on win
-			repDir = Character.toUpperCase(repDir.charAt(0)) + repDir.substring(1);
-		}
-		return repDir;
+		return absolutePathFormatting(repDir);
 	}
 	
 	private boolean checkParentDir(File f, File defaultFolder)
@@ -463,38 +458,40 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
-	public String getCheckedRelativeReportPath(String pathToReportDir) throws RemoteException, Exception {
+	private String absolutePathFormatting(String path) throws IOException
+	{
+		if (System.getProperty("os.name").startsWith("Windows"))
+		{
+			File f = new File(path);
+			if (f.isAbsolute()) return f.getCanonicalPath();  
+		}
+		return path;
+	}
+	
+	public String getCheckedRelativeReportsPath(String pathToReportDir) throws RemoteException, Exception {
 
 		if (getReportDirectory() == null) throw new FileNotFoundException("Report directory not found");
 		
 		if (pathToReportDir == null || pathToReportDir.length() == 0) return getReportDirectory();
 
-		if (pathToReportDir.charAt(0) == '/') 
+		pathToReportDir = absolutePathFormatting(pathToReportDir);
+		if (pathToReportDir.startsWith(getReportDirectory())) 
 		{
-			//relative path
+			if (!(new File(pathToReportDir)).exists()) throw new FileNotFoundException("Relative path to report directory not found");
+			else return adjustFile(pathToReportDir);
+		}
+		else 
+		{
+			if ((new File(pathToReportDir)).isAbsolute()) throw new SecurityException("Absolute directory setting not allowed");
+			
 			File dir = new File(getReportDirectory(), pathToReportDir);
 			File parent = new File(getReportDirectory());
 			if (!checkParentDir(dir.getCanonicalFile(), parent))
 			{
-				throw new SecurityException(pathToReportDir + "is not a valid path in the report directory");
+				throw new SecurityException(pathToReportDir + " is not a valid path in the report directory");
 			}
 			if (!dir.exists()) throw new FileNotFoundException("Relative path to report directory not found");
 			else return adjustFile(dir.getCanonicalPath()); 
-		} 
-		else 
-		{
-			//absolute path? 
-			if (pathToReportDir.startsWith(getReportDirectory())) 
-			{
-				if (!(new File(pathToReportDir)).exists()) throw new FileNotFoundException("Relative path to report directory not found");
-				else return adjustFile(pathToReportDir);
-			}
-			else 
-			{
-				if (!(new File(getReportDirectory()  + "/" + pathToReportDir)).exists())
-					throw new FileNotFoundException("Relative path to report directory not found");
-				else return adjustFile(getReportDirectory()  + "/" + pathToReportDir);
-			}
 		}
 	}
 	

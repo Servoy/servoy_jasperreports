@@ -265,6 +265,15 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 			retval.append("%%elementName%%.reportsDirectory = 'path/to/reportsDirectory';\n");
 			return retval.toString();
 		}
+		else if ("relativeReportsDirectory".equals(methodName))
+		{
+			StringBuffer retval = new StringBuffer();
+			retval.append("//"); //$NON-NLS-1$
+			retval.append(getToolTip(methodName));
+			retval.append("\n"); //$NON-NLS-1$
+			retval.append("%%elementName%%.relativeReportsDirectory = 'relativePath/to/serverReportsDirectory';\n");
+			return retval.toString();
+		}
 		else if ("setSize".equals(methodName))
 		{
 			StringBuffer retval = new StringBuffer();
@@ -334,6 +343,10 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		{
 			return "Gets or sets the path to the reports directory of the JasperReports plugin.";
 		}
+		else if ("relativeReportsDirectory".equals(methodName))
+		{
+			return "Gets or sets the path to the clien'ts reports directory of the JasperReports plugin, relative to the server's reports directory.";
+		}
 		else if ("setSize".equals(methodName))
 		{
 			return "Sets the size of the Bean.";
@@ -345,7 +358,15 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	 * (non-Javadoc)
 	 * @see com.servoy.j2db.scripting.IScriptObject#isDeprecated(java.lang.String)
 	 */
-	public boolean isDeprecated(String arg0) {
+	public boolean isDeprecated(String methodName) {
+		if (methodName == null)
+			return false;
+		else if ("".equals(methodName)) {
+			return true;
+		} 
+		else if ("reportDirectory".equals(methodName)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -506,12 +527,26 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		return isTransparent();
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public void js_setReportsDirectory(String reportsDirectory) throws Exception {
 		provider.js_setReportDirectory(reportsDirectory);
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public String js_getReportsDirectory() throws Exception {
 		return provider.js_getReportDirectory();
+	}
+	
+	public void js_setRelativeReportsDirectory(String relativeReportsDirectory) throws Exception {
+		provider.js_setRelativeReportsDirectory(relativeReportsDirectory);
+	}
+	
+	public String js_getRelativeReportsDirectory() throws Exception {
+		return provider.js_getRelativeReportsDirectory();
 	}
 	
 	public void js_setExtraDirectories(String extraDirectories) throws Exception {

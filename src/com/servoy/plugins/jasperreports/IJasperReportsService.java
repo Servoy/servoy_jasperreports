@@ -72,6 +72,6 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 	
 	public JasperReport loadReport(String clientID, String location) throws RemoteException, Exception;
 
-	public String getCheckedRelativeReportPath(String reportPath) throws RemoteException, Exception;
+	public String getCheckedRelativeReportsPath(String reportPath) throws RemoteException, Exception;
 
 }
