@@ -25,8 +25,8 @@ import com.servoy.j2db.scripting.IScriptObject;
 import com.servoy.j2db.util.ComponentFactoryHelper;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.PersistHelper;
-import com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE;
 import com.servoy.plugins.jasperreports.IJasperReportsService;
+import com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE;
 import com.servoy.plugins.jasperreports.JasperReportsPlugin;
 import com.servoy.plugins.jasperreports.JasperReportsProvider;
 
@@ -359,12 +359,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	 * @see com.servoy.j2db.scripting.IScriptObject#isDeprecated(java.lang.String)
 	 */
 	public boolean isDeprecated(String methodName) {
-		if (methodName == null)
-			return false;
-		else if ("".equals(methodName)) {
-			return true;
-		} 
-		else if ("reportDirectory".equals(methodName)) {
+	 if ("reportsDirectory".equals(methodName)) {
 			return true;
 		}
 		return false;
