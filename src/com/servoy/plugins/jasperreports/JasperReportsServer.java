@@ -145,6 +145,12 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		while (report.indexOf('\\') != -1) {
 			report = report.replace('\\', '/');
 		}
+		
+		//check if report is inside report directory
+		String repSrc = jasperDirectory + (jasperDirectory.endsWith("/") ? "" : "/")+ report;
+		if (fileIsOutsideReportsDirectory(new File(repSrc), jasperDirectory))
+			throw new IllegalArgumentException("No jasperReport " + report + " has been found or loaded in directory " + jasperDirectory);
+		
 		// First, try absolute
 		String reportCompiled = new String(report);
 		if (reportCompiled.endsWith("jrxml"))
@@ -326,6 +332,9 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		report = getAbsolutePath(report, jasperDirectory);
 		File tempFile = new File(report);
 
+		if (fileIsOutsideReportsDirectory(tempFile, jasperDirectory))
+			throw new IllegalArgumentException("No jasperReport " + report + " has been found or loaded");
+		
 		if (tempFile.exists()) {
 			if (destination == null)
 				compiledFile = JasperCompileManager.compileReportToFile(report);
@@ -336,6 +345,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 				// make absolute path
 				destination = getAbsolutePath(destination, jasperDirectory);
+				if (fileIsOutsideReportsDirectory(new File(destination), jasperDirectory))
+					throw new IllegalArgumentException("Writing to " + destination + " is not allowed");
 
 				//compile the report;
 				JasperCompileManager.compileReportToFile(report, destination);
@@ -362,6 +373,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		String report = JasperReportRunner.adjustFileUnix(jasperDirectory + '/' + filenm);
 
 		File file = new File(report);
+		if (fileIsOutsideReportsDirectory(file, jasperDirectory))
+			throw new IllegalArgumentException("Jasper writefile: File " + filenm + " is illegal");
 		if (file.exists() && !file.canWrite())
 			throw new IOException("Jasper writefile: File " + filenm + " can't be written");
 		file.createNewFile();
@@ -385,6 +398,9 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		String report = JasperReportRunner.adjustFileUnix(jasperDirectory + '/' + filenm);
 		File file = new File(report);
 		
+		if (fileIsOutsideReportsDirectory(file, jasperDirectory))
+			throw new IllegalArgumentException("Jasper deleteFile: File " + filenm + " is illegal");
+
 		if (!file.exists())
 			throw new IOException("Jasper deleteFile: File " + filenm + " does not exist");
 		
@@ -399,6 +415,13 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return true;
 	}
 
+	private boolean fileIsOutsideReportsDirectory(File f, String reportDirectory) throws IOException
+	{
+		String unixFilePath = JasperReportRunner.adjustFileUnix(f.getCanonicalPath());
+		if (!unixFilePath.startsWith(reportDirectory)) return true;
+		else return false;
+	}
+	
 	public byte[] readFile(String clientID, String filenm, String repdir) throws Exception {
 		
 		if (!hasAccess(clientID)) return null;
@@ -410,6 +433,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		String report = JasperReportRunner.adjustFileUnix(jasperDirectory + '/' + filenm);
 
 		File file = new File(report);
+		if (fileIsOutsideReportsDirectory(file, jasperDirectory))
+			throw new IllegalArgumentException("Jasper readfile: File " + filenm + " is illegal");
 		if (!file.exists())
 			throw new IllegalArgumentException("Jasper readfile: File " + filenm + " not found");
 		if (!file.isFile())

@@ -97,7 +97,6 @@ public class JasperReportRunner implements IJasperReportRunner {
 			throw new IllegalArgumentException("non-datasource argument: "+source.getClass());
 		}
 
-
 		if (report == null) {
 			throw new IllegalArgumentException("No jasperReport <null> has been found or loaded");
 		}
