@@ -793,45 +793,33 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return jsds;
 	}
 
-	public void saveByteArrayToFile(String clientID, String filename, byte[] buffer, String reportsDir) throws Exception {
-		
-		if (!hasAccess(clientID)) throw new Exception("Unauthorized client access.");
-
-		String file = adjustFile(filename);
-		String repd = adjustFile(reportsDir);
-
-		String absolutefile = getAbsolutePath(file, repd);
-
-		FileOutputStream fos = new FileOutputStream(absolutefile);
-		try {
-			fos.write(buffer);
-			fos.flush();
-		}
-		finally {
-			fos.close();
-		}
-	}
-	
 	/**
 	 * TODO: add security checks
 	 */
 	public byte[] loadImage(String clientID, String img) throws Exception {
 		String xtraDir = this.getExtraDirectories();
 		String filePath2LoadFrom = xtraDir + img;
+		
+		if (fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), getExtraDirectories()))
+			throw new IllegalArgumentException("No jasperReport " + filePath2LoadFrom + " has been found or loaded in directory " + getExtraDirectories());
+		
 		return JRLoader.loadBytesFromLocation(filePath2LoadFrom);
 	}
 	
 	/**
 	 * TODO: add security checks
 	 */
-	public JasperReport loadReport(String clientID, String location) throws Exception {
-		Object obj = JRLoader.loadObject(location);
-		JasperReport loadedReport = null;
-		if (obj instanceof JasperReport)
-		{
-			loadedReport = (JasperReport)obj;
+	public JasperReport loadReport(String clientID, String location)
+			throws Exception {
+		File file = new File(location);
+		if (fileIsOutsideReportsDirectory(file, getReportDirectory()))
+			throw new IllegalArgumentException("No jasperReport " + location + " has been found or loaded in directory " + getReportDirectory());
+		
+		Object obj = JRLoader.loadObject(file);
+		if (obj instanceof JasperReport) {
+			return  (JasperReport) obj;
 		}
-		return loadedReport;
+		return null;
 	}
 	
 	/**

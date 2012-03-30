@@ -62,8 +62,6 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 
 	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws RemoteException, Exception;
 
-	public void saveByteArrayToFile(String clientID, String filename, byte[] buffer, String reportsDir) throws RemoteException, Exception;
-
 	public JasperReport getJasperReport(String clientID, String report, String repdir) throws RemoteException, Exception;
 	
 	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws RemoteException, Exception;
