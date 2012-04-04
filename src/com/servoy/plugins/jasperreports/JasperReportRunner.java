@@ -104,8 +104,8 @@ public class JasperReportRunner implements IJasperReportRunner {
 		Debug.trace("JasperTrace: Directory: " + repdir);
 		
 		JasperReport jasperReport = jasperReportsService.getJasperReport(clientID, report, repdir);
-
-		return getJasperPrint(jasperReport, null, (JRDataSource) source, parameters, repdir, extraDirs);
+		
+		return getJasperPrint(jasperReport, null, (JRDataSource) source, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
 	}
 
 	

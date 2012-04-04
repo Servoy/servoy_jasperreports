@@ -201,6 +201,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		
 		if (!hasAccess(clientID)) return null;
 		
+		extraDirs = getCheckedExtraDirectoriesRelativePath(extraDirs); 
+				
 		boolean serviceSet = false;
 		if (JasperReportsProvider.jasperReportsLocalService.get() == null) {
 			// called from smart client over rmi
@@ -275,7 +277,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			
 			JasperReport jasperReport = getJasperReport(clientID, report, repdir);
 			
-			return JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, repdir, extraDirs);
+			return JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, repdir, getCheckedExtraDirectoriesRelativePath(extraDirs));
 
 		} finally {
 			if (conn != null)
@@ -418,7 +420,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	private boolean fileIsOutsideReportsDirectory(File f, String reportDirectory) throws IOException
 	{
 		String unixFilePath = JasperReportRunner.adjustFileUnix(f.getCanonicalPath());
-		if (!unixFilePath.startsWith(reportDirectory)) return true;
+		if (!unixFilePath.startsWith(JasperReportRunner.adjustFileUnix(reportDirectory))) return true;
 		else return false;
 	}
 	
@@ -453,23 +455,6 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return buffer;
 	}
 
-	/**
-	 * Getting the reports directory, which has been set from the AdminServer page.
-	 * 
-	 * @return the path to the reports' directory
-	 */
-	public String getReportDirectory() throws Exception {
-		String repDir = settings.getProperty("directory.jasper.report");
-		if (repDir == null)
-		{
-			//default to appserver_dir/server/reports
-//			repDir = adjustFile(ApplicationServer.get().getServoyApplicationServerDirectory() + "/server/reports");
-//			setReportDirectory(repDir);
-			return null;
-		}
-		return absolutePathFormatting(repDir);
-	}
-	
 	private boolean checkParentDir(File f, File defaultFolder)
 	{
 		if (f == null) return false;
@@ -493,6 +478,13 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return path;
 	}
 	
+	/**
+	 * Return the adjusted and checked absolute path in the report directory directory. 
+	 * 
+	 * @param pathToReportDir the path to the client-set report directory, relative to the server-side setting
+	 * 
+	 * @return the absolute path to the relative report directory (will start with the server side report directory path)
+	 */
 	public String getCheckedRelativeReportsPath(String pathToReportDir) throws RemoteException, Exception {
 
 		if (getReportDirectory() == null) throw new FileNotFoundException("Report directory not found");
@@ -521,21 +513,96 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	}
 	
 	/**
+	 * Getting the plugin's reports directory which has been set from the AdminServer page.
+	 * 
+	 * @return the path to the reports' directory
+	 */
+	public String getReportDirectory() throws Exception {
+		String repDir = settings.getProperty("directory.jasper.report");
+		if (repDir == null)
+		{
+			//default to appserver_dir/server/reports
+//			repDir = adjustFile(ApplicationServer.get().getServoyApplicationServerDirectory() + "/server/reports");
+//			setReportDirectory(repDir);
+			return null;
+		}
+		return absolutePathFormatting(repDir);
+	}
+	
+	/**
+	 * Setting the (absolute) server-side path to the plugin's reports directory 
+	 * 
+	 * @param jasperDirectory absolute path to the plugin's reports directory on the server
+	 */
+	public void setReportDirectory(String jasperDirectory) {
+		settings.setProperty("directory.jasper.report", adjustFile(jasperDirectory));
+	}
+	
+	/**
+	 * This method is similar to {@linkplain #getCheckedRelativeReportsPath(String)} and returns the absolute path (relative to the 
+	 * server-side extra directories setting) to the specified (relative) extra directories path.
+	 * 
+	 * @param relativePathToExtraDirs extra directories path relative to the server-side setting 
+	 * 
+	 * @return absolute and corrected path to the server-side extra directories 
+	 */
+	public String getCheckedExtraDirectoriesRelativePath(String relativePathsToExtraDirs) throws RemoteException, Exception {
+		
+		if (getExtraDirectories() == null) throw new FileNotFoundException("Extra directories not set");
+			
+		if (relativePathsToExtraDirs == null || relativePathsToExtraDirs.length() == 0) return getExtraDirectories();
+		
+		// format all relative extra paths
+		String[] xtraPaths = relativePathsToExtraDirs.split(",");
+		String[] extraDirs = getExtraDirectories().split(",");
+		for (String xtradir : extraDirs)
+		{
+			xtradir = adjustFile(absolutePathFormatting(xtradir));
+			for (String relpath : xtraPaths)
+			{
+				relpath = adjustFile(absolutePathFormatting(relpath));
+				if (relpath.startsWith(xtradir))
+				{
+					if (!(new File(relpath)).exists()) throw new FileNotFoundException("Relative path to extra directory not found");
+					else return relpath;
+				}
+				else
+				{
+					if ((new File(relpath)).isAbsolute()) throw new SecurityException("Absolute directory setting on server not allowed");
+					
+					File dir = new File(xtradir, relpath);
+					if (!dir.exists()) throw new FileNotFoundException("Relative path to extra directory not found");
+					
+					File parent = new File(xtradir);
+					if (!checkParentDir(dir.getCanonicalFile(),parent))
+					{
+						throw new SecurityException(relpath + " is not a valid path in any extra directory");
+					}
+					return adjustFile(dir.getCanonicalPath());
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Getting the additional resource directories, needed for handling different report needed resources. 
 	 * This value can be set from the AdminServer page.
 	 * 
 	 * @return the path to the additional resource directories
 	 */
 	public String getExtraDirectories() throws Exception {
-		return settings.getProperty("directories.jasper.extra");
+		String xtraDirs = settings.getProperty("directories.jasper.extra");
+		if (xtraDirs == null)
+		{
+			return null;
+		}
+		return xtraDirs;
 	}
 
-	public void setReportDirectory(String jasperDirectory) {
-		settings.setProperty("directory.jasper.report", adjustFile(jasperDirectory));
-	}
-	
 	public void setExtraDirectories(String extraDirectories) {
-		settings.setProperty("directories.jasper.extra", extraDirectories);
+		settings.setProperty("directories.jasper.extra", adjustFile(extraDirectories));
 	}
 
 	public static String adjustFile(String file) {
@@ -632,7 +699,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	public Map getRequiredPropertyNames() {
 		Map req = new HashMap();
 		req.put("directory.jasper.report", "Reports Directory");
-		req.put("directories.jasper.extra", "Extra Directories needed by the Servoy JasperReports Plugin; for multiple entries, separate with commas.");
+		req.put("directories.jasper.extra", "Extra Directories needed by the Servoy JasperReports Plugin. Paths can be set on the client relative to the server side setting path; for multiple entries, separate with commas.");
 		
 		return req;
 	}
@@ -797,11 +864,23 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	 * TODO: add security checks
 	 */
 	public byte[] loadImage(String clientID, String img) throws Exception {
-		String xtraDir = this.getExtraDirectories();
-		String filePath2LoadFrom = xtraDir + img;
 		
-		if (fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), getExtraDirectories()))
-			throw new IllegalArgumentException("No jasperReport " + filePath2LoadFrom + " has been found or loaded in directory " + getExtraDirectories());
+		String[] xtraDirs = this.getExtraDirectories().split(",");
+		String filePath2LoadFrom = null;
+		
+		boolean foundImage = false;
+		for (String xtraDir : xtraDirs)
+		{
+			xtraDir = JasperReportRunner.adjustFileUnix(absolutePathFormatting(xtraDir));
+			filePath2LoadFrom = xtraDir + (xtraDir.endsWith("/") ? "" : "/") + img ;
+			if (!fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), xtraDir))
+			{
+				foundImage = true;
+				break;
+			}
+		}
+		
+		if (!foundImage) throw new IllegalArgumentException("No image file: " + img + " has been found in extra resources directories");
 		
 		return JRLoader.loadBytesFromLocation(filePath2LoadFrom);
 	}

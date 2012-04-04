@@ -151,9 +151,14 @@ public class JasperReportsProvider implements IScriptObject {
 					{ "Property for retrieving the reports directory from the server." },
 					{ "// By defaul the value is read from the adim page Server Plugins, the directory.jasper.report property.\n// If the client modifies the reportDirectory property, this value will be used instead of the default one for the whole client session and only for this client. Each client session has it's own reportDirectory value." } },
 			{
+					{ "relativeExtraDirectories" },
+					{},
+					{ "Property for retrieving and setting the paths to the extra resources directories. The paths are set per client and are relative to the server corresponding directories setting." },
+					{ "// By defaul the value is read from the adim page Server Plugins, the directories.jasper.extra property.\n// If the client modifies the default property, this value will be used instead of the \n// default one for the whole client session and only for this client. \n// Each client session has it's own extraDirectories value.\n// NOTE: Extra directories are not searched recursively." } },		
+			{
 					{ "relativeReportsDirectory" },
 					{},
-					{ "Property for retrieving the path to the reports directory, set by the current client, relative to the server reports directory." },
+					{ "Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory." },
 					{ "// By default the value is read from the adim page Server Plugins, the directory.jasper.report property.\n//A client is only able to set a path relative to the server report directory. \n//If the client modifies this property, its value will be used instead of the default one, for the whole client session and only for this client. \n//Each client session has it's own relativeReportDirectory value." } },
 			{
 					{ "viewerExportFormats" },
@@ -169,10 +174,12 @@ public class JasperReportsProvider implements IScriptObject {
 							+ "plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];" } } };
 
 	private String relativeReportsDir;
+	private String relativeExtraDirs;
 	
 	JasperReportsProvider(JasperReportsPlugin p) throws Exception {
 		plugin = p;
 		relativeReportsDir = "";
+		relativeExtraDirs = "";
 	}
 
 	public String[] getProperty(String methodName, int prop) {
@@ -199,6 +206,8 @@ public class JasperReportsProvider implements IScriptObject {
 		} else if ("readFile".equals(methodName)) {
 			return true;
 		} else if ("reportDirectory".equals(methodName)) {
+			return true;
+		} else if ("extraDirectories".equals(methodName)) {
 			return true;
 		}
 			
@@ -473,7 +482,7 @@ public class JasperReportsProvider implements IScriptObject {
 				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin
 							.getIClientPluginAccess().getClientID(), source,
 							txid, report, params, relativeReportsDir,
-							plugin.getJasperExtraDirectories());
+							relativeExtraDirs);
 				
 				if (moveTableOfContent) {
 					int iP = getInsertPage(jp);
@@ -528,10 +537,12 @@ public class JasperReportsProvider implements IScriptObject {
 					}
 
 					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT)) {
-						jsp = JasperReportRunner.getJasperBytes("pdf", jp, plugin.getJasperExtraDirectories(),exporterParams);
+						jsp = JasperReportRunner.getJasperBytes("pdf", jp, 
+								jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs),exporterParams);
 						JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, "pdf", 	mimeType);
 					} else {
-						jsp = JasperReportRunner.getJasperBytes(type, jp, plugin.getJasperExtraDirectories(),exporterParams);
+						jsp = JasperReportRunner.getJasperBytes(type, jp, 
+								jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs),exporterParams);
 						if (nooutput) {
 							JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, type, mimeType);
 						} else {
@@ -602,7 +613,7 @@ public class JasperReportsProvider implements IScriptObject {
 						// 3. SmartClient other output formats
 					} else {
 						jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(),
-								type, jp, plugin.getJasperExtraDirectories(), exporterParams);
+								type, jp, relativeExtraDirs, exporterParams);
 						if (!nooutput) {
 							saveByteArrayToFile(file, jsp);
 						}
@@ -768,13 +779,31 @@ public class JasperReportsProvider implements IScriptObject {
 		plugin.setJasperReportsDirectory(checkedPath);
 	}
 
+	/**
+	 * 
+	 * @deprecated
+	 */
 	public String js_getExtraDirectories() throws Exception {
 		return plugin.getJasperExtraDirectories();
 	}
 
-	public void js_setExtraDirectories(String extraDirectories)
-			throws Exception {
-		plugin.setJasperExtraDirectories(extraDirectories);
+	public String js_getRelativeExtraDirectories() throws Exception {
+		return relativeExtraDirs;
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public void js_setExtraDirectories(String extraDirectories) throws Exception {
+		js_setRelativeExtraDirectories(extraDirectories);
+	}
+	
+	public void js_setRelativeExtraDirectories(String extraDirectories) throws Exception {
+		//plugin.setJasperExtraDirectories(extraDirectories);
+		connectJasperService();
+		String extraDirsRelPath = jasperReportService.getCheckedExtraDirectoriesRelativePath(extraDirectories);
+		relativeExtraDirs = extraDirectories;
+		plugin.setJasperExtraDirectories(extraDirsRelPath);
 	}
 
 	public void connectJasperService() throws Exception {
