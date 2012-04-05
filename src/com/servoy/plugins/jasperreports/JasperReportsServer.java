@@ -548,7 +548,17 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	 */
 	public String getCheckedExtraDirectoriesRelativePath(String relativePathsToExtraDirs) throws RemoteException, Exception {
 		
-		if (getExtraDirectories() == null) throw new FileNotFoundException("Extra directories not set");
+		if (getExtraDirectories() == null)
+		{
+			// extra directories not set 
+			if (relativePathsToExtraDirs != null)
+			{
+				// trying to set to some path, but with no server side extra dirs => exception
+				if (relativePathsToExtraDirs.length() > 0) throw new FileNotFoundException("Extra directories not set");
+				else if ("".equals(relativePathsToExtraDirs)) return null;
+			}
+			else return null;
+		}
 			
 		if (relativePathsToExtraDirs == null || relativePathsToExtraDirs.length() == 0) return getExtraDirectories();
 		
