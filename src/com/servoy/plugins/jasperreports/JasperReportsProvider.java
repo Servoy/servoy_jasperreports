@@ -76,7 +76,6 @@ import com.servoy.j2db.util.Utils;
 public class JasperReportsProvider implements IScriptObject {
 	private JasperReportsPlugin plugin;
 
-	private IJasperReportsService jasperReportService = null;
 	protected static ThreadLocal<IJasperReportsService> jasperReportsLocalService = new ThreadLocal<IJasperReportsService>();
 	protected static ThreadLocal<String> jasperReportsLocalClientID = new ThreadLocal<String>();
 
@@ -439,15 +438,7 @@ public class JasperReportsProvider implements IScriptObject {
 		}
 		Debug.trace("JasperTrace: JasperReport initialize");
 
-		// create if not yet created
-		if (jasperReportService == null) {
-			try {
-				jasperReportService = (IJasperReportsService) plugin.getIClientPluginAccess().getServerService("servoy.IJasperReportService");
-			} catch (Exception e) {
-				Debug.error(e);
-				throw new Exception("Jasper Exception: Cannot connect to service-server");
-			}
-		}
+		IJasperReportsService jasperReportService = plugin.connectJasperService();
 
 		// check out type of data source (and how to run reports)
 		IJasperReportRunner jasperReportRunner;
@@ -655,11 +646,9 @@ public class JasperReportsProvider implements IScriptObject {
 		Debug.trace("JasperTrace: JasperCompile initialize");
 		boolean compiled = false;
 
-		connectJasperService();
-
 		try {
 			Debug.trace("JasperTrace: JasperCompile starting");
-			compiled = jasperReportService.jasperCompile(plugin.getIClientPluginAccess().getClientID(), report, destination, relativeReportsDir);
+			compiled = plugin.connectJasperService().jasperCompile(plugin.getIClientPluginAccess().getClientID(), report, destination, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperCompile finished");
 		} catch (Error err) {
 			Debug.error(err);
@@ -701,11 +690,9 @@ public class JasperReportsProvider implements IScriptObject {
 	public boolean js_writeFileToReportsDir(String filenm, Object obj)
 			throws Exception {
 
-		connectJasperService();
-
 		try {
 			Debug.trace("JasperTrace: JasperWriteFile starting");
-			boolean b = jasperReportService.writeFile(plugin.getIClientPluginAccess().getClientID(), filenm, obj, relativeReportsDir);
+			boolean b = plugin.connectJasperService().writeFile(plugin.getIClientPluginAccess().getClientID(), filenm, obj, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperWriteFile finished");
 			return b;
 		} catch (Exception e) {
@@ -716,11 +703,9 @@ public class JasperReportsProvider implements IScriptObject {
 
 	public boolean js_deleteFileFromReportsDir(String filenm) throws Exception {
 
-		connectJasperService();
-
 		try {
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir starting");
-			boolean b = jasperReportService.deleteFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportsDir);
+			boolean b = plugin.connectJasperService().deleteFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir finished");
 			return b;
 		} catch (Exception e) {
@@ -741,11 +726,9 @@ public class JasperReportsProvider implements IScriptObject {
 
 		byte[] b = null;
 
-		connectJasperService();
-
 		try {
 			Debug.trace("JasperTrace: JasperReadFile starting");
-			b = jasperReportService.readFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportsDir);
+			b = plugin.connectJasperService().readFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperReadFile finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -773,8 +756,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 	
 	public void js_setRelativeReportsDirectory(String relativeReportDirectory) throws Exception {
-		connectJasperService();
-		String checkedPath = jasperReportService.getCheckedRelativeReportsPath(relativeReportDirectory);
+		String checkedPath = plugin.connectJasperService().getCheckedRelativeReportsPath(relativeReportDirectory);
 		relativeReportsDir = relativeReportDirectory;
 		plugin.setJasperReportsDirectory(checkedPath);
 	}
@@ -800,32 +782,9 @@ public class JasperReportsProvider implements IScriptObject {
 	
 	public void js_setRelativeExtraDirectories(String extraDirectories) throws Exception {
 		//plugin.setJasperExtraDirectories(extraDirectories);
-		connectJasperService();
-		String extraDirsRelPath = jasperReportService.getCheckedExtraDirectoriesRelativePath(extraDirectories);
+		String extraDirsRelPath = plugin.connectJasperService().getCheckedExtraDirectoriesRelativePath(extraDirectories);
 		relativeExtraDirs = extraDirectories;
 		plugin.setJasperExtraDirectories(extraDirsRelPath);
-	}
-
-	public void connectJasperService() throws Exception {
-
-		Debug.trace("JasperTrace: service connection initialize");
-		// create if not yet created
-		if (jasperReportService == null) {
-			try {
-				jasperReportService = (IJasperReportsService) plugin.getIClientPluginAccess().getServerService("servoy.IJasperReportService");
-			} catch (Exception ex) {
-				Debug.error(ex);
-				throw new Exception(
-						"JasperTrace: Jasper Exception: Cannot connect to service-server");
-			}
-		}
-
-		// in case the server is not started in developer
-		if (jasperReportService == null) {
-			System.err.println("JasperTrace: Jasper Exception: No service running");
-			throw new Exception("JasperTrace: Jasper Exception: No service running");
-		}
-		Debug.trace("JasperTrace: service connection found");
 	}
 
 	public String[] js_getReports() throws Exception {
@@ -842,11 +801,10 @@ public class JasperReportsProvider implements IScriptObject {
 	
 	private String[] getReports(String filter)  throws Exception {
 		String[] reports = null;
-		connectJasperService();
 
 		try {
 			Debug.trace("JasperTrace: getReports starting");
-			reports = jasperReportService.getReports(plugin.getIClientPluginAccess().getClientID(), filter);
+			reports = plugin.connectJasperService().getReports(plugin.getIClientPluginAccess().getClientID(), filter);
 			Debug.trace("JasperTrace: getReports finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -860,11 +818,9 @@ public class JasperReportsProvider implements IScriptObject {
 
 		String[] reports = null;
 
-		connectJasperService();
-
 		try {
 			Debug.trace("JasperTrace: getReports starting");
-			reports = jasperReportService.getReports(plugin.getIClientPluginAccess().getClientID(), compiled, uncompiled);
+			reports = plugin.connectJasperService().getReports(plugin.getIClientPluginAccess().getClientID(), compiled, uncompiled);
 			Debug.trace("JasperTrace: getReports finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -878,11 +834,9 @@ public class JasperReportsProvider implements IScriptObject {
 
 		JSDataSet ds = null;
 
-		connectJasperService();
-
 		try {
 			Debug.trace("JasperTrace: getReportParameters starting");
-			ds = jasperReportService.getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, relativeReportsDir);
+			ds = plugin.connectJasperService().getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, relativeReportsDir);
 			Debug.trace("JasperTrace: getReportParameters finished");
 		} catch (Exception e) {
 			Debug.error(e);

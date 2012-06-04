@@ -29,6 +29,7 @@
 package com.servoy.plugins.jasperreports;
 
 import java.beans.PropertyChangeEvent;
+import java.rmi.RemoteException;
 import java.util.Properties;
 
 import javax.swing.Icon;
@@ -54,11 +55,15 @@ public class JasperReportsPlugin implements IClientPlugin {
 	
 	private String jasperExtraDirectories;
 
+	private IJasperReportsService jasperReportService;
+
 	public String getJasperReportsDirectory(){
+		connectJasperService(); // is initialized with server setting
 		return jasperReportsDirectory;
 	}
 	
 	public String getJasperExtraDirectories() {
+		connectJasperService(); // is initialized with server setting
 		return jasperExtraDirectories;
 	}
 
@@ -72,15 +77,31 @@ public class JasperReportsPlugin implements IClientPlugin {
 
 	public void initialize(IClientPluginAccess app) throws PluginException {
 		application = app;
+	}
+	
+	public IJasperReportsService connectJasperService()  {
 
-		try{
-			IJasperReportsService service = (IJasperReportsService) app.getServerService("servoy.IJasperReportService");
-			jasperReportsDirectory = service.getReportDirectory();
-			jasperExtraDirectories = service.getExtraDirectories();
+		Debug.trace("JasperTrace: service connection initialize");
+		// create if not yet created
+		if (jasperReportService == null) {
+			try {
+				jasperReportService = (IJasperReportsService) application.getServerService("servoy.IJasperReportService");
+				if (jasperReportsDirectory == null) jasperReportsDirectory = jasperReportService.getReportDirectory();
+				if (jasperExtraDirectories == null) jasperExtraDirectories = jasperReportService.getExtraDirectories();
+			} catch (Exception ex) {
+				Debug.error(ex);
+				throw new RuntimeException(
+						"JasperTrace: Jasper Exception: Cannot connect to service-server");
+			}
 		}
-		catch (Exception e){
-			throw new PluginException(e);
+
+		// in case the server is not started in developer
+		if (jasperReportService == null) {
+			System.err.println("JasperTrace: Jasper Exception: No service running");
+			throw new RuntimeException("JasperTrace: Jasper Exception: No service running");
 		}
+		Debug.trace("JasperTrace: service connection found");
+		return jasperReportService;
 	}
 
 	IClientPluginAccess getIClientPluginAccess()
