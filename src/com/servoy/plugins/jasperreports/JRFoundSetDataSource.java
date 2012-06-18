@@ -28,44 +28,32 @@
 
 package com.servoy.plugins.jasperreports;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JRRewindableDataSource;
 
 import com.servoy.j2db.dataprocessing.IFoundSet;
 import com.servoy.j2db.dataprocessing.IRecord;
 import com.servoy.j2db.plugins.IClientPluginAccess;
 import com.servoy.j2db.util.ServoyException;
-import com.servoy.j2db.util.Utils;
 
 /**
  * JRDataSource wrapper for foundsets.
- * @author Rob Gansevles
+ * @author rgansevles
  *
  */
-public class JRFoundSetDataSource implements JRRewindableDataSource {
+public class JRFoundSetDataSource extends AbstractServoyDataSource {
 
-	private final IClientPluginAccess pluginAccess;
 	private final FoundsetWithIndex foundSet;
-
 	private Map<String, FoundsetWithIndex> relatedFoundSets;
 
 	public  JRFoundSetDataSource (IClientPluginAccess pluginAccess, IFoundSet foundSet)
 	{
-		this.pluginAccess = pluginAccess;
+		super(pluginAccess);
 		this.foundSet = new FoundsetWithIndex(foundSet);
 		moveFirst();
 	}
-
+ 
 	public boolean next() {
 	
 		FoundsetWithIndex deepestFoundSet = foundSet;
@@ -110,68 +98,6 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 		// else we completed a related foundSet, progress the next deepest one
 		relatedFoundSets.remove(deepestPath);
 		return next();
-	}
-
-	public Object getFieldValue(JRField jrField) throws JRException {
-
-		String name = jrField.getName();
-
-		Object value;
-		try {
-			if (name.indexOf('(') > 0)
-			{
-				// a global method
-				value = getGlobalMethodResult(name);
-			}
-			else
-			{
-				// a data provider
-				value =  getDataProviderValue(name);
-			}
-		} catch (Exception e) {
-			throw new JRException(e);
-		}
-		
-		return convertToFieldValueClass(JSArgumentsUnwrap.unwrapJSObject(value, pluginAccess), jrField);
-	}
-	
-	private Object convertToFieldValueClass(Object value, JRField jrf)
-	{
-		if (value == null) return value;
-		if ("java.lang.Boolean".equals(jrf.getValueClassName()) && !(value instanceof Boolean)) return Boolean.valueOf(Utils.getAsBoolean(value));
-		else if ("java.lang.Byte".equals(jrf.getValueClassName()) && !(value instanceof Byte))
-		{
-			if (value instanceof Number) return Byte.valueOf(((Number)value).byteValue());
-			else return Byte.valueOf(value.toString());
-		}
-		else if ("java.lang.Double".equals(jrf.getValueClassName()) && !(value instanceof Double)) return Double.valueOf(Utils.getAsDouble(value));
-		else if ("java.lang.Float".equals(jrf.getValueClassName()) && !(value instanceof Float)) return Float.valueOf(Utils.getAsFloat(value));
-		else if ("java.lang.Integer".equals(jrf.getValueClassName()) && !(value instanceof Integer)) return Integer.valueOf(Utils.getAsInteger(value));
-		else if ("java.lang.Long".equals(jrf.getValueClassName()) && !(value instanceof Long)) return Long.valueOf(Utils.getAsLong(value));
-		else if ("java.lang.Short".equals(jrf.getValueClassName()) && !(value instanceof Short))
-		{
-			if (value instanceof Number) return Short.valueOf(((Number)value).shortValue());
-			else return Short.valueOf(value.toString());
-		}
-		else if ("java.lang.String".equals(jrf.getValueClassName()) && !(value instanceof String)) return value.toString();
-		return value;
-	}
-
-	/**
-	 * Call the global method, arguments may be specified.
-	 * @param name
-	 * @return
-	 * @throws Exception 
-	 */	
-	protected Object getGlobalMethodResult(String name) throws Exception {
-
-		String[] split = name.trim().split("[(,)]");
-		Object[] args = new Object[split.length-1];
-		for (int i = 1; i < split.length; i++)
-		{
-			args[i-1] = getDataProviderValue(split[i].trim());
-		}
-		return pluginAccess.executeMethod(null, split[0].trim(), args, false);
 	}
 
 	/**
@@ -221,6 +147,7 @@ public class JRFoundSetDataSource implements JRRewindableDataSource {
 		return record.getValue(searchName);
 	}
 
+	@Override
 	public void moveFirst() {
 		relatedFoundSets = null;
 		foundSet.rewind();

@@ -36,12 +36,12 @@ import java.util.Map;
 import net.sf.jasperreports.engine.JRException;
 
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.Wrapper;
 
+import com.servoy.j2db.dataprocessing.IDataSet;
 import com.servoy.j2db.dataprocessing.IFoundSet;
 import com.servoy.j2db.plugins.IClientPluginAccess;
-import com.servoy.j2db.util.Debug;
-import com.servoy.j2db.util.ServoyException;
 
 /**
  * Helper function to unwrap Rhino Js objects to Java 
@@ -62,6 +62,10 @@ public class JSArgumentsUnwrap {
 		if (o instanceof IFoundSet) {
 			// foundSets are used as data sources for sub-reports
 			return new JRFoundSetDataSource(clientPluginAccess, (IFoundSet)o);
+		}
+		
+		if (o instanceof IDataSet) {
+			return new DatasetDataSource(clientPluginAccess, (IDataSet)o);
 		}
 		
 		if (o instanceof ScriptableObject) {
@@ -85,6 +89,12 @@ public class JSArgumentsUnwrap {
 			}
 			o = params;
 		}
+		
+		if (o == UniqueTag.NOT_FOUND)
+		{
+			return null;
+		}
+		
 		return o;
 	}
 }

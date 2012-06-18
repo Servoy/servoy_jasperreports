@@ -92,7 +92,7 @@ public class JasperReportsProvider implements IScriptObject {
 			{
 					{ "runReport" },
 					{
-							"source(serverName|foundset)",
+							"source(serverName|foundset|dataset)",
 							"reportFileName ",
 							"exportFileName / boolean showPrintDialog / printerName",
 							"outputFormat", "parameters", "[locale]",
@@ -303,7 +303,7 @@ public class JasperReportsProvider implements IScriptObject {
 		return null;
 	}
 
-	public Class[] getAllReturnedTypes() {
+	public Class<?>[] getAllReturnedTypes() {
 		return new Class[] { OUTPUT_FORMAT.class, JR_SVY_VIEWER_DISPLAY_MODE.class };
 	}
 
@@ -314,9 +314,9 @@ public class JasperReportsProvider implements IScriptObject {
 	 *            print job that the fix applies to
 	 */
 	public static void initPrinterJobFields(PrinterJob job) {
-		Class clazz = job.getClass();
+		Class<?> clazz = job.getClass();
 		try {
-			Class printServiceClass = Class.forName("javax.print.PrintService");
+			Class<?> printServiceClass = Class.forName("javax.print.PrintService");
 			Method method = clazz.getMethod("getPrintService", (Class[]) null);
 			Object printService = method.invoke(job, (Object[]) null);
 			method = clazz.getMethod("setPrintService",
