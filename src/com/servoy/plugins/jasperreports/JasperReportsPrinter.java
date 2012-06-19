@@ -79,14 +79,14 @@ public class JasperReportsPrinter implements Printable {
 
 	printJob.setJobName("JasperReports - " + jasperPrint.getName());
 
-	switch (jasperPrint.getOrientation()) {
-	case JRReport.ORIENTATION_LANDSCAPE: {
+	switch (jasperPrint.getOrientationValue()) {
+	case LANDSCAPE: {
 	    pageFormat.setOrientation(PageFormat.LANDSCAPE);
 	    paper.setSize(jasperPrint.getPageHeight(), jasperPrint.getPageWidth());
 	    paper.setImageableArea(0, 0, jasperPrint.getPageHeight(), jasperPrint.getPageWidth());
 	    break;
 	}
-	case JRReport.ORIENTATION_PORTRAIT:
+	case PORTRAIT:
 	default: {
 	    pageFormat.setOrientation(PageFormat.PORTRAIT);
 	    paper.setSize(jasperPrint.getPageWidth(), jasperPrint.getPageHeight());
@@ -100,15 +100,7 @@ public class JasperReportsPrinter implements Printable {
 	book.append(this, pageFormat, lastPageIndex - firstPageIndex + 1);
 	printJob.setPageable(book);
 	try {
-	    if (false) {
-		if (printJob.printDialog()) {
-		    printJob.print();
-		} else {
-		    isOK = false;
-		}
-	    } else {
 		printJob.print();
-	    }
 	} catch (Exception ex) {
 	    throw new JRException("Error printing report.", ex);
 	}

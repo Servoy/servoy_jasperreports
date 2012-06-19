@@ -37,17 +37,18 @@ UPGRADE BASIC OR CHARTNSCRIPT PLUGIN VERSIONS
 If you are using the Basic or the ChartNScript drop-in versions:
 1. Upgrade the version of the JasperReports engine, in the /plugins/servoy_jasperreports directory with the desired one.
 2. Check and synchronize the versions of the libraries used by Servoy with the ones used by JasperReports:
-	2.1 In the current version of Servoy JasperReports plugin, which is 3.1 (that uses the JasperReports engine version 3.7.1), only the iText and Jakarta-POI libraries were upgraded in Servoy (these jars are found in the /plugins/jakarta-poi and /plugins/pdf_output folders in your Servoy installation directory and in the /plugins/servoy_jasperreports/ folder).
-	2.2 If you are upgrading from the previous version of our plugin (3.0), make sure you have the new version of the two aforementioned libraries in the locations mentioned at 2.1.
+	2.1 In the current version of Servoy JasperReports plugin, which is 4.0 (that uses the JasperReports engine version 4.6.0), libraries are in sync with required Servoy versions.
+	2.2 If you are upgrading from the previous version(s) of our plugin (3.3 and below), make sure you have the new version of the needed libraries (pay special attention to POI and itext) at the corresponding locations.
+	2.3 Please also refer to the wiki page of project for details: https://www.servoyforge.net/projects/servoy-jasperreports/wiki
 		2.2.1 If more (complex) updates are needed, please double-check and synchronize the library versions of the following folders, in your servoy installation directory: /application_server/lib and application_server/plugins, with the ones used by the version of the JasperReports project you are upgrading to.
-3. Edit the servoy_jasperreports.properties file, to point to the properly new copied library jars files.
+3. Edit the servoy_jasperreports.properties file, to point to the properly new copied library jars files, if any.
 
 
 UPGRADE THE ADVANCED PLUGIN VERSION
 If you are using the Advanced (configurable) version of the plugin:
 1. Edit the servoy_jasperreports.properties file. 
 	1.1 Specify the path to the JasperReports (extracted) project folder and to the JasperReports engine jar file (this path must end with the name of the jar file): pathToJasperReportsEngineJar=C:/Downloads/JasperReports/jasperreports-x.x.x.jar, pathToJasperReportsLibs=C:/Downloads/JasperReports/jasperreports-x.x.x-project.
-	1.2 The servoy_jasperreports.properties file contains records of all the libraries that might be required by the JasperReports engine. The properties file has been written with respect to JasperReports version 3.7.1. If using a different version of JasperReports, please verify and update the library record information if necessary (path, package, version, as found in the JasperReports project folder).
+	1.2 The servoy_jasperreports.properties file contains records of all the libraries that might be required by the JasperReports engine. The properties file has been written with respect to JasperReports version 4.6.0. If using a different version of JasperReports, please verify and update the library record information if necessary (path, package, version, as found in the JasperReports project folder).
 2. Generate the plugin files (required by Servoy), using ant and providing the configure.xml (contained in the present downloaded zip) as the argument: for example, start in the same folder where the configure.xml is located and run ant (C:/path/to/configure_xml/ant), if you have the "path" system variable pointing to the bin folder of the ant binaries, or start from the bin folder located in the ant binaries folder and run ant pointing to configure.xml (C:/path/to/ant_binaries/bin/ant -buildfile C:/path/to/configure_xml/configure.xml).  
 	2.1 If you do not have ant installed, please download the binaries from http://ant.apache.org/bindownload.cgi and configure the system "path" variable to point to the bin folder of the ant binaries download.
 	2.2 This step configures the plugin with a minimal set of required libraries and creates the necessary jnlp file (according to the properties specified in the servoy_jasperreports.properties file).

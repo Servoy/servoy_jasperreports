@@ -847,7 +847,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	public String js_getPluginVersion() {
-		return "3.3.0_b1";
+		return "4.0.0";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed
@@ -926,7 +926,7 @@ public class JasperReportsProvider implements IScriptObject {
 		JRSaveContributor[] jrSaveContribs = new JRSaveContributor[DEFAULT_CONTRIBUTORS.length];
 		for (int i = 0; i < DEFAULT_CONTRIBUTORS.length; i++) {
 			try {
-				Class<? extends JRSaveContributor> saveContribClass = JRClassLoader.loadClassForName(DEFAULT_CONTRIBUTORS[i]);
+				Class<? extends JRSaveContributor> saveContribClass = (Class<? extends JRSaveContributor>) JRClassLoader.loadClassForName(DEFAULT_CONTRIBUTORS[i]);
 				ResourceBundle jrViewerResBundel = ResourceBundle.getBundle(
 						"net/sf/jasperreports/view/viewer", jrv.getLocale());
 				Constructor<? extends JRSaveContributor>  constructor = saveContribClass.getConstructor(new Class[] { Locale.class, ResourceBundle.class });

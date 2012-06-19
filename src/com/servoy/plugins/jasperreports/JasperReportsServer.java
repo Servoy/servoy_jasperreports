@@ -39,10 +39,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,7 +52,6 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -69,7 +66,6 @@ import com.servoy.j2db.plugins.IServerAccess;
 import com.servoy.j2db.plugins.IServerPlugin;
 import com.servoy.j2db.plugins.PluginException;
 import com.servoy.j2db.preference.PreferencePanel;
-import com.servoy.j2db.server.ApplicationServer;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
@@ -322,8 +318,6 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		if (report == null) {
 			throw new IllegalArgumentException("No jasperReport <null> has been found or loaded");
 		}
-
-		String servoyDir = JasperReportRunner.adjustFileUnix(System.getProperty("user.dir"));
 
 		// make directory unix style
 		String jasperDirectory = JasperReportRunner.adjustFileUnix(repdir);
@@ -706,32 +700,31 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return null;
 	}
 
-	public Map getRequiredPropertyNames() {
-		Map req = new HashMap();
+	public Map<String, String> getRequiredPropertyNames() {
+		Map<String, String> req = new HashMap<String, String>();
 		req.put("directory.jasper.report", "Reports Directory");
 		req.put("directories.jasper.extra", "Extra Directories needed by the Servoy JasperReports Plugin. Paths can be set on the client relative to the server side setting path; for multiple entries, separate with commas.");
-		
 		return req;
 	}
 
 	public String[] getReports(String clientID, String filePattern) throws Exception {
 		String reportsdir = getReportDirectory();
-		List files = getFileListing(new File(reportsdir), filePattern);
+		List<File> files = getFileListing(new File(reportsdir), filePattern);
 		return getListOfFiles(files);
 	}
 	
-	public List getFileListing(File startingDirectory, String filePattern) throws FileNotFoundException
+	public List<File> getFileListing(File startingDirectory, String filePattern) throws FileNotFoundException
 	{
 		checkStartingDirectory(startingDirectory);
 		FileFilter wildcardFileFilter = new WildcardFileFilter(filePattern,IOCase.INSENSITIVE);
 		File[] filesAndDirs = startingDirectory.listFiles(wildcardFileFilter);
-		List filesDirs = Arrays.asList(filesAndDirs);
-		List result = new ArrayList();
+		List<File> filesDirs = Arrays.asList(filesAndDirs);
+		List<File> result = new ArrayList<File>();
 		
 		for (int i = 0; i < filesDirs.size(); i++) {
-			File file = (File) filesDirs.get(i);
+			File file = filesDirs.get(i);
 			if (!file.isFile()) {
-				List deeperList = getFileListing(file, filePattern);
+				List<File> deeperList = getFileListing(file, filePattern);
 				result.addAll(deeperList);
 			} else {
 				result.add(file);
@@ -742,18 +735,18 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	
 	public String[] getReports(String clientID, boolean compiled, boolean uncompiled) throws Exception {
 		String reportsdir = getReportDirectory();
-		List files = getFileListing(new File(reportsdir), compiled, uncompiled);
+		List<File> files = getFileListing(new File(reportsdir), compiled, uncompiled);
 		return getListOfFiles(files);
 	}
 	
-	private List getFileListing(File startingDirectory, boolean compiled,
+	private List<File> getFileListing(File startingDirectory, boolean compiled,
 			boolean uncompiled) throws FileNotFoundException {
 
 		checkStartingDirectory(startingDirectory);
 		
-		List result = new ArrayList();
+		List<File> result = new ArrayList<File>();
 
-		ArrayList extensions = new ArrayList();
+		ArrayList<String> extensions = new ArrayList<String>();
 		if (compiled)
 			extensions.add(".JASPER");
 		if (uncompiled)
@@ -761,12 +754,12 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 		FileFilter filter = new JasperFilter(extensions);
 		File[] filesAndDirs = startingDirectory.listFiles(filter);
-		List filesDirs = Arrays.asList(filesAndDirs);
+		List<File> filesDirs = Arrays.asList(filesAndDirs);
 
 		for (int i = 0; i < filesDirs.size(); i++) {
-			File file = (File) filesDirs.get(i);
+			File file = filesDirs.get(i);
 			if (!file.isFile()) {
-				List deeperList = getFileListing(file, compiled, uncompiled);
+				List<File> deeperList = getFileListing(file, compiled, uncompiled);
 				result.addAll(deeperList);
 			} else {
 				result.add(file);
@@ -795,14 +788,14 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
-	public String[] getListOfFiles(List files) throws Exception
+	public String[] getListOfFiles(List<File> files) throws Exception
 	{
 		String reportsdir = getReportDirectory();
 		String[] list = new String[files.size()];
 
 		for (int i = 0; i < files.size(); i++) {
 
-			String filepath = ((File) files.get(i)).getPath();
+			String filepath = files.get(i).getPath();
 			String filen = filepath.substring(reportsdir.length());
 
 			if (filen.startsWith("\\"))
@@ -815,9 +808,9 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 	private class JasperFilter implements FileFilter {
 
-		private ArrayList jrext;
+		private ArrayList<String> jrext;
 
-		public JasperFilter(ArrayList ext) {
+		public JasperFilter(ArrayList<String> ext) {
 			this.jrext = ext;
 		}
 
@@ -825,7 +818,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			boolean acc = false;
 
 			for (int i = 0; i < jrext.size(); i++) {
-				String ext = (String) jrext.get(i);
+				String ext = jrext.get(i);
 				String uname = file.getName().toUpperCase();
 
 				if (uname.endsWith(ext)) {
@@ -921,24 +914,11 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	 */
 	private final boolean hasAccess(String clientId) throws Exception {
 		
-		boolean isServerProcess = false;
-		boolean isAuthenticated = false;
-		
-		try {
-			Method methodIsServerProcess = IServerAccess.class.getMethod("isServerProcess", String.class);
-			Method methodIsAuthenticated = IServerAccess.class.getMethod("isAuthenticated", String.class);
-			isServerProcess = ((Boolean)methodIsServerProcess.invoke(application, clientId)).booleanValue();
-			isAuthenticated = ((Boolean)methodIsAuthenticated.invoke(application, clientId)).booleanValue();
-		} catch (NoSuchMethodException nsme) {
-			Debug.error(nsme.getMessage());
-			return true; 
-		}
-		
-		if (isServerProcess || isAuthenticated) { 
-			return true; //in 5.2.x and have access
+		if (application.isServerProcess(clientId) || application.isAuthenticated(clientId)) { 
+			return true; // have access
 		}
 		else {
-			return false; //in 5.2.x and NO access
+			return false; //NO access
 		}
 	}
 	
