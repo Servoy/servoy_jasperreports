@@ -53,7 +53,7 @@
 		<echo message="&#x0009;&#x0009;&lt;vendor&gt;Servoy and Others&lt;/vendor&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&lt;/information&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&lt;resources&gt; ${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
-		<echo message="&#x0009;&#x0009;&lt;j2se version=&quot;1.6+&quot; /&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&lt;j2se version=&quot;1.6+&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		
 		<!-- the default jar files that are needed -->
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/plugins/servoy_jasperreports.jar&quot; download=&quot;eager&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
