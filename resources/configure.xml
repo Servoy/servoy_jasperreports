@@ -46,8 +46,7 @@
 	</target>
 	
 	<target name="createJnlpFileHeader">
-		<echo file="${plugins}/servoy_jasperreports.jar.jnlp" append="false"/>
-		<echo message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="false"/>
 		<echo message="&lt;jnlp spec=&quot;1.0+&quot; codebase=&quot;%%serverURL%%&quot; href=&quot;/servoy-client/${plugins}/servoy_jasperreports.jar.jnlp&quot;&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&lt;information&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&#x0009;&lt;title&gt;Servoy Client Plugins&lt;/title&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
