@@ -738,8 +738,9 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated replaced by the relativeReportsDirectory property
 	 */
+	@Deprecated
 	public String js_getReportDirectory() throws Exception {
 		return plugin.getJasperReportsDirectory();
 	}
@@ -747,6 +748,7 @@ public class JasperReportsProvider implements IScriptObject {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public void js_setReportDirectory(String jasperDirectorie) throws Exception {
 		js_setRelativeReportsDirectory(jasperDirectorie);
 	}
@@ -763,8 +765,9 @@ public class JasperReportsProvider implements IScriptObject {
 
 	/**
 	 * 
-	 * @deprecated
+	 * @deprecated replaced by the relativeExtraDirectories property
 	 */
+	@Deprecated
 	public String js_getExtraDirectories() throws Exception {
 		return plugin.getJasperExtraDirectories();
 	}
@@ -776,6 +779,7 @@ public class JasperReportsProvider implements IScriptObject {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public void js_setExtraDirectories(String extraDirectories) throws Exception {
 		js_setRelativeExtraDirectories(extraDirectories);
 	}
