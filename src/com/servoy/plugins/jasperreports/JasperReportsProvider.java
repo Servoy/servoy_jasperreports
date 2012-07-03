@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2009 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2009 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,8 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +50,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.print.PrintService;
+import javax.swing.ImageIcon;
+import javax.swing.JApplet;
 import javax.swing.WindowConstants;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -86,6 +90,10 @@ public class JasperReportsProvider implements IScriptObject {
 	private static final int EXAMPLE = 3;
 
 	private String[] viewerExportFormats = null;
+	private String viewerTitle;
+	private String viewerIconURL;
+	
+	
 
 	private static final String PROPERTIES[][][] = {
 			// methodname, parameters, tooltip, example
@@ -159,6 +167,16 @@ public class JasperReportsProvider implements IScriptObject {
 					{},
 					{ "Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory." },
 					{ "// By default the value is read from the adim page Server Plugins, the directory.jasper.report property.\n//A client is only able to set a path relative to the server report directory. \n//If the client modifies this property, its value will be used instead of the default one, for the whole client session and only for this client. \n//Each client session has it's own relativeReportDirectory value." } },
+			{
+					{ "viewerTitle" },
+					{},
+					{ "Get or set Jasper Viewer's title text" },
+					{ "plugins.jasperPluginRMI.viewerTitle = 'My Title'" } },
+			{
+					{ "viewerIconURL" },
+					{},
+					{ "Get or set Jasper Viewer's icon URL" },
+					{ "plugins.jasperPluginRMI.viewerIconURL = 'myIcon.jpg'" } },
 			{
 					{ "viewerExportFormats" },
 					{},
@@ -557,6 +575,29 @@ public class JasperReportsProvider implements IScriptObject {
 
 						if (viewerExportFormats != null)
 							setViewerSaveContributors(jasperviewer.getJRViewer(), viewerExportFormats);
+						
+						if(viewerTitle != null) jasperviewer.setTitle(viewerTitle);
+						if(viewerIconURL != null)
+						{
+							URL mediaURL = null;
+							try
+							{
+								mediaURL = new URL(viewerIconURL);
+							}
+							catch (MalformedURLException ex)
+							{
+								// fallback to media:///
+								try
+								{
+									mediaURL = new URL("media:///" + viewerIconURL);
+								}
+								catch (MalformedURLException ex1)
+								{
+									Debug.error(ex1);
+								}
+							}
+							if (mediaURL != null) jasperviewer.setIconImage(new ImageIcon(mediaURL).getImage());
+						}
 
 						if (jp != null && jp.getPages() != null
 								&& jp.getPages().size() > 0) {
@@ -886,6 +927,44 @@ public class JasperReportsProvider implements IScriptObject {
 		viewerExportFormats = saveContribs;
 	}
 
+	/**
+	 * Sets the Jasper Viewer's title text
+	 * 
+	 * @param viewerTitle title text
+	 */	
+	public void js_setViewerTitle(String viewerTitle)
+	{
+		this.viewerTitle = viewerTitle;
+	}
+	
+	/**
+	 * Gets Jasper Viewer's title text
+	 * @return Jasper Viewer's title text
+	 */	
+	public String js_getViewerTitle()
+	{
+		return viewerTitle;
+	}
+	
+	/**
+	 * Sets the Jasper Viewer's icon URL
+	 * 
+	 * @param viewerIconURL icon URL
+	 */		
+	public void js_setViewerIconURL(String viewerIconURL)
+	{
+		this.viewerIconURL = viewerIconURL;
+	}
+	
+	/**
+	 * Gets Jasper Viewer's icon URL
+	 * @return Jasper Viewer's icon URL
+	 */	
+	public String js_getViewerIconURL()
+	{
+		return viewerIconURL;
+	}
+	
 	/**
 	 * Sets the save contributors for the JasperViewer's JRViewer instance.
 	 * 
