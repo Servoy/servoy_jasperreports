@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2010 Servoy BV http://www.servoy.com
+ * Copyright © 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  * Servoy B.V.
  * De Brand 26
  * 3823 LJ Amersfoort
- * The Netherlands 
+ * The Netherlands
  * http://www.servoy.com
  */
 package com.servoy.plugins.jasperreports;
