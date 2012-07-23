@@ -28,11 +28,30 @@
  */
 package com.servoy.plugins.jasperreports;
 
+import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.scripting.IConstantsObject;
 
+@ServoyDocumented(category = ServoyDocumented.PLUGINS)
 public abstract class JR_SVY_VIEWER_DISPLAY_MODE implements IConstantsObject 
 {
+	/**
+	 * @sample
+	 * elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
+	 * elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);
+	 */
 	public static final String FIT_WIDTH = "display_mode_fit_width";
+	
+	/**
+	 * @sample
+	 * elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE;
+	 * elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);
+	 */
 	public static final String FIT_PAGE = "display_mode_fit_page";
+	
+	/**
+	 * @sample
+	 * elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE;
+	 * elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);
+	 */
 	public static final String ACTUAL_PAGE_SIZE = "acutal_page_size";
 }

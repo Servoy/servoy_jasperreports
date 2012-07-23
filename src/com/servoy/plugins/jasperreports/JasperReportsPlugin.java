@@ -40,6 +40,7 @@ import com.servoy.j2db.plugins.IClientPluginAccess;
 import com.servoy.j2db.plugins.PluginException;
 import com.servoy.j2db.preference.PreferencePanel;
 import com.servoy.j2db.scripting.IScriptObject;
+import com.servoy.j2db.scripting.IScriptable;
 import com.servoy.j2db.util.Debug;
 
 /**
@@ -47,6 +48,8 @@ import com.servoy.j2db.util.Debug;
  */
 public class JasperReportsPlugin implements IClientPlugin {
 
+	public static final String PLUGIN_NAME = "JasperReports";
+	
 	private IClientPluginAccess application;
 
 	private JasperReportsProvider impl;
@@ -125,7 +128,7 @@ public class JasperReportsPlugin implements IClientPlugin {
 		return null;
 	}
 
-	public IScriptObject getScriptObject(){
+	public IScriptable getScriptObject(){
 		try{
 
 			if (impl == null)

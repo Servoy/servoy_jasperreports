@@ -56,16 +56,16 @@ public abstract class AbstractServoyDataSource implements JRRewindableDataSource
 
 	/**
 	 * Get the value of the dataProvider.
-	 * @param dataProviderId
-	 * @return
+	 * @param dataProviderId the id of the dataprovider
+	 * @return the dataprovider value for the specified dataprovider id
 	 * @throws ServoyException 
 	 */
 	protected abstract Object getDataProviderValue(String dataProviderId) throws ServoyException ;
 
 	/**
 	 * Get the value of the field, may be a value or a global method call (when it has braces).
-	 * @param dataProviderId
-	 * @return
+	 * @param dataProviderId the field to get the value for
+	 * @return the value of the field for the specified field
 	 * @throws ServoyException 
 	 */
 	public final Object getFieldValue(JRField jrField) throws JRException {
@@ -115,8 +115,8 @@ public abstract class AbstractServoyDataSource implements JRRewindableDataSource
 
 	/**
 	 * Call the global method, arguments may be specified.
-	 * @param name
-	 * @return
+	 * @param name the name of the gloal method to call
+	 * @return the result of the global method call
 	 * @throws Exception 
 	 */	
 	protected Object getGlobalMethodResult(String name) throws Exception {

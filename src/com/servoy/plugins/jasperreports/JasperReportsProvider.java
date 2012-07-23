@@ -30,16 +30,13 @@ package com.servoy.plugins.jasperreports;
 
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,7 +48,6 @@ import java.util.ResourceBundle;
 
 import javax.print.PrintService;
 import javax.swing.ImageIcon;
-import javax.swing.JApplet;
 import javax.swing.WindowConstants;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -66,8 +62,10 @@ import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.JRViewer;
 
 import com.servoy.j2db.dataprocessing.JSDataSet;
+import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.plugins.IClientPluginAccess;
-import com.servoy.j2db.scripting.IScriptObject;
+import com.servoy.j2db.scripting.IReturnedTypesProvider;
+import com.servoy.j2db.scripting.IScriptable;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
@@ -77,119 +75,17 @@ import com.servoy.j2db.util.Utils;
  * .org/jaspersoft/opensource/business_intelligence/jasperreports
  * /requirements.html
  */
-public class JasperReportsProvider implements IScriptObject {
+@ServoyDocumented(category = ServoyDocumented.PLUGINS, publicName = JasperReportsPlugin.PLUGIN_NAME, scriptingName = "plugins." + JasperReportsPlugin.PLUGIN_NAME)
+public class JasperReportsProvider implements IScriptable, IReturnedTypesProvider {
 	private JasperReportsPlugin plugin;
 
 	protected static ThreadLocal<IJasperReportsService> jasperReportsLocalService = new ThreadLocal<IJasperReportsService>();
 	protected static ThreadLocal<String> jasperReportsLocalClientID = new ThreadLocal<String>();
 
-	private static final int PARAMETER = 1;
-
-	private static final int TOOLTIP = 2;
-
-	private static final int EXAMPLE = 3;
-
 	private String[] viewerExportFormats = null;
 	private String viewerTitle;
 	private String viewerIconURL;
 	
-	
-
-	private static final String PROPERTIES[][][] = {
-			// methodname, parameters, tooltip, example
-			{
-					{ "runReport" },
-					{
-							"source(serverName|foundset|dataset)",
-							"reportFileName ",
-							"exportFileName / boolean showPrintDialog / printerName",
-							"outputFormat", "parameters", "[locale]",
-							"[moveTableOfContents]" }, { "Execute a Report" },
-					{} },
-			{
-					{ "writeFileToReportsDir" },
-					{ "reportFileName", "JSFile reportFile" },
-					{ "Store a reportFile on the Server" },
-					{ "// .jasper or .jrxml files can be used\n"
-							+ "var file = plugins.file.readFile('e:\\\\temp\\\\sample.jasper');\n"
-							+ "plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file);\n"
-							+ "// Writes to a subfolder from the reports directory. All the folders from the path must exist.\n"
-							+ "plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.jasper', file);\n" } },
-			{
-					{ "deleteFileFromReportsDir" },
-					{ "reportFileName" },
-					{ "Delete a reportFile from the Server" },
-					{ "var reportFile2Delete = 'myCustomerReport.jrxml';\n"
-							+ "plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);\n" } },
-			{
-					{ "readFileFromReportsDir" },
-					{ "reportFileName" },
-					{ "Retrieve a reportFile from the Server" },
-					{ "var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper');\n"
-							+ "// Subfolders can be used to read files.\n"
-							+ "var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir\\\\myCustomerReport.jasper');" } },
-			{
-					{ "compileReport" },
-					{ "reportFileName", "[destinationFileName]" },
-					{ "Compile a Jasper Reports .jrxml file to a .jasper file." },
-					{ "// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name.\n"
-							+ "// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file.\n"
-							+ "var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml');\n"
-							+ "// The report name as a relative path. The file will be searched relative to the ReportDirectory.\n"
-							+ "var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml');\n"
-							+ "var success = plugins.jasperPluginRMI.compileReport('\\\\subdir\\\\myCustomerReport2.jrxml');\n"
-							+ "// To specify a different destination file than the original filaname, the second parameter can be incouded.\n"
-							+ "// If it is relative, the file will be created relative to the ReportDirectory.\n"
-							+ "var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');" } },
-			{
-					{ "getReports" },
-					{ "filter" },
-					{ "Retrieve a String array of available reports, based on the reports directory." },
-					{ "// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports\n// No parameter returns all the reports\nvar result = plugins.jasperPluginRMI.getReports('NONCOMPILED');\napplication.output(result[0]);\n " 
-						+ "\n // using a string as the search filter\n//var result = plugins.jasperPluginRMI.getReports('*criteria*');\n//for(var i=0; i<result.length; i++)\n//application.output(result[i]);\n " } },
-			{
-					{ "getReportParameters" },
-					{ "report" },
-					{ "Retrieve a JSDataSet with the parameters except the system defined ones." },
-					{ "var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml');\nvar csv = ds.getAsText(',','\\n','\"',true);\napplication.output(csv);" } },
-			{
-					{ "reportDirectory" },
-					{},
-					{ "Property for retrieving the reports directory from the server." },
-					{ "// By defaul the value is read from the adim page Server Plugins, the directory.jasper.report property.\n// If the client modifies the reportDirectory property, this value will be used instead of the default one for the whole client session and only for this client. Each client session has it's own reportDirectory value." } },
-			{
-					{ "relativeExtraDirectories" },
-					{},
-					{ "Property for retrieving and setting the paths to the extra resources directories. The paths are set per client and are relative to the server corresponding directories setting." },
-					{ "// By defaul the value is read from the adim page Server Plugins, the directories.jasper.extra property.\n// If the client modifies the default property, this value will be used instead of the \n// default one for the whole client session and only for this client. \n// Each client session has it's own extraDirectories value.\n// NOTE: Extra directories are not searched recursively." } },		
-			{
-					{ "relativeReportsDirectory" },
-					{},
-					{ "Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory." },
-					{ "// By default the value is read from the adim page Server Plugins, the directory.jasper.report property.\n//A client is only able to set a path relative to the server report directory. \n//If the client modifies this property, its value will be used instead of the default one, for the whole client session and only for this client. \n//Each client session has it's own relativeReportDirectory value." } },
-			{
-					{ "viewerTitle" },
-					{},
-					{ "Get or set Jasper Viewer's title text" },
-					{ "plugins.jasperPluginRMI.viewerTitle = 'My Title'" } },
-			{
-					{ "viewerIconURL" },
-					{},
-					{ "Get or set Jasper Viewer's icon URL" },
-					{ "plugins.jasperPluginRMI.viewerIconURL = 'myIcon.jpg'" } },
-			{
-					{ "viewerExportFormats" },
-					{},
-					{ "Get or set the Jasper Viewer's export formats" },
-					{ "var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;\n"
-							+ "application.output(defaultExportFormats);\n"
-							+ "// use the default export constants of the plugin, of the OUTPUT_FORMAT constants node;\n"
-							+ "// the following formats are availabe for setting the viewer export formats:\n "
-							+ "// PDF, JRPRINT, RTF, ODT, HTML, XLS_1_SHEET, XLS, CSV, XML\n"
-							+ "// and there is an extra Xml with Embedded Images export type available for the Viewer, denoted by 'xml_embd_img' \n"
-							+ "// the first export format in the list will be the default one displayed in the Save dialog of the Viewer.\n"
-							+ "plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];" } } };
-
 	private String relativeReportsDir;
 	private String relativeExtraDirs;
 	
@@ -197,128 +93,6 @@ public class JasperReportsProvider implements IScriptObject {
 		plugin = p;
 		relativeReportsDir = "";
 		relativeExtraDirs = "";
-	}
-
-	public String[] getProperty(String methodName, int prop) {
-		for (int i = 0; i < PROPERTIES.length; i++) {
-			String as[][] = PROPERTIES[i];
-			if (as[0][0].equals(methodName)) {
-				return as[prop];
-			}
-		}
-		return null;
-	}
-
-	public boolean isDeprecated(String methodName) {
-		if (methodName == null)
-			return false;
-		else if ("".equals(methodName)) {
-			return true;
-		} else if ("jasperReport".equals(methodName)) {
-			return true;
-		} else if ("jasperCompile".equals(methodName)) {
-			return true;
-		} else if ("writeFile".equals(methodName)) {
-			return true;
-		} else if ("readFile".equals(methodName)) {
-			return true;
-		} else if ("reportDirectory".equals(methodName)) {
-			return true;
-		} else if ("extraDirectories".equals(methodName)) {
-			return true;
-		}
-			
-		return false;
-	}
-
-	public String[] getParameterNames(String methodName) {
-		return getProperty(methodName, PARAMETER);
-	}
-
-	public String getSample(String methodName) {
-		if (methodName == null)
-			return null;
-		else if ("runReport".equals(methodName)) {
-			StringBuffer retval = new StringBuffer();
-			retval.append("// The method runs a client report specified by the second parameter acording to the output format.\n ");
-			retval.append("// The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one.\n\n");
-			retval.append("/* To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient\n");
-			retval.append(" * Note: the parameters argument is used to send additional parameters into the report. For example:\n");
-			retval.append(" * {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value of dataprovider customer_id in the selected record on the customers form\n");
-			retval.append(" * The parameters argument is an Object, which can be instantiated in two ways:\n");
-			retval.append(" * var o = new Object();\n");
-			retval.append(" * o.pcustomerid = forms.customers.customer_id;\n");
-			retval.append(" * or:\n");
-			retval.append(" * var o = {pcustomerid: forms.customers.customer_id};\n");
-			retval.append(" */\n");
-			retval.append("application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer\n");
-			retval.append("plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("\n");
-			retval.append("/* To request a report in a different Language than the current language of the client, it's possible to specify a Locale string as the locale argument. For example: 'en' or 'es' or 'nl'\n");
-			retval.append(" * When the locale argument is not specified, the report will be in the current langauge of the Client\n");
-			retval.append(" * i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation\n");
-			retval.append(" */\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl');\n");
-			retval.append("\n");
-			retval.append("/* To print the result of the customers report in the SmartClient (to a specified printer), the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT).\n");
-			retval.append(" * The third parameter can contain the name of the printer to which the report needs to be printed\n");
-			retval.append(" * or can contain true (boolean value) to show a printdialog before printing.\n");
-			retval.append(" * If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer.\n");
-			retval.append(" * Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT).\n");
-			retval.append(" */\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("\n");
-			retval.append("/* To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive:\n");
-			retval.append(" * Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml.\n");
-			retval.append(" * These are available as constants in the OUTPUT_FORMAT node of the plugin's tree.\n");
-			retval.append(" * Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside\n");
-			retval.append(" */\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.html',OUTPUT_FORMAT.HTML,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.pdf',OUTPUT_FORMAT.PDF,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.rtf',OUTPUT_FORMAT.RTF,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS /*or excel OUTPUT_FORMAT.EXCEL*/,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("//plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});\n");
-			retval.append("\n");
-			retval.append("/* Jasper Reports supports queries with IN operators through the following notation: X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist)\n");
-			retval.append(" * When using this notation, the pcustomeridlist parameter needs to contain one or more values in the following way:\n");
-			retval.append(" */\n");
-			retval.append("//var idlist = new Array()\n");
-			retval.append("//idlist[0] = 1\n");
-			retval.append("//idlist[1] = 26\n");
-			retval.append("//plugins.jasperPluginRMI.jasperReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist});\n");
-			retval.append("\n//The return value is a byte array with the content of the file generated that can be further used.\n");
-			retval.append("//var res = plugins.jasperPluginRMI.runReport(currentcontroller.getServerName(),'samplereport.jrxml', null, OUTPUT_FORMAT.PDF, null);\n");
-			retval.append("//plugins.file.writeFile('e:\\\\sample.pdf', res); \n");
-			retval.append("\n/* In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\") \n");
-			retval.append(" * to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\" \n");
-			retval.append(" */\n");
-			retval.append("// plugins.jasperPluginRMI.runReport(forms.customers.controller.getServerName(),'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);\n");
-			retval.append("\n/* NOTE: in Servoy 5.x and above, instead of forms.customers.controller.getServerName() use code as the following, to get the server name: */\n");
-			retval.append("// var ds = foundset.getDataSource();\n");
-			retval.append("// var d = ds.split('/);\n");
-			retval.append("// var myServer = d[1]; \n");
-			return retval.toString();
-		} else {
-			String[] as = getProperty(methodName, EXAMPLE);
-			if (as != null)
-				return as[0];
-		}
-		return null;
-	}
-
-	public String getToolTip(String methodName) {
-		String[] as = getProperty(methodName, TOOLTIP);
-		if (as != null)
-			return as[0];
-		return null;
 	}
 
 	public Class<?>[] getAllReturnedTypes() {
@@ -367,20 +141,31 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * @deprecated
-	 * @see js_runReport(String dbalias, String report, Object arg, String type,
-	 *      Object parameters)
+	 * @param dbalias the data base alias (server name or foundset)
+	 * @param report the report file
+	 * @param arg the output file to write to
+	 * @param type the output file format 
+	 * @param parameters the map of user specified parameters to use when running the report
+	 * 
+	 * @deprecated replaced by runReport(String, String, Object, String, Object)
 	 */
+	@Deprecated
 	public byte[] js_jasperReport(String dbalias, String report, Object arg,
 			String type, Object parameters) throws Exception {
 		return js_runReport(dbalias, report, arg, type, parameters, null);
 	}
 
 	/**
-	 * @deprecated
-	 * @see js_runReport(String dbalias, String report, Object arg, String type,
-	 *      Object parameters, String localeString)
+	 * @param dbalias the data base alias (server name or foundset)
+	 * @param report the report file
+	 * @param arg the output file to write to
+	 * @param type the output file format 
+	 * @param parameters the map of user specified parameters to use when running the report
+	 * @param localeString the string which specifies the locale
+	 * 
+	 * @deprecated replaced by runReport(String, String, Object, String, Object, String)
 	 */
+	@Deprecated
 	public byte[] js_jasperReport(String dbalias, String report, Object arg,
 			String type, Object parameters, String localeString)
 			throws Exception {
@@ -388,11 +173,36 @@ public class JasperReportsProvider implements IScriptObject {
 				localeString);
 	}
 
+	/**
+	 * @clonedesc js_runReport(Object,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(Object,String,Object,String,Object,String,Boolean) 
+	 * 
+	 * @param source the server name of foundset to run the report on
+	 * @param report the report file (relative to the reports directory)
+	 * @param arg the output file (must specify an absolute path) or null if not needed
+	 * @param type the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * 
+	 * @return the generated reported as a byte array
+	 */
 	public byte[] js_runReport(Object source, String report, Object arg,
 			String type, Object parameters) throws Exception {
 		return js_runReport(source, report, arg, type, parameters, null);
 	}
 
+	/**
+	 * @clonedesc js_runReport(Object,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(Object,String,Object,String,Object,String,Boolean) 
+	 * 
+	 * @param source the server name of foundset to run the report on
+	 * @param report the report file (relative to the reports directory)
+	 * @param arg the output file (must specify an absolute path) or null if not needed
+	 * @param type the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString the string which specifies the locale
+	 * 
+	 * @return the generated reported as a byte array
+	 */
 	public byte[] js_runReport(Object source, String report, Object arg,
 			String type, Object parameters, String localeString)
 			throws Exception {
@@ -400,6 +210,82 @@ public class JasperReportsProvider implements IScriptObject {
 				localeString, Boolean.FALSE);
 	}
 
+	/**
+	 * This method runs a specified (client) report according to the output format, parameters and locale.
+	 * If using a table of contents and if needed, the table of contents can be moved to a specified page. 
+	 * Please refer to the sample code for more details.
+	 * 
+	 * @sample
+	 * // The method runs a client report specified by the second parameter acording to the output format. 
+	 * // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
+	 * // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
+	 * // Note: the parameters argument is used to send additional parameters into the report. For example:
+	 * // {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value of dataprovider customer_id in the selected record on the customers form
+	 * // The parameters argument is an Object, which can be instantiated in two ways: 
+	 * // var o = new Object(); 
+	 * // o.pcustomerid = forms.customers.customer_id; 
+	 * // or: 
+	 * // var o = {pcustomerid: forms.customers.customer_id}; 
+	 * application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer
+	 * var ds = foundset.getDataSource();
+	 * var d = ds.split('/);
+	 * var myServer = d[1];
+	 * plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
+	 * 
+	 * // To request a report in a different Language than the current language of the client, it's possible to specify a Locale string as the locale argument. For example: 'en' or 'es' or 'nl'
+	 * // When the locale argument is not specified, the report will be in the current langauge of the Client
+	 * // i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl');
+	 * 
+	 * // To print the result of the customers report in the SmartClient (to a specified printer), the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT).
+	 * // The third parameter can contain the name of the printer to which the report needs to be printed
+	 * // or can contain true (boolean value) to show a print dialog before printing.
+	 * // If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer.
+	 * // Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT).
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
+	 * 
+	 * // To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive:
+	 * // Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml.
+	 * // These are available as constants in the OUTPUT_FORMAT node of the plugin's tree.
+	 * // Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.html',OUTPUT_FORMAT.HTML,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.pdf',OUTPUT_FORMAT.PDF,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.rtf',OUTPUT_FORMAT.RTF,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
+	 * 
+	 * // Jasper Reports supports queries with IN operators through the following notation: X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist)
+	 * // When using this notation, the pcustomeridlist parameter needs to contain one or more values in the following way:
+	 * //var idlist = new Array()
+	 * //idlist[0] = 1
+	 * //idlist[1] = 26
+	 * //plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist});
+	 * //The return value is a byte array with the content of the file generated that can be further used.
+	 * //var res = plugins.jasperPluginRMI.runReport(myServer,'samplereport.jrxml', null, OUTPUT_FORMAT.PDF, null);
+	 * //plugins.file.writeFile('e:\\\\sample.pdf', res);
+	 * 
+	 * // In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\")
+	 * // to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\"
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);
+	 * 
+	 * @param source the server name of foundset to run the report on
+	 * @param report the report file (relative to the reports directory)
+	 * @param arg the output file (must specify an absolute path) or null if not needed
+	 * @param type the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString the string which specifies the locale
+	 * @param moveTableOfContent true in order to move the table of contents, false otherwise
+	 * 
+	 * @return the generated reported as a byte array
+	 */
 	public byte[] js_runReport(Object source, String report, Object arg,
 			String type, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception {
@@ -677,10 +563,37 @@ public class JasperReportsProvider implements IScriptObject {
 		}
 	}
 
+	/**
+	 * Compile a Jasper Reports .jrxml file to a .jasper file.
+	 * 
+	 * @sample
+	 * // Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name
+	 * // The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file.
+	 * var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml');
+	 * // The report name as a relative path. The file will be searched relative to the ReportDirectory.
+	 * var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml');
+	 * var success = plugins.jasperPluginRMI.compileReport('\\\\subdir\\\\myCustomerReport2.jrxml');
+	 * // To specify a different destination file than the original filaname, the second parameter can be incouded.
+	 * // If it is relative, the file will be created relative to the ReportDirectory.
+	 * var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');
+	 * 
+	 * @param report the .jrxml jasper report file
+	 * 
+	 * @return the compiled jasper report file
+	 */
 	public boolean js_compileReport(String report) throws Error, Exception {
 		return js_compileReport(report, null);
 	}
 
+	/**
+	 * @clonedesc js_compileReport(String)
+	 * @sampleas js_compileReport(String)
+	 * 
+	 * @param report the .jrxml jasper report file
+	 * @param destination the destination file for the compiled report
+	 * 
+	 * @return the compiled jasper report file
+	 */
 	public boolean js_compileReport(String report, String destination)
 			throws Error, Exception {
 
@@ -703,37 +616,59 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * @deprecated
-	 * @see js_compileReport(String report)
+	 * @param report the .jrxml jasper report file
+	 * 
+	 * @deprecated replaced by compileReport(String)
 	 */
+	@Deprecated
 	public boolean js_jasperCompile(String report) throws Error, Exception {
 		return js_compileReport(report);
 	}
 
 	/**
-	 * @param forceRecompile
-	 * @deprecated
-	 * @see js_compileReport(String report)
+	 * @param report the .jrxml jasper report file
+	 * @param forceRecompile true in order to recompile (is no longer supported)
+	 * 
+	 * @deprecated replaced by compileReport(String)
 	 */
+	@Deprecated 
 	public boolean js_jasperCompile(String report, boolean forceRecompile)
 			throws Error, Exception {
 		return js_compileReport(report);
 	}
 
 	/**
-	 * @deprecated
-	 * @see js_writeFileToReportsDir(String filenm, Object obj)
+	 * @param fileName the name and or relative path to the file to write to
+	 * @param obj the object file to write
+	 * 
+	 * @deprecated replaced by writeFileToReportsDir(String, Object)
 	 */
-	public boolean js_writeFile(String filenm, Object obj) throws Exception {
-		return js_writeFileToReportsDir(filenm, obj);
+	@Deprecated
+	public boolean js_writeFile(String fileName, Object obj) throws Exception {
+		return js_writeFileToReportsDir(fileName, obj);
 	}
 
-	public boolean js_writeFileToReportsDir(String filenm, Object obj)
+	/** 
+	 * Store a reportFile on the Server.
+	 * 
+	 * @sample
+	 * // .jasper or .jrxml files can be used
+	 * var file = plugins.file.readFile('\\\\temp\\\\sample.jasper');
+	 * plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file);
+	 * // Writes to a subfolder from the reports directory. All the folders from the path must exist.
+	 * plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.jasper', file);
+	 * 
+	 * @param fileName the name of the file to write to
+	 * @param obj the object file to write
+	 * 
+	 * @return true if the write was successful, false otherwise 
+	 */
+	public boolean js_writeFileToReportsDir(String fileName, Object obj)
 			throws Exception {
 
 		try {
 			Debug.trace("JasperTrace: JasperWriteFile starting");
-			boolean b = plugin.connectJasperService().writeFile(plugin.getIClientPluginAccess().getClientID(), filenm, obj, relativeReportsDir);
+			boolean b = plugin.connectJasperService().writeFile(plugin.getIClientPluginAccess().getClientID(), fileName, obj, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperWriteFile finished");
 			return b;
 		} catch (Exception e) {
@@ -742,11 +677,22 @@ public class JasperReportsProvider implements IScriptObject {
 		}
 	}
 
-	public boolean js_deleteFileFromReportsDir(String filenm) throws Exception {
+	/**
+	 * Delete a report file from the Server.
+	 * 
+	 * @sample
+	 * var reportFile2Delete = 'myCustomerReport.jrxml';
+	 * plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);
+	 * 
+	 * @param fileName the name of the report file to delete
+	 * 
+	 * @return true if the file was successfully deleted, false otherwise 
+	 */
+	public boolean js_deleteFileFromReportsDir(String fileName) throws Exception {
 
 		try {
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir starting");
-			boolean b = plugin.connectJasperService().deleteFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportsDir);
+			boolean b = plugin.connectJasperService().deleteFile(plugin.getIClientPluginAccess().getClientID(), fileName, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperDeleteFileFromReportsDir finished");
 			return b;
 		} catch (Exception e) {
@@ -756,20 +702,34 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * @deprecated
-	 * @see js_readFileFromReportsDir(String filenm)
+	 * @param fileName the name of the file to read from the reports directory
+	 * 
+	 * @deprecated replaced by readFileFromReportsDir(String)
 	 */
-	public byte[] js_readFile(String filenm) throws Exception {
-		return js_readFileFromReportsDir(filenm);
+	@Deprecated
+	public byte[] js_readFile(String fileName) throws Exception {
+		return js_readFileFromReportsDir(fileName);
 	}
 
-	public byte[] js_readFileFromReportsDir(String filenm) throws Exception {
+	/**
+	 * Retrieve a report file from the Server.
+	 * 
+	 * @sample
+	 * var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper');
+	 * // Subfolders can be used to read files.
+	 * var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir\\\\myCustomerReport.jasper');
+	 * 
+	 * @param fileName the name of the file to read from the reports directory
+	 * 
+	 * @return the report file retrieved as a byte array
+	 */
+	public byte[] js_readFileFromReportsDir(String fileName) throws Exception {
 
 		byte[] b = null;
 
 		try {
 			Debug.trace("JasperTrace: JasperReadFile starting");
-			b = plugin.connectJasperService().readFile(plugin.getIClientPluginAccess().getClientID(), filenm, relativeReportsDir);
+			b = plugin.connectJasperService().readFile(plugin.getIClientPluginAccess().getClientID(), fileName, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperReadFile finished");
 		} catch (Exception e) {
 			Debug.error(e);
@@ -779,6 +739,10 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
+	 * Property for retrieving the reports directory from the server.
+	 * 
+	 * NOTE: Setting the absolute path for the report directory on the server is no longer supported.
+	 * 
 	 * @deprecated replaced by the relativeReportsDirectory property
 	 */
 	@Deprecated
@@ -794,6 +758,19 @@ public class JasperReportsProvider implements IScriptObject {
 		js_setRelativeReportsDirectory(jasperDirectorie);
 	}
 	
+	/**
+	 * Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory.
+	 * 
+	 * By default the value is read from the adim page Server Plugins, the directory.jasper.report property.
+	 * A client is only able to set a path relative to the server report directory. 
+	 * If the client modifies this property, its value will be used instead of the default one, for the whole client session and only for this client.
+	 * Each client session has it's own relativeReportDirectory value.
+	 * 
+	 * @sample
+	 * plugins.jasperPluginRMI.relativeReportsDirectory = "/myReportsLocation";
+	 * 
+	 * @return the location of the reports directory, relative to the server set path 
+	 */
 	public String js_getRelativeReportsDirectory() throws Exception {
 		return relativeReportsDir;
 	}
@@ -805,7 +782,6 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * 
 	 * @deprecated replaced by the relativeExtraDirectories property
 	 */
 	@Deprecated
@@ -813,6 +789,22 @@ public class JasperReportsProvider implements IScriptObject {
 		return plugin.getJasperExtraDirectories();
 	}
 
+	/**
+	 * Property for retrieving and setting the paths to the extra resources directories. 
+	 * The paths are set per client and are relative to the server corresponding directories setting.
+	 * 
+	 * By default the value is read from the Admin Page: Server Plugins - the directories.jasper.extra property. 
+	 * If the client modifies the default property, this value will be used instead of the default one for the whole client session and only for this client. 
+	 * Each client session has it's own extraDirectories value. 
+	 * 
+	 * NOTE: Extra directories are not searched recursively.
+	 * 
+	 * @sample
+	 * //setting the extra directories, relative to the server side location
+	 * plugins.jasperPluginRMI.relativeExtraDirectories = "extraDir1,extraDir2";
+	 * 
+	 * @return the path to the extra directories relative to the server side set location
+	 */
 	public String js_getRelativeExtraDirectories() throws Exception {
 		return relativeExtraDirs;
 	}
@@ -832,10 +824,33 @@ public class JasperReportsProvider implements IScriptObject {
 		plugin.setJasperExtraDirectories(extraDirsRelPath);
 	}
 
+	/**
+	 * Retrieve a String array of available reports, based on the reports directory.
+	 * 
+	 * @sample
+	 * // COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports
+	 * // No parameter returns all the reports
+	 * var result = plugins.jasperPluginRMI.getReports('NONCOMPILED');
+	 * application.output(result[0]);
+	 * // using a string as the search filter
+	 * //var result = plugins.jasperPluginRMI.getReports('*criteria*');
+	 * //for(var i=0; i<result.length; i++)
+	 * //application.output(result[i]);
+	 * 
+	 * @return the String array of available reports
+	 */
 	public String[] js_getReports() throws Exception {
 		return getReports(true, true);
 	}
 
+	/** 
+	 * @clonedesc js_getReports()
+	 * @sampleas js_getReports()
+	 * 
+	 * @param filter the string to be used as a search filter
+	 * 
+	 * @return the String array of available reports
+	 */
 	public String[] js_getReports(String filter) throws Exception {
 		if (filter.toUpperCase().compareTo("COMPILED") == 0) {
 			return getReports(true, false);
@@ -875,6 +890,18 @@ public class JasperReportsProvider implements IScriptObject {
 		return reports;
 	}
 
+	/**
+	 * Retrieve a JSDataSet with the report parameters, except the system defined ones.
+	 * 
+	 * @sample
+	 * var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml');
+	 * var csv = ds.getAsText(',','\\n','\"',true);
+	 * application.output(csv);
+	 * 
+	 * @param report the name of the report file to get the parameters for
+	 * 
+	 * @return the JSDataSet with the report parameters 
+	 */
 	public JSDataSet js_getReportParameters(String report) throws Exception {
 
 		JSDataSet ds = null;
@@ -891,6 +918,14 @@ public class JasperReportsProvider implements IScriptObject {
 		return ds;
 	}
 
+	/**
+	 * Get the version of the Servoy JasperReports Plugin.
+	 * 
+	 * @sample
+	 * application.output(plugins.jasperPluginRMI.pluginVersion);
+	 * 
+	 * @return the plugin's version
+	 */
 	public String js_getPluginVersion() {
 		return "4.0.0 b1";
 
@@ -911,16 +946,8 @@ public class JasperReportsProvider implements IScriptObject {
 		// DO NOTHING. READ ONLY PROPERTY.
 	}
 
-	/**
-	 * This sets the Jasper Viewer's save contributors, that is the (only)
-	 * export formats of the Jasper Viewer. The first item in the list be the
-	 * default selected export format. Feature request from <a href=
-	 * "http://code.google.com/p/servoy-jasperreports-plugin/issues/detail?id=35"
-	 * >Google issue 35</a>.
-	 * 
-	 * @param saveContribs
-	 *            the list of desired export formats; the first one will be the
-	 *            default export format.
+	/*
+	 * Feature request from <a href="http://code.google.com/p/servoy-jasperreports-plugin/issues/detail?id=35">Google issue 35</a>.
 	 */
 	public void js_setViewerExportFormats(String[] saveContribs)
 			throws Exception {
@@ -928,9 +955,7 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * Sets the Jasper Viewer's title text
-	 * 
-	 * @param viewerTitle title text
+	 * @param viewerTitle the viewer's title text
 	 */	
 	public void js_setViewerTitle(String viewerTitle)
 	{
@@ -938,17 +963,18 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 	
 	/**
-	 * Gets Jasper Viewer's title text
-	 * @return Jasper Viewer's title text
-	 */	
+	 * Sets or gets the Jasper Viewer's title text.
+	 * 
+	 * @sample
+	 * plugins.jasperPluginRMI.viewerTitle = 'My Title'
+	 * 
+	 */
 	public String js_getViewerTitle()
 	{
 		return viewerTitle;
 	}
 	
 	/**
-	 * Sets the Jasper Viewer's icon URL
-	 * 
 	 * @param viewerIconURL icon URL
 	 */		
 	public void js_setViewerIconURL(String viewerIconURL)
@@ -957,8 +983,11 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 	
 	/**
-	 * Gets Jasper Viewer's icon URL
-	 * @return Jasper Viewer's icon URL
+	 * Sets or gets the Jasper Viewer's icon URL.
+	 *
+	 * @sample
+	 * plugins.jasperPluginRMI.viewerIconURL = 'myIcon.jpg'
+	 * 
 	 */	
 	public String js_getViewerIconURL()
 	{
@@ -1024,9 +1053,20 @@ public class JasperReportsProvider implements IScriptObject {
 	}
 
 	/**
-	 * Returns the list of export formats for the Jasper Viewer.
+	 * Property used in order to get or set the Jasper Viewer's export formats.
 	 * 
-	 * @return the list of export formats for the Jasper Viewer
+	 * @sample
+	 * var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;
+	 * application.output(defaultExportFormats);
+	 * 
+	 * // use the default export constants of the plugin, of the OUTPUT_FORMAT constants node;
+	 * // the following formats are available for setting the viewer export formats:
+	 * // PDF, JRPRINT, RTF, ODT, HTML, XLS_1_SHEET, XLS, CSV, XML
+	 * // and there is an extra Xml with Embedded Images export type available for the Viewer, denoted by 'xml_embd_img'
+	 * // the first export format in the list will be the default one displayed in the Save dialog of the Viewer
+	 * plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];
+	 * 
+	 * @return the list of desired export formats; the first one will be the default export format.
 	 */
 	public String[] js_getViewerExportFormats() throws Exception {
 		return viewerExportFormats;
