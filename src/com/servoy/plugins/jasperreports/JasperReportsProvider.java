@@ -31,6 +31,7 @@ package com.servoy.plugins.jasperreports;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
@@ -530,6 +531,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 						}
 						// 3. SmartClient other output formats
 					} else {
+						if (!nooutput) {
+							String fileLocation = new File(file).getParent();
+							exporterParams.put("REPORT_FILE_LOCATION", fileLocation);
+						}
 						jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(),
 								type, jp, relativeExtraDirs, exporterParams);
 						if (!nooutput) {
