@@ -142,11 +142,14 @@ public class JasperReportRunner implements IJasperReportRunner {
 		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML)) {
 			exporter = new JRHtmlExporter();
 			String location = adjustFileUnix((String)exporterParameters.get("REPORT_FILE_LOCATION"));
-			location = (location.endsWith("/") ? location : location + "/");
-			exporter.setParameter(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, Boolean.TRUE);
-			exporter.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, location + "/" + jasperPrint.getName() + ".html_files/");
-			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, jasperPrint.getName() + ".html_files/"); // backslash is important
-			exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.TRUE);
+			if (location != null)
+			{
+				location = (location.endsWith("/") ? location : location + "/");
+				exporter.setParameter(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, Boolean.TRUE);
+				exporter.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, location + "/" + jasperPrint.getName() + ".html_files/");
+				exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, jasperPrint.getName() + ".html_files/"); // backslash is important
+				exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.TRUE);
+			}
 			
 		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XHTML)) {
 			exporter = new JRXhtmlExporter();
@@ -376,6 +379,7 @@ public class JasperReportRunner implements IJasperReportRunner {
 	}
 	
 	public static String adjustFileUnix(String file) {
+		if (file == null) return null;
 		while (file.indexOf('\\') != -1) {
 			file = file.replace('\\', '/');
 		}
