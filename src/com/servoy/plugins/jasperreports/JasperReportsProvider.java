@@ -178,7 +178,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * @clonedesc js_runReport(Object,String,Object,String,Object,String,Boolean)
 	 * @sampleas js_runReport(Object,String,Object,String,Object,String,Boolean) 
 	 * 
-	 * @param source the server name of foundset to run the report on
+	 * @param source the server name or foundset to run the report on
 	 * @param report the report file (relative to the reports directory)
 	 * @param arg the output file (must specify an absolute path) or null if not needed
 	 * @param type the output format; use the constants node for available output formats
@@ -195,7 +195,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * @clonedesc js_runReport(Object,String,Object,String,Object,String,Boolean)
 	 * @sampleas js_runReport(Object,String,Object,String,Object,String,Boolean) 
 	 * 
-	 * @param source the server name of foundset to run the report on
+	 * @param source the server name or foundset to run the report on
 	 * @param report the report file (relative to the reports directory)
 	 * @param arg the output file (must specify an absolute path) or null if not needed
 	 * @param type the output format; use the constants node for available output formats
@@ -277,7 +277,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * // to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\"
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);
 	 * 
-	 * @param source the server name of foundset to run the report on
+	 * @param source the server name or foundset to run the report on
 	 * @param report the report file (relative to the reports directory)
 	 * @param arg the output file (must specify an absolute path) or null if not needed
 	 * @param type the output format; use the constants node for available output formats

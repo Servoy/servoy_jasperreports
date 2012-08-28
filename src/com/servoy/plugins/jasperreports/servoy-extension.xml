@@ -414,7 +414,7 @@ plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
-                <description><![CDATA[the server name of foundset to run the report on]]></description>
+                <description><![CDATA[the server name or foundset to run the report on]]></description>
               </parameter>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the report file (relative to the reports directory)]]></description>
@@ -505,7 +505,7 @@ plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
-                <description><![CDATA[the server name of foundset to run the report on]]></description>
+                <description><![CDATA[the server name or foundset to run the report on]]></description>
               </parameter>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the report file (relative to the reports directory)]]></description>
@@ -600,7 +600,7 @@ plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
-                <description><![CDATA[the server name of foundset to run the report on]]></description>
+                <description><![CDATA[the server name or foundset to run the report on]]></description>
               </parameter>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the report file (relative to the reports directory)]]></description>
