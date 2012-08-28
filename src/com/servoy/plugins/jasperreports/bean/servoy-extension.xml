@@ -96,28 +96,28 @@ of the Servoy JasperReports plugin.]]></summary>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the height of the Bean]]></return>
             <description><![CDATA[Gets the height of the Bean.]]></description>
             <summary><![CDATA[Gets the height of the Bean.]]></summary>
-            <sample><![CDATA[var h = %%elementName%%.getHeight;]]></sample>
+            <sample><![CDATA[var h = %%elementName%%.getHeight();]]></sample>
           </function>
           <function name="getLocationX">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the x-coordinate of the Bean's top-left corner location]]></return>
             <description><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></description>
             <summary><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></summary>
-            <sample><![CDATA[var x = %%elementName%%.getLocationX;]]></sample>
+            <sample><![CDATA[var x = %%elementName%%.getLocationX();]]></sample>
           </function>
           <function name="getLocationY">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the y-coordinate of the Bean's top-left corner location]]></return>
             <description><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></description>
             <summary><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></summary>
-            <sample><![CDATA[var y = %%elementName%%.getLocationY;]]></sample>
+            <sample><![CDATA[var y = %%elementName%%.getLocationY();]]></sample>
           </function>
           <function name="getWidth">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the width of the Bean]]></return>
             <description><![CDATA[Gets the width of the Bean.]]></description>
             <summary><![CDATA[Gets the width of the Bean.]]></summary>
-            <sample><![CDATA[var w = %%elementName%%.getWidth;]]></sample>
+            <sample><![CDATA[var w = %%elementName%%.getWidth();]]></sample>
           </function>
           <function name="setLocation" undocumented="true">
             <argumentsTypes>
@@ -162,7 +162,7 @@ params.SUBREPORT_DIR = "./Subreport_Tests/";
 var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
-                <description><![CDATA[the datasource (the server name or foundset) to run the report on]]></description>
+                <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
               </parameter>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the report file to export and preview (relative to the reports directory)]]></description>
@@ -187,7 +187,7 @@ params.SUBREPORT_DIR = "./Subreport_Tests/";
 var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
-                <description><![CDATA[the datasource (the server name or foundset) to run the report on]]></description>
+                <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
               </parameter>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the report file to export and preview (relative to the reports directory)]]></description>
@@ -216,7 +216,7 @@ params.SUBREPORT_DIR = "./Subreport_Tests/";
 var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
-                <description><![CDATA[the datasource (the server name or foundset) to run the report on]]></description>
+                <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
               </parameter>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the report file to export and preview (relative to the reports directory)]]></description>

@@ -298,7 +298,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * Gets the x-coordinate of the Bean's top-left corner location.
 	 * 
 	 * @sample
-	 * var x = %%elementName%%.getLocationX;
+	 * var x = %%elementName%%.getLocationX();
 	 * 
 	 * @return the x-coordinate of the Bean's top-left corner location
 	 */
@@ -310,7 +310,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * Gets the y-coordinate of the Bean's top-left corner location.
 	 * 
 	 * @sample
-	 * var y = %%elementName%%.getLocationY;
+	 * var y = %%elementName%%.getLocationY();
 	 * 
 	 * @return the y-coordinate of the Bean's top-left corner location
 	 */
@@ -335,7 +335,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * Gets the width of the Bean.
 	 * 
 	 * @sample
-	 * var w = %%elementName%%.getWidth;
+	 * var w = %%elementName%%.getWidth();
 	 * 
 	 * @return the width of the Bean
 	 */
@@ -347,7 +347,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * Gets the height of the Bean.
 	 * 
 	 * @sample
-	 * var h = %%elementName%%.getHeight;
+	 * var h = %%elementName%%.getHeight();
 	 * 
 	 * @return the height of the Bean
 	 */
@@ -442,7 +442,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * @clonedesc js_showReport(Object, String, Object, String, Boolean)
 	 * @sampleas js_showReport(Object, String, Object, String, Boolean)
 	 * 
-	 * @param source the datasource (the server name or foundset) to run the report on
+	 * @param source the datasource (the server name, foundset or dataset) to run the report on
 	 * @param report the report file to export and preview (relative to the reports directory)
 	 * @param parameters the map of parameters to be used when previewing the report
 	 * 
@@ -456,7 +456,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * @clonedesc js_showReport(Object, String, Object, String, Boolean)
 	 * @sampleas js_showReport(Object, String, Object, String, Boolean)
 	 * 
-	 * @param source the datasource (the server name or foundset) to run the report on
+	 * @param source the datasource (the server name, foundset or dataset) to run the report on
 	 * @param report the report file to export and preview (relative to the reports directory)
 	 * @param parameters the map of parameters to be used when previewing the report
 	 * @param localeString the string which specifies the locale
@@ -476,7 +476,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * params.SUBREPORT_DIR = "./Subreport_Tests/";
 	 * var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);
 	 * 
-	 * @param source the datasource (the server name or foundset) to run the report on
+	 * @param source the datasource (the server name, foundset or dataset) to run the report on
 	 * @param report the report file to export and preview (relative to the reports directory)
 	 * @param parameters the map of parameters to be used when previewing the report
 	 * @param localeString the string which specifies the locale
