@@ -47,9 +47,10 @@ import net.sf.jasperreports.view.JRViewer;
 
 import com.servoy.j2db.dataprocessing.IRecord;
 import com.servoy.j2db.dataui.IServoyAwareBean;
+import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.plugins.IClientPlugin;
 import com.servoy.j2db.plugins.IClientPluginAccess;
-import com.servoy.j2db.scripting.IScriptObject;
+import com.servoy.j2db.scripting.IScriptable;
 import com.servoy.j2db.util.ComponentFactoryHelper;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.PersistHelper;
@@ -66,8 +67,10 @@ import com.servoy.plugins.jasperreports.JasperReportsProvider;
  * @author acostache
  *
  */
-public class JasperReportsServoyViewer extends JPanel implements IScriptObject, IServoyAwareBean
+@ServoyDocumented(category= "beans", publicName = JasperReportsServoyViewer.BEAN_NAME, scriptingName = "beans." + JasperReportsServoyViewer.BEAN_NAME)
+public class JasperReportsServoyViewer extends JPanel implements IScriptable, IServoyAwareBean
 {
+	public static final String BEAN_NAME = "JasperReportsServoyViewer";
 	private static final long serialVersionUID = 1L;
 	private IJasperReportsService service = null;
 	private JasperReportsPlugin jasper = null;
@@ -112,285 +115,6 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	@SuppressWarnings("rawtypes")
 	public Class[] getAllReturnedTypes() {
 		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.servoy.j2db.scripting.IScriptObject#getParameterNames(java.lang.String)
-	 */
-	public String[] getParameterNames(String methodName) {
-		if ("showReport".equals(methodName))
-		{
-			return new String[] { "source", "report","parameters", "localeString", "moveTableOfContent" };
-		}
-		else if ("background".equals(methodName))
-		{
-			return new String[] { "background" };
-		}
-		else if ("beanViewerExportFormats".equals(methodName))
-		{
-			return new String[] { "beanViewerExportFormats" };
-		}
-		else if ("border".equals(methodName))
-		{
-			return new String[] { "border" };
-		}
-		else if ("extraDirectories".equals(methodName))
-		{
-			return new String[] { "extraDirectories" };
-		}
-		else if ("displayMode".equals(methodName))
-		{
-			return new String[] { "displayMode" };
-		}
-		else if ("font".equals(methodName))
-		{
-			return new String[] { "fontString" };
-		}
-		else if ("foreground".equals(methodName))
-		{
-			return new String[] { "foregroundString" };
-		}
-		else if ("name".equals(methodName))
-		{
-			return new String[] { "name" };
-		}
-		else if ("reportsDirectory".equals(methodName))
-		{
-			return new String[] { "reportsDirectory" };
-		}
-		else if ("setSize".equals(methodName))
-		{
-			return new String[] { "width", "height" };
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.servoy.j2db.scripting.IScriptObject#getSample(java.lang.String)
-	 */
-	public String getSample(String methodName) {
-		if ("showReport".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("var params = new Object();\n");
-			retval.append("params.SUBREPORT_DIR = \"./Subreport_Tests/\";\n");
-			retval.append("var report = %%elementName%%.showReport(customers_to_orders,'/Subreport_Tests/main_report_fs.jrxml',params);\n");
-			retval.append("\n"); //$NON-NLS-1$
-			return retval.toString();
-		}
-		else if ("background".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.background='#00ff00';\n");
-			return retval.toString();
-		}
-		else if ("beanViewerExportFormats".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("//also see plugins.jasperPluginRMI.viewerExportFormats \n");
-			retval.append("%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];\n");
-			return retval.toString();
-		}
-		else if ("border".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.border='LineBorder,4,#000000';\n");
-			return retval.toString();
-		}
-		else if ("displayMode".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;\n");
-			retval.append("%%elementName%%.showReport(myDataSource,\"/myReport.jrxml\",null);\n");
-			return retval.toString();
-		}
-		else if ("extraDirectories".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.extraDirectories='path/to/extraDirectories';\n");
-			return retval.toString();
-		}
-		else if ("font".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.font='Tahoma,0,14';\n");
-			return retval.toString();
-		}
-		else if ("foreground".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.foreground='#000000';\n");
-			return retval.toString();
-		}
-		else if ("getHeight".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("var h = %%elementName%%.getHeight;\n");
-			return retval.toString();
-		}
-		else if ("getLocationX".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("var x = %%elementName%%.getLocationX;\n");
-			return retval.toString();
-		}
-		else if ("getLocationY".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("var y = %%elementName%%.getLocationY;\n");
-			return retval.toString();
-		}
-		else if ("name".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("var beanName = %%elementName%%.name;\n");
-			return retval.toString();
-		}
-		else if ("reportsDirectory".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.reportsDirectory = 'path/to/reportsDirectory';\n");
-			return retval.toString();
-		}
-		else if ("relativeReportsDirectory".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.relativeReportsDirectory = 'relativePath/to/serverReportsDirectory';\n");
-			return retval.toString();
-		}
-		else if ("setSize".equals(methodName))
-		{
-			StringBuffer retval = new StringBuffer();
-			retval.append("//"); //$NON-NLS-1$
-			retval.append(getToolTip(methodName));
-			retval.append("\n"); //$NON-NLS-1$
-			retval.append("%%elementName%%.setSize(800,600);\n");
-			return retval.toString();
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.servoy.j2db.scripting.IScriptObject#getToolTip(java.lang.String)
-	 */
-	public String getToolTip(String methodName) {
-		if ("showReport".equals(methodName))
-		{
-			return "Shows the indicated report in a JasperReports Viewer (in the Bean).";
-		}
-		else if ("background".equals(methodName))
-		{
-			return "Sets or gets the background color of the Bean.";
-		}
-		else if ("beanViewerExportFormats".equals(methodName))
-		{
-			return "Gets or gets the file save/export formats of the Bean's viewer.";
-		}
-		else if ("border".equals(methodName))
-		{
-			return "Sets or gets the border type, thickness and color of the Bean.";
-		}
-		else if ("displayMode".equals(methodName))
-		{
-			return "Sets or gets the display mode of the Bean.";
-		}
-		else if ("extraDirectories".equals(methodName))
-		{
-			return "Sets or gets the path to the extra directories for the JasperReports plugin.";
-		}
-		else if ("font".equals(methodName))
-		{
-			return "Sets or gets the font type of the Bean.";
-		}
-		else if ("foreground".equals(methodName))
-		{
-			return "Sets or gets the foreground color.";
-		}
-		else if ("getHeight".equals(methodName))
-		{
-			return "Gets the height of the Bean.";
-		}
-		else if ("getLocationX".equals(methodName))
-		{
-			return "Gets the x-coordinate of the Bean's top-left corner location.";
-		}
-		else if ("getLocationY".equals(methodName))
-		{
-			return "Gets the y-coordinate of the Bean's top-left corner location.";
-		}
-		else if ("name".equals(methodName))
-		{
-			return "Gets or sets the name of the Bean.";
-		}
-		else if ("reportsDirectory".equals(methodName))
-		{
-			return "Gets or sets the path to the reports directory of the JasperReports plugin.";
-		}
-		else if ("relativeReportsDirectory".equals(methodName))
-		{
-			return "Gets or sets the path to the clien'ts reports directory of the JasperReports plugin, relative to the server's reports directory.";
-		}
-		else if ("setSize".equals(methodName))
-		{
-			return "Sets the size of the Bean.";
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.servoy.j2db.scripting.IScriptObject#isDeprecated(java.lang.String)
-	 */
-	public boolean isDeprecated(String methodName) {
-	 if ("reportsDirectory".equals(methodName)) {
-			return true;
-		}
-		return false;
 	}
 
 	/*
@@ -464,6 +188,14 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		setName(name);
 	}
 	
+	/**
+	 * Gets or sets the name of the Bean.
+	 * 
+	 * @sample
+	 * var beanName = %%elementName%%.name;
+	 * 
+	 * @return the name of the Bean
+	 */
 	public String js_getName() {
 		return getName();
 	}
@@ -472,6 +204,14 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		setBackground(PersistHelper.createColor(background));
 	}
 
+	/**
+	 * Sets or gets the background color of the Bean.
+	 * 
+	 * @sample
+	 * %%elementName%%.background='#00ff00';
+	 * 
+	 * @return the border color of the bean
+	 */
 	public String js_getBackground() {
 		return (getBackground() == null) ? null : PersistHelper.createColorString(getBackground());
 	}
@@ -480,10 +220,27 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		setBorder(ComponentFactoryHelper.createBorder(border));
 	}
 	
+	/**
+	 * Sets or gets the border type, width and color.
+	 * 
+	 * @sample
+	 * %%elementName%%.border='LineBorder,4,#000000';
+	 * 
+	 * @return border type, width and color
+	 */
 	public String js_getBorder() {
 		return ComponentFactoryHelper.createBorderString(getBorder());
 	}
 	
+	/**
+	 * Sets or gets the display mode of the viewer in the Bean.
+	 * 
+	 * @sample
+	 * %%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
+	 * retval.append("%%elementName%%.showReport(myDataSource,\"/myReport.jrxml\",null);
+	 * 
+	 * @return the display mode of the viewer
+	 */
 	public String js_getDisplayMode() {
 		//make a pretty name for the display mode type
 		String disp = "";
@@ -505,6 +262,14 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		}
 	}
 	
+	/**
+	 * Sets or gets the font type of the Bean's viewer.
+	 * 
+	 * @sample
+	 * %%elementName%%.font='Tahoma,0,14';
+	 * 
+	 * @return the font type used in the viewer
+	 */
 	public String js_getFont() {
 		return PersistHelper.createFontString(getFont());
 	}
@@ -513,6 +278,14 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		setForeground(PersistHelper.createColor(foregroundString));
 	}
 	
+	/**
+	 * Sets or gets the foreground color.
+	 * 
+	 * @sample
+	 * %%elementName%%.foreground='#000000';
+	 * 
+	 * @return the foreground color
+	 */
 	public String js_getForeground() {
 		return (getForeground() == null) ? null : 
 			PersistHelper.createColorString(getForeground());
@@ -522,22 +295,63 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		setLocation(x,y);
 	}
 	
+	/**
+	 * Gets the x-coordinate of the Bean's top-left corner location.
+	 * 
+	 * @sample
+	 * var x = %%elementName%%.getLocationX;
+	 * 
+	 * @return the x-coordinate of the Bean's top-left corner location
+	 */
 	public int js_getLocationX() {
 		return getLocation().x;
 	}
 
+	/**
+	 * Gets the y-coordinate of the Bean's top-left corner location.
+	 * 
+	 * @sample
+	 * var y = %%elementName%%.getLocationY;
+	 * 
+	 * @return the y-coordinate of the Bean's top-left corner location
+	 */
 	public int js_getLocationY() {
 		return getLocation().y;
 	}
 	
+	/**
+	 * Sets the size of the Bean.
+	 * 
+	 * @sample
+	 * %%elementName%%.setSize(800,600);
+	 * 
+	 * @param width the width of the bean
+	 * @param height the height of the bean
+	 */
 	public void js_setSize(int width, int height) {
 		setSize(width,height);
 	}
 	
+	/**
+	 * Gets the width of the Bean.
+	 * 
+	 * @sample
+	 * var w = %%elementName%%.getWidth;
+	 * 
+	 * @return the width of the Bean
+	 */
 	public int js_getWidth() {
 		return getSize().width;
 	}
 	
+	/**
+	 * Gets the height of the Bean.
+	 * 
+	 * @sample
+	 * var h = %%elementName%%.getHeight;
+	 * 
+	 * @return the height of the Bean
+	 */
 	public int js_getHeight() {
 		return getSize().height;
 	}
@@ -553,13 +367,15 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public void js_setReportsDirectory(String reportsDirectory) throws Exception {
 		provider.js_setReportDirectory(reportsDirectory);
 	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated replaced by the relativeReportsDirectory property
 	 */
+	@Deprecated
 	public String js_getReportsDirectory() throws Exception {
 		return provider.js_getReportDirectory();
 	}
@@ -568,27 +384,107 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		provider.js_setRelativeReportsDirectory(relativeReportsDirectory);
 	}
 	
+	/**
+	 * Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
+	 * of the Servoy JasperReports plugin.
+	 * 
+	 * Please refer to the same property of the Servoy JasperReports plugin for more details.
+	 * 
+	 * @sample
+	 * %%elementName%%.relativeReportsDirectory = 'relativePath/to/serverReportsDirectory';
+	 * 
+	 * @return the location of the client set reports directory, relative to the server set path
+	 * 
+	 * @throws Exception
+	 */
 	public String js_getRelativeReportsDirectory() throws Exception {
 		return provider.js_getRelativeReportsDirectory();
 	}
+
+	public void js_setRelativeExtraDirectories(String relativeExtraDirectories) throws Exception {
+		provider.js_setRelativeExtraDirectories(relativeExtraDirectories);
+	}
 	
+	/**
+	 * Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.
+	 * The paths are set per client and are relative to the server corresponding directories setting.
+	 * 
+	 * Please refer to the same property of the Servoy JasperReports plugin for more details.
+	 * 
+	 * @sample
+	 * %%elementName%%.extraDirectories='relative/path/to/client/extraDirectory1';
+	 * 
+	 * @return the relative path or paths to the client set extra directory/directories
+	 * 
+	 * @throws Exception
+	 */
+	public String js_getRelativeExtraDirectories() throws Exception {
+		return provider.js_getRelativeExtraDirectories();
+	}
+	
+	
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void js_setExtraDirectories(String extraDirectories) throws Exception {
 		provider.js_setExtraDirectories(extraDirectories);
 	}
 	
+	/**
+	 * @deprecated replaced by the relativeExtraDirectories property
+	 */
+	@Deprecated
 	public String js_getExtraDirectories() throws Exception {
 		return provider.js_getExtraDirectories();
 	}
 	
+	/**
+	 * @clonedesc js_showReport(Object, String, Object, String, Boolean)
+	 * @sampleas js_showReport(Object, String, Object, String, Boolean)
+	 * 
+	 * @param source the datasource (the server name or foundset) to run the report on
+	 * @param report the report file to export and preview (relative to the reports directory)
+	 * @param parameters the map of parameters to be used when previewing the report
+	 * 
+	 * @throws Exception
+	 */
 	public void js_showReport(Object source, String report, Object parameters) throws Exception {
 		js_showReport(source, report, parameters, null);
 	}
 
+	/**
+	 * @clonedesc js_showReport(Object, String, Object, String, Boolean)
+	 * @sampleas js_showReport(Object, String, Object, String, Boolean)
+	 * 
+	 * @param source the datasource (the server name or foundset) to run the report on
+	 * @param report the report file to export and preview (relative to the reports directory)
+	 * @param parameters the map of parameters to be used when previewing the report
+	 * @param localeString the string which specifies the locale
+	 * 
+	 * @throws Exception
+	 */
 	public void js_showReport(Object source, String report, Object parameters, String localeString)
 			throws Exception {
 		js_showReport(source, report, parameters,localeString, Boolean.valueOf(false));
 	}
 	
+	/**
+	 * Shows the indicated report in a JasperReports Viewer (in the Bean).
+	 * 
+	 * @sample
+	 * var params = new Object();
+	 * params.SUBREPORT_DIR = "./Subreport_Tests/";
+	 * var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);
+	 * 
+	 * @param source the datasource (the server name or foundset) to run the report on
+	 * @param report the report file to export and preview (relative to the reports directory)
+	 * @param parameters the map of parameters to be used when previewing the report
+	 * @param localeString the string which specifies the locale
+	 * @param moveTableOfContent true in order to move the table of contents, false otherwise
+	 * 
+	 * @throws Exception
+	 */
 	public void js_showReport(Object source, String report, Object parameters, String localeString,
 			Boolean moveTableOfContent) throws Exception{
 		showReport(source, report, parameters, localeString, moveTableOfContent);
@@ -598,6 +494,17 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptObject, 
 		beanViewerExportFormats = saveContribs;
 	}
 	
+	/**
+	 * Gets or gets the file save/export formats of the Bean's viewer.
+	 * 
+	 * @sample
+	 * //also see plugins.jasperPluginRMI.viewerExportFormats
+	 * retval.append("%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];
+	 * 
+	 * @return the file save/export formats of the viewer
+	 * 
+	 * @throws Exception
+	 */
 	public String[] js_getBeanViewerExportFormats() throws Exception {
 		return beanViewerExportFormats;
 	}
