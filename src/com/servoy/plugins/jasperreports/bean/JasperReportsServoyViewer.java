@@ -67,10 +67,9 @@ import com.servoy.plugins.jasperreports.JasperReportsProvider;
  * @author acostache
  *
  */
-@ServoyDocumented(category= "beans", publicName = JasperReportsServoyViewer.BEAN_NAME, scriptingName = "beans." + JasperReportsServoyViewer.BEAN_NAME)
+@ServoyDocumented(category= "beans", publicName = JasperReportsServoyViewerBeanInfo.BEAN_NAME, scriptingName = "beans." + JasperReportsServoyViewerBeanInfo.BEAN_NAME)
 public class JasperReportsServoyViewer extends JPanel implements IScriptable, IServoyAwareBean
 {
-	public static final String BEAN_NAME = "JasperReportsServoyViewer";
 	private static final long serialVersionUID = 1L;
 	private IJasperReportsService service = null;
 	private JasperReportsPlugin jasper = null;
@@ -237,7 +236,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * 
 	 * @sample
 	 * %%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
-	 * retval.append("%%elementName%%.showReport(myDataSource,\"/myReport.jrxml\",null);
+	 * %%elementName%%.showReport(myDataSource,"myReport.jrxml",null);
 	 * 
 	 * @return the display mode of the viewer
 	 */
@@ -499,7 +498,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * 
 	 * @sample
 	 * //also see plugins.jasperPluginRMI.viewerExportFormats
-	 * retval.append("%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];
+	 * %%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];
 	 * 
 	 * @return the file save/export formats of the viewer
 	 * 
@@ -630,4 +629,22 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 		this.validate();
 	}
 
+	/**
+	 * This is a readonly property which returns the bean version.
+	 * The bean version indicates which version of the Servoy JasperReports plugin the bean should be used with.
+	 * 
+	 * @sample
+	 * application.output(%%elementName%%.beanVersion);
+	 * 
+	 * @return the version of the bean; this should be in sync with the version of the plugin used
+	 */
+	public String js_getBeanVersion()
+	{
+		return "Bean version: " + provider.js_getPluginVersion() + ".\nThis version number indicates the bean should be used together with the Servoy JasperReports plugin version " + provider.js_getPluginVersion() + "."; 
+	}
+	
+	public void js_setBeanVersion(String version)
+	{
+		//do nothing
+	}
 }

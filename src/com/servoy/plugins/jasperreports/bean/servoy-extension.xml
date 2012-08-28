@@ -3,11 +3,6 @@
   <servoydoc>
     <beans>
       <object publicName="JasperReportsServoyViewer" qualifiedName="com.servoy.plugins.jasperreports.bean.JasperReportsServoyViewer" scriptingName="beans.JasperReportsServoyViewer">
-        <constants>
-          <constant name="BEAN_NAME" undocumented="true">
-            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-          </constant>
-        </constants>
         <properties>
           <property name="background">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the border color of the bean]]></return>
@@ -15,12 +10,19 @@
             <summary><![CDATA[Sets or gets the background color of the Bean.]]></summary>
             <sample><![CDATA[%%elementName%%.background='#00ff00';]]></sample>
           </property>
+          <property name="beanVersion">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the version of the bean; this should be in sync with the version of the plugin used]]></return>
+            <description><![CDATA[This is a readonly property which returns the bean version.
+The bean version indicates which version of the Servoy JasperReports plugin the bean should be used with.]]></description>
+            <summary><![CDATA[This is a readonly property which returns the bean version.]]></summary>
+            <sample><![CDATA[application.output(%%elementName%%.beanVersion);]]></sample>
+          </property>
           <property name="beanViewerExportFormats">
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the file save/export formats of the viewer]]></return>
             <description><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></description>
             <summary><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></summary>
             <sample><![CDATA[//also see plugins.jasperPluginRMI.viewerExportFormats
-retval.append("%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];]]></sample>
+%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];]]></sample>
           </property>
           <property name="border">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[border type, width and color]]></return>
@@ -33,7 +35,7 @@ retval.append("%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPU
             <description><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></description>
             <summary><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></summary>
             <sample><![CDATA[%%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
-retval.append("%%elementName%%.showReport(myDataSource,\"/myReport.jrxml\",null);]]></sample>
+%%elementName%%.showReport(myDataSource,"myReport.jrxml",null);]]></sample>
           </property>
           <property deprecated="true" name="extraDirectories">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>

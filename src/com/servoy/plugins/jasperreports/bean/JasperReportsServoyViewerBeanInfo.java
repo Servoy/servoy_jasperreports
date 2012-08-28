@@ -43,6 +43,8 @@ import com.servoy.j2db.util.Debug;
  */
 public class JasperReportsServoyViewerBeanInfo extends SimpleBeanInfo 
 {
+	public static final String BEAN_NAME = "JasperReportsServoyViewer";
+	
 	protected Image icon16x16;
 	protected Image icon32x32;
 
