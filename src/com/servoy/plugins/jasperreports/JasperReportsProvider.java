@@ -605,7 +605,9 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		Debug.trace("JasperTrace: JasperCompile initialize");
 		boolean compiled = false;
 
+		ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
 		try {
+			Thread.currentThread().setContextClassLoader(plugin.getIClientPluginAccess().getPluginManager().getClassLoader());
 			Debug.trace("JasperTrace: JasperCompile starting");
 			compiled = plugin.connectJasperService().jasperCompile(plugin.getIClientPluginAccess().getClientID(), report, destination, relativeReportsDir);
 			Debug.trace("JasperTrace: JasperCompile finished");
@@ -615,6 +617,8 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		} catch (Exception ex) {
 			Debug.error(ex);
 			throw new Exception(ex.getMessage());
+		} finally {
+			Thread.currentThread().setContextClassLoader(savedCl);
 		}
 
 		return compiled;
