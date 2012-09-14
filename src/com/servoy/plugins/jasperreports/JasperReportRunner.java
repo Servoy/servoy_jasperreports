@@ -32,6 +32,7 @@ package com.servoy.plugins.jasperreports;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -62,21 +63,19 @@ import net.sf.jasperreports.engine.export.JRXmlExporterParameter;
 import net.sf.jasperreports.engine.export.oasis.JROdsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
-import net.sf.jasperreports.engine.util.JRImageLoader;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.util.JRSaver;
-import net.sf.jasperreports.engine.util.SimpleFileResolver;
-
 import net.sf.jasperreports.engine.fill.JRAbstractLRUVirtualizer;
 import net.sf.jasperreports.engine.fill.JRFileVirtualizer;
 import net.sf.jasperreports.engine.fill.JRGzipVirtualizer;
 import net.sf.jasperreports.engine.fill.JRSwapFileVirtualizer;
+import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.util.JRSwapFile;
+import net.sf.jasperreports.engine.util.SimpleFileResolver;
 
 import com.servoy.j2db.util.Debug;
 
-public class JasperReportRunner implements IJasperReportRunner {
-	
+public class JasperReportRunner implements IJasperReportRunner
+{
+
 	private static final int TEXT_PAGE_WIDTH_IN_CHARS = 120;
 	private static final int TEXT_PAGE_HEIGHT_IN_CHARS = 60;
 
@@ -86,62 +85,82 @@ public class JasperReportRunner implements IJasperReportRunner {
 
 	private final IJasperReportsService jasperReportsService;
 
-	public JasperReportRunner(IJasperReportsService jasperReportsService) {
+	public JasperReportRunner(IJasperReportsService jasperReportsService)
+	{
 		this.jasperReportsService = jasperReportsService;
 	}
 
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception {
-		if (source == null) {
+	@Override
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception
+	{
+		if (source == null)
+		{
 			throw new IllegalArgumentException("no data source");
 		}
-		if (!(source instanceof JRDataSource)) {
-			throw new IllegalArgumentException("non-datasource argument: "+source.getClass());
+		if (!(source instanceof JRDataSource))
+		{
+			throw new IllegalArgumentException("non-datasource argument: " + source.getClass());
 		}
 
-		if (report == null) {
+		if (report == null)
+		{
 			throw new IllegalArgumentException("No jasperReport <null> has been found or loaded");
 		}
 
 		Debug.trace("JasperTrace: Directory: " + repdir);
-		
+
 		JasperReport jasperReport = jasperReportsService.getJasperReport(clientID, report, repdir);
-		
+
 		return getJasperPrint(jasperReport, null, (JRDataSource) source, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
 	}
 
-	
-	public static byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws IOException, JRException {
+	public static byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws IOException, JRException
+	{
 		// exporting the report
-		if (type.equalsIgnoreCase(OUTPUT_FORMAT.JRPRINT)) {
+		if (type.equalsIgnoreCase(OUTPUT_FORMAT.JRPRINT))
+		{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			JRSaver.saveObject(jasperPrint, baos);
 			return baos.toByteArray();
 		}
-		
+
 		JRExporter exporter;
-		if (type.equalsIgnoreCase(OUTPUT_FORMAT.PDF)) {
+		if (type.equalsIgnoreCase(OUTPUT_FORMAT.PDF))
+		{
 			exporter = new JRPdfExporter();
-			
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.RTF)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.RTF))
+		{
 			exporter = new JRRtfExporter();
 
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.CSV)) {
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.CSV))
+		{
 			exporter = new JRCsvExporter();
-			
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.TXT)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.TXT))
+		{
 			exporter = new JRTextExporter();
 			exporter.setParameter(JRTextExporterParameter.PAGE_WIDTH, new Integer(TEXT_PAGE_WIDTH_IN_CHARS));
 			exporter.setParameter(JRTextExporterParameter.PAGE_HEIGHT, new Integer(TEXT_PAGE_HEIGHT_IN_CHARS));
-			
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.ODT)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.ODT))
+		{
 			exporter = new JROdtExporter();
-			
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.ODS)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.ODS))
+		{
 			exporter = new JROdsExporter();
-			
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML))
+		{
 			exporter = new JRHtmlExporter();
-			String location = adjustFileUnix((String)exporterParameters.get("REPORT_FILE_LOCATION"));
+			String location = (exporterParameters != null ? adjustFileUnix((String) exporterParameters.get("REPORT_FILE_LOCATION")) : null);
 			if (location != null)
 			{
 				location = (location.endsWith("/") ? location : location + "/");
@@ -150,39 +169,51 @@ public class JasperReportRunner implements IJasperReportRunner {
 				exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, jasperPrint.getName() + ".html_files/"); // backslash is important
 				exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.TRUE);
 			}
-			
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XHTML)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XHTML))
+		{
 			exporter = new JRXhtmlExporter();
-				
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XML)) {
+
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XML))
+		{
 			exporter = new JRXmlExporter();
 			exporter.setParameter(JRXmlExporterParameter.IS_EMBEDDING_IMAGES, Boolean.TRUE);
 
-		} else if ( type.equalsIgnoreCase(OUTPUT_FORMAT.EXCEL) 
-				|| type.equalsIgnoreCase(OUTPUT_FORMAT.XLS) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET)) {
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.EXCEL) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET))
+		{
 			// coding For Excel:
 			exporter = new JRXlsExporter();
-			//default is multiple sheets per page
+			// default is multiple sheets per page
 			exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-			if (type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET)) {
+			if (type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET))
+			{
 				exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE);
 			}
-			else {
+			else
+			{
 				String maxRowsPerSheet = jasperPrint.getProperty("MAXIMUM_ROWS_PER_SHEET");
-				exporter.setParameter(JRXlsExporterParameter.MAXIMUM_ROWS_PER_SHEET,Integer.valueOf(maxRowsPerSheet));				
+				exporter.setParameter(JRXlsExporterParameter.MAXIMUM_ROWS_PER_SHEET, Integer.valueOf(maxRowsPerSheet));
 			}
-			/*next line is deprecated so will use the suggested replacement
-			exporterXLS.setParameter(JRXlsExporterParameter.IS_AUTO_DETECT_CELL_TYPE, Boolean.TRUE);
+			/*
+			 * next line is deprecated so will use the suggested replacement 
+			 * exporterXLS.setParameter(JRXlsExporterParameter.IS_AUTO_DETECT_CELL_TYPE,Boolean.TRUE);
 			 */
 			exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-			
+
 			exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
 			exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
 
-		} else if (type.equalsIgnoreCase(OUTPUT_FORMAT.DOCX)) {
+		}
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.DOCX))
+		{
 			exporter = new JRDocxExporter();
-			
-		} else {
+
+		}
+		else
+		{
 			throw new IllegalArgumentException("Undefined output type:" + type);
 		}
 
@@ -190,104 +221,166 @@ public class JasperReportRunner implements IJasperReportRunner {
 		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, baos);
 		exporter.setParameter(JRExporterParameter.CHARACTER_ENCODING, "UTF-8");
-		 
+
+		// add all received JRExporterParameters to the exporter
 		if (exporterParameters != null)
 		{
-			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.PAGE_INDEX))exporter.setParameter(JRExporterParameter.PAGE_INDEX, (Integer)exporterParameters.get(EXPORTER_PARAMETERS.PAGE_INDEX));
-			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.START_PAGE_INDEX))exporter.setParameter(JRExporterParameter.START_PAGE_INDEX, (Integer)exporterParameters.get(EXPORTER_PARAMETERS.START_PAGE_INDEX));
-			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.END_PAGE_INDEX))exporter.setParameter(JRExporterParameter.END_PAGE_INDEX,(Integer)exporterParameters.get(EXPORTER_PARAMETERS.END_PAGE_INDEX));
-			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_X))exporter.setParameter(JRExporterParameter.OFFSET_X,(Integer)exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_X));
-			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_Y))exporter.setParameter(JRExporterParameter.OFFSET_Y,(Integer)exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_Y));
+			// leaving these 5 for legacy purposes
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.PAGE_INDEX)) exporter.setParameter(JRExporterParameter.PAGE_INDEX, exporterParameters.get(EXPORTER_PARAMETERS.PAGE_INDEX));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.START_PAGE_INDEX)) exporter.setParameter(JRExporterParameter.START_PAGE_INDEX, exporterParameters.get(EXPORTER_PARAMETERS.START_PAGE_INDEX));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.END_PAGE_INDEX)) exporter.setParameter(JRExporterParameter.END_PAGE_INDEX, exporterParameters.get(EXPORTER_PARAMETERS.END_PAGE_INDEX));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_X)) exporter.setParameter(JRExporterParameter.OFFSET_X, exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_X));
+			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_Y)) exporter.setParameter(JRExporterParameter.OFFSET_Y, exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_Y));
+
+			// add all fully qualified named jasperreports export paramters
+			for (Object key : exporterParameters.keySet())
+			{
+				if (key instanceof String)
+				{
+					String s = (String) key;
+					if (s.startsWith("net.sf.jasperreports.engine.JRExporterParameter") || s.startsWith("net.sf.jasperreports.engine.export"))
+					{
+						String className = s.substring(0, s.lastIndexOf("."));
+						if (className == null) continue;
+						try
+						{
+							Class<?> clz = Class.forName(className);
+							if (clz != null)
+							{
+								String fieldName = s.substring(s.lastIndexOf(".") + 1);
+								if (fieldName != null)
+								{
+									Field field = clz.getField(fieldName);
+									if (field != null)
+									{
+										JRExporterParameter exporterParameter = (JRExporterParameter) field.get(JRExporterParameter.class);
+										Object parameterValue = exporterParameters.get(key);
+										exporter.setParameter(exporterParameter, parameterValue);
+									}
+								}
+							}
+						}
+						catch (ClassNotFoundException e)
+						{
+							Debug.log(e);
+						}
+						catch (SecurityException e)
+						{
+							Debug.log(e);
+						}
+						catch (NoSuchFieldException e)
+						{
+							Debug.log(e);
+						}
+						catch (IllegalArgumentException e)
+						{
+							Debug.log(e);
+						}
+						catch (IllegalAccessException e)
+						{
+							Debug.log(e);
+						}
+					}
+				}
+			}
 		}
-		
-		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);	
-		if (al != null) {
+
+		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);
+		if (al != null)
+		{
 			ArrayList<File> dirList = new ArrayList<File>();
 			String aux = null;
-			for (String st : al) {
+			for (String st : al)
+			{
 				aux = adjustFileUnix(st);
 				dirList.add(new File(aux));
 			}
 			exporter.setParameter(JRExporterParameter.FILE_RESOLVER, new SimpleFileResolver(dirList));
-		}		
-		
+		}
+
 		exporter.exportReport();
 
-		// cleanup, if virtualizers have been used (NOTE: file virtualizer does cleanup itself)
-		if (virtualizer != null) 
+		// cleanup, if virtualizers have been used (NOTE: file virtualizer does
+		// cleanup itself)
+		if (virtualizer != null)
 		{
 			virtualizer.cleanup();
 			virtualizer = null;
 		}
-		
+
 		return baos.toByteArray();
 	}
-	
-	
+
 	private static JRAbstractLRUVirtualizer virtualizer = null;
-	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map parameters, String repdir, String extraDirs) throws JRException {
+
+	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map parameters, String repdir, String extraDirs) throws JRException
+	{
 		// client - fill (the compiled) report
 		Debug.trace("JasperTrace: Directory: " + repdir);
-		
+
 		// make directory unix style
 		String jasperDirectory = adjustFileUnix(repdir);
 
-		if (parameters == null)
-			parameters = new HashMap();
+		if (parameters == null) parameters = new HashMap();
 
 		parameters.put("report_directory", jasperDirectory);
-		if (!jasperDirectory.endsWith("/"))
-			jasperDirectory = jasperDirectory + '/';
-		
-		String subReportDir = (String)parameters.get("SUBREPORT_DIR");
+		if (!jasperDirectory.endsWith("/")) jasperDirectory = jasperDirectory + '/';
+
+		String subReportDir = (String) parameters.get("SUBREPORT_DIR");
 		if (subReportDir == null || subReportDir.equals(""))
 		{
-			//if the subreport directory is not set
+			// if the subreport directory is not set
 			parameters.put("SUBREPORT_DIR", jasperDirectory);
 		}
 		else
 		{
-			//if the path is relative
+			// if the path is relative
 			if (!(new File(subReportDir)).isAbsolute())
 			{
-				subReportDir = jasperDirectory + "/" + subReportDir; 
+				subReportDir = jasperDirectory + "/" + subReportDir;
 				subReportDir = adjustFileUnix(subReportDir);
 				parameters.put("SUBREPORT_DIR", subReportDir);
 			}
 		}
-		
+
 		Debug.trace("JasperTrace: Extra Directories: " + extraDirs);
-		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);	
-		if (al != null) {
+		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);
+		if (al != null)
+		{
 			String aux = null;
-			for (int x = 0; x < al.size(); x++) {
+			for (int x = 0; x < al.size(); x++)
+			{
 				aux = adjustFileUnix(al.get(x));
-				parameters.put("extra_directory_" + (x+1), aux);
+				parameters.put("extra_directory_" + (x + 1), aux);
 			}
 		}
-		
+
 		String virtualizerType = null;
 		String pageOutDir = System.getProperty("java.io.tmpdir");
 		Number maxRowsPerSheet = null;
-		
-		for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();) {
+
+		for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();)
+		{
 			Object key = iter.next();
 			Object value = parameters.get(key);
-			if (key.equals("VIRTUALIZER_TYPE")) {					
+			if (key.equals("VIRTUALIZER_TYPE"))
+			{
 				virtualizerType = (String) value;
 				iter.remove();
 			}
-			if (key.equals("PAGE_OUT_DIR") && value != null) {
+			if (key.equals("PAGE_OUT_DIR") && value != null)
+			{
 				pageOutDir = (String) value;
 				iter.remove();
 			}
-			if (key.equals("MAXIMUM_ROWS_PER_SHEET") && value != null) {
+			if (key.equals("MAXIMUM_ROWS_PER_SHEET") && value != null)
+			{
 				maxRowsPerSheet = (Number) value;
 				iter.remove();
 			}
 		}
-		
-		//explicit check if pageOutDir exists
+
+		// explicit check if pageOutDir exists
 		String virtErrMsg = null;
 		File testDir = new File(pageOutDir);
 		if (!testDir.exists())
@@ -296,91 +389,108 @@ public class JasperReportRunner implements IJasperReportRunner {
 			Debug.error(virtErrMsg);
 			throw new JRException(virtErrMsg);
 		}
-		else
-			testDir = null;
-		
+		else testDir = null;
+
 		// Virtualizers
 		virtualizer = null;
-		if (VIRTUALIZER_FILE.equalsIgnoreCase(virtualizerType)) {
+		if (VIRTUALIZER_FILE.equalsIgnoreCase(virtualizerType))
+		{
 			virtualizer = new JRFileVirtualizer(2, pageOutDir);
-		} else if (VIRTUALIZER_SWAP_FILE.equalsIgnoreCase(virtualizerType)) {
-			JRSwapFile swapFile = new JRSwapFile((String) pageOutDir, 1024,1024);
+		}
+		else if (VIRTUALIZER_SWAP_FILE.equalsIgnoreCase(virtualizerType))
+		{
+			JRSwapFile swapFile = new JRSwapFile(pageOutDir, 1024, 1024);
 			virtualizer = new JRSwapFileVirtualizer(2, swapFile, true);
-		} else if (VIRTUALIZER_GZIP.equalsIgnoreCase(virtualizerType)) {
+		}
+		else if (VIRTUALIZER_GZIP.equalsIgnoreCase(virtualizerType))
+		{
 			virtualizer = new JRGzipVirtualizer(2);
-		} else if (virtualizerType != null) {
-			//virtualizer type has been specified but is not of a supported type
+		}
+		else if (virtualizerType != null)
+		{
+			// virtualizer type has been specified but is not of a supported
+			// type
 			virtErrMsg = "The virtualizer type specified '" + virtualizerType + "' is not supported.";
 			Debug.error(virtErrMsg);
 			throw new JRException(virtErrMsg);
 		}
-		if (virtualizer != null) {
+		if (virtualizer != null)
+		{
 			parameters.put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 		}
-		
 
 		JRParameter[] params = jasperReport.getParameters();
 		// Check to see if the report has parameters that should be prompted
-		for (int i = 0; i < params.length; i++) {
+		for (int i = 0; i < params.length; i++)
+		{
 			JRParameter param = params[i];
-			if (!param.isSystemDefined()) {
+			if (!param.isSystemDefined())
+			{
 				String paramName = param.getName();
 				String paramDesc = param.getDescription();
 				String paramClass = param.getValueClassName();
 				Object value = parameters.get(paramName);
-				if ((value != null) && (value.getClass().getName().equalsIgnoreCase("java.lang.Double"))
-					&& (paramClass.equalsIgnoreCase("java.lang.Integer"))) {
+				if ((value != null) && (value.getClass().getName().equalsIgnoreCase("java.lang.Double")) && (paramClass.equalsIgnoreCase("java.lang.Integer")))
+				{
 					value = new Integer(((Double) value).intValue());
 					parameters.put(paramName, value);
 				}
-				if (value != null) {
-					Debug.trace("JasperDebug: Parameter: " + ((paramDesc != null) ? paramDesc : "") + " " + paramName + " (" + paramClass + "): "
-							+ value.toString());
-				} else {
+				if (value != null)
+				{
+					Debug.trace("JasperDebug: Parameter: " + ((paramDesc != null) ? paramDesc : "") + " " + paramName + " (" + paramClass + "): " + value.toString());
+				}
+				else
+				{
 					Debug.trace("JasperDebug: Parameter: " + ((paramDesc != null) ? paramDesc : "") + " " + paramName + " (" + paramClass + "): null");
 				}
-				if (!parameters.containsKey(paramName)) {
-					Debug.trace("JasperDebug: Warning parameter " + ((paramDesc != null) ? paramDesc : "") + " " + paramName + " (" + paramClass
-							+ ") has no value");
+				if (!parameters.containsKey(paramName))
+				{
+					Debug.trace("JasperDebug: Warning parameter " + ((paramDesc != null) ? paramDesc : "") + " " + paramName + " (" + paramClass + ") has no value");
 				}
 			}
 		}
-		
 
 		// create JasperPrint using fillReport() method
 		JasperPrint jp = null;
-		
-		if (connection == null && jrDataSource == null)
-			throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
-		else
-			try {
-				if (connection != null) {
-					jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
-				} 
-				else if (jrDataSource != null) {
-					jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
-				}
-				//else 
-				//throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
-			} catch (Exception e) {
-				Debug.log(e);
-				throw new JRException(e.getMessage());
+
+		if (connection == null && jrDataSource == null) throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
+		else try
+		{
+			if (connection != null)
+			{
+				jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
 			}
-		
-		if (virtualizer != null) {
+			else if (jrDataSource != null)
+			{
+				jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
+			}
+			// else
+			// throw new
+			// IllegalArgumentException("No model or db connection <null> has been found or loaded");
+		}
+		catch (Exception e)
+		{
+			Debug.log(e);
+			throw new JRException(e.getMessage());
+		}
+
+		if (virtualizer != null)
+		{
 			virtualizer.setReadOnly(true);
 		}
-		
-		//adding MAXIMUM_ROWS_PER_SHEET property
+
+		// adding MAXIMUM_ROWS_PER_SHEET property
 		if (maxRowsPerSheet == null) jp.setProperty("MAXIMUM_ROWS_PER_SHEET", String.valueOf(65535));
 		else jp.setProperty("MAXIMUM_ROWS_PER_SHEET", String.valueOf(maxRowsPerSheet.intValue()));
-		
+
 		return jp;
 	}
-	
-	public static String adjustFileUnix(String file) {
+
+	public static String adjustFileUnix(String file)
+	{
 		if (file == null) return null;
-		while (file.indexOf('\\') != -1) {
+		while (file.indexOf('\\') != -1)
+		{
 			file = file.replace('\\', '/');
 		}
 		return file;
