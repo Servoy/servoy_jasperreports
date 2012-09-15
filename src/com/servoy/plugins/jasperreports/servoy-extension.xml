@@ -1,6 +1,240 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <servoyextension>
   <servoydoc>
+    <beans>
+      <object publicName="JasperReportsServoyViewer" qualifiedName="com.servoy.plugins.jasperreports.bean.JasperReportsServoyViewer" scriptingName="beans.JasperReportsServoyViewer">
+        <properties>
+          <property name="background">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the border color of the bean]]></return>
+            <description><![CDATA[Sets or gets the background color of the Bean.]]></description>
+            <summary><![CDATA[Sets or gets the background color of the Bean.]]></summary>
+            <sample><![CDATA[%%elementName%%.background='#00ff00';]]></sample>
+          </property>
+          <property name="beanVersion">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the version of the bean; this should be in sync with the version of the plugin used]]></return>
+            <description><![CDATA[This is a readonly property which returns the bean version.
+The bean version indicates which version of the Servoy JasperReports plugin the bean should be used with.]]></description>
+            <summary><![CDATA[This is a readonly property which returns the bean version.]]></summary>
+            <sample><![CDATA[application.output(%%elementName%%.beanVersion);]]></sample>
+          </property>
+          <property name="beanViewerExportFormats">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the file save/export formats of the viewer]]></return>
+            <description><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></description>
+            <summary><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></summary>
+            <sample><![CDATA[//also see plugins.jasperPluginRMI.viewerExportFormats
+%%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];]]></sample>
+          </property>
+          <property name="border">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[border type, width and color]]></return>
+            <description><![CDATA[Sets or gets the border type, width and color.]]></description>
+            <summary><![CDATA[Sets or gets the border type, width and color.]]></summary>
+            <sample><![CDATA[%%elementName%%.border='LineBorder,4,#000000';]]></sample>
+          </property>
+          <property name="displayMode">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the display mode of the viewer]]></return>
+            <description><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></description>
+            <summary><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></summary>
+            <sample><![CDATA[%%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
+%%elementName%%.showReport(myDataSource,"myReport.jrxml",null);]]></sample>
+          </property>
+          <property deprecated="true" name="extraDirectories">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
+            <description/>
+            <deprecated><![CDATA[replaced by the relativeExtraDirectories property]]></deprecated>
+            <sample/>
+          </property>
+          <property name="font">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the font type used in the viewer]]></return>
+            <description><![CDATA[Sets or gets the font type of the Bean's viewer.]]></description>
+            <summary><![CDATA[Sets or gets the font type of the Bean's viewer.]]></summary>
+            <sample><![CDATA[%%elementName%%.font='Tahoma,0,14';]]></sample>
+          </property>
+          <property name="foreground">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the foreground color]]></return>
+            <description><![CDATA[Sets or gets the foreground color.]]></description>
+            <summary><![CDATA[Sets or gets the foreground color.]]></summary>
+            <sample><![CDATA[%%elementName%%.foreground='#000000';]]></sample>
+          </property>
+          <property name="name">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the name of the Bean]]></return>
+            <description><![CDATA[Gets or sets the name of the Bean.]]></description>
+            <summary><![CDATA[Gets or sets the name of the Bean.]]></summary>
+            <sample><![CDATA[var beanName = %%elementName%%.name;]]></sample>
+          </property>
+          <property name="relativeExtraDirectories">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the relative path or paths to the client set extra directory/directories]]></return>
+            <description><![CDATA[Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.
+The paths are set per client and are relative to the server corresponding directories setting.
+
+Please refer to the same property of the Servoy JasperReports plugin for more details.]]></description>
+            <summary><![CDATA[Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.]]></summary>
+            <sample><![CDATA[%%elementName%%.extraDirectories='relative/path/to/client/extraDirectory1';]]></sample>
+          </property>
+          <property name="relativeReportsDirectory">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the location of the client set reports directory, relative to the server set path]]></return>
+            <description><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
+of the Servoy JasperReports plugin.
+
+Please refer to the same property of the Servoy JasperReports plugin for more details.]]></description>
+            <summary><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
+of the Servoy JasperReports plugin.]]></summary>
+            <sample><![CDATA[%%elementName%%.relativeReportsDirectory = 'relativePath/to/serverReportsDirectory';]]></sample>
+          </property>
+          <property deprecated="true" name="reportsDirectory">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
+            <description/>
+            <deprecated><![CDATA[replaced by the relativeReportsDirectory property]]></deprecated>
+            <sample/>
+          </property>
+          <property name="transparent" undocumented="true">
+            <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"/>
+          </property>
+        </properties>
+        <functions>
+          <function name="getHeight">
+            <argumentsTypes/>
+            <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the height of the Bean]]></return>
+            <description><![CDATA[Gets the height of the Bean.]]></description>
+            <summary><![CDATA[Gets the height of the Bean.]]></summary>
+            <sample><![CDATA[var h = %%elementName%%.getHeight();]]></sample>
+          </function>
+          <function name="getLocationX">
+            <argumentsTypes/>
+            <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the x-coordinate of the Bean's top-left corner location]]></return>
+            <description><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></description>
+            <summary><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></summary>
+            <sample><![CDATA[var x = %%elementName%%.getLocationX();]]></sample>
+          </function>
+          <function name="getLocationY">
+            <argumentsTypes/>
+            <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the y-coordinate of the Bean's top-left corner location]]></return>
+            <description><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></description>
+            <summary><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></summary>
+            <sample><![CDATA[var y = %%elementName%%.getLocationY();]]></sample>
+          </function>
+          <function name="getWidth">
+            <argumentsTypes/>
+            <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the width of the Bean]]></return>
+            <description><![CDATA[Gets the width of the Bean.]]></description>
+            <summary><![CDATA[Gets the width of the Bean.]]></summary>
+            <sample><![CDATA[var w = %%elementName%%.getWidth();]]></sample>
+          </function>
+          <function name="setLocation" undocumented="true">
+            <argumentsTypes>
+              <argumentType typecode="int"/>
+              <argumentType typecode="int"/>
+            </argumentsTypes>
+            <return type="void" typecode="void"/>
+            <parameters>
+              <parameter name="x" type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"/>
+              <parameter name="y" type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"/>
+            </parameters>
+          </function>
+          <function name="setSize">
+            <argumentsTypes>
+              <argumentType typecode="int"/>
+              <argumentType typecode="int"/>
+            </argumentsTypes>
+            <return type="void" typecode="void"/>
+            <description><![CDATA[Sets the size of the Bean.]]></description>
+            <summary><![CDATA[Sets the size of the Bean.]]></summary>
+            <sample><![CDATA[%%elementName%%.setSize(800,600);]]></sample>
+            <parameters>
+              <parameter name="width" type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int">
+                <description><![CDATA[the width of the bean]]></description>
+              </parameter>
+              <parameter name="height" type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int">
+                <description><![CDATA[the height of the bean]]></description>
+              </parameter>
+            </parameters>
+          </function>
+          <function name="showReport">
+            <argumentsTypes>
+              <argumentType typecode="java.lang.Object"/>
+              <argumentType typecode="java.lang.String"/>
+              <argumentType typecode="java.lang.Object"/>
+            </argumentsTypes>
+            <return type="void" typecode="void"/>
+            <description><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
+            <summary><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
+            <sample><![CDATA[var params = new Object();
+params.SUBREPORT_DIR = "./Subreport_Tests/";
+var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
+            <parameters>
+              <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
+                <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
+              </parameter>
+              <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
+                <description><![CDATA[the report file to export and preview (relative to the reports directory)]]></description>
+              </parameter>
+              <parameter name="parameters" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
+                <description><![CDATA[the map of parameters to be used when previewing the report]]></description>
+              </parameter>
+            </parameters>
+          </function>
+          <function name="showReport">
+            <argumentsTypes>
+              <argumentType typecode="java.lang.Object"/>
+              <argumentType typecode="java.lang.String"/>
+              <argumentType typecode="java.lang.Object"/>
+              <argumentType typecode="java.lang.String"/>
+            </argumentsTypes>
+            <return type="void" typecode="void"/>
+            <description><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
+            <summary><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
+            <sample><![CDATA[var params = new Object();
+params.SUBREPORT_DIR = "./Subreport_Tests/";
+var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
+            <parameters>
+              <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
+                <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
+              </parameter>
+              <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
+                <description><![CDATA[the report file to export and preview (relative to the reports directory)]]></description>
+              </parameter>
+              <parameter name="parameters" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
+                <description><![CDATA[the map of parameters to be used when previewing the report]]></description>
+              </parameter>
+              <parameter name="localeString" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
+                <description><![CDATA[the string which specifies the locale]]></description>
+              </parameter>
+            </parameters>
+          </function>
+          <function name="showReport">
+            <argumentsTypes>
+              <argumentType typecode="java.lang.Object"/>
+              <argumentType typecode="java.lang.String"/>
+              <argumentType typecode="java.lang.Object"/>
+              <argumentType typecode="java.lang.String"/>
+              <argumentType typecode="java.lang.Boolean"/>
+            </argumentsTypes>
+            <return type="void" typecode="void"/>
+            <description><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
+            <summary><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
+            <sample><![CDATA[var params = new Object();
+params.SUBREPORT_DIR = "./Subreport_Tests/";
+var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
+            <parameters>
+              <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
+                <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
+              </parameter>
+              <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
+                <description><![CDATA[the report file to export and preview (relative to the reports directory)]]></description>
+              </parameter>
+              <parameter name="parameters" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
+                <description><![CDATA[the map of parameters to be used when previewing the report]]></description>
+              </parameter>
+              <parameter name="localeString" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
+                <description><![CDATA[the string which specifies the locale]]></description>
+              </parameter>
+              <parameter name="moveTableOfContent" type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="java.lang.Boolean">
+                <description><![CDATA[true in order to move the table of contents, false otherwise]]></description>
+              </parameter>
+            </parameters>
+          </function>
+        </functions>
+      </object>
+    </beans>
     <plugins>
       <object publicName="JR_SVY_VIEWER_DISPLAY_MODE" qualifiedName="com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE">
         <constants>
@@ -40,12 +274,12 @@ elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);]]></sample>
           </property>
           <property name="relativeExtraDirectories">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the path to the extra directories relative to the server side set location]]></return>
-            <description><![CDATA[Property for retrieving and setting the paths to the extra resources directories. 
-The paths are set per client and are relative to the server corresponding directories setting.
+            <description><![CDATA[Property for retrieving and setting the paths to the extra resources directories. The paths are set per client
+and are relative to the server corresponding directories setting.
 
-By default the value is read from the Admin Page: Server Plugins - the directories.jasper.extra property. 
-If the client modifies the default property, this value will be used instead of the default one for the whole client session and only for this client. 
-Each client session has it's own extraDirectories value. 
+By default the value is read from the Admin Page: Server Plugins - the directories.jasper.extra property. If the
+client modifies the default property, this value will be used instead of the default one for the whole client
+session and only for this client. Each client session has it's own extraDirectories value.
 
 NOTE: Extra directories are not searched recursively.]]></description>
             <summary><![CDATA[Property for retrieving and setting the paths to the extra resources directories.]]></summary>
@@ -54,13 +288,15 @@ plugins.jasperPluginRMI.relativeExtraDirectories = "extraDir1,extraDir2";]]></sa
           </property>
           <property name="relativeReportsDirectory">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the location of the reports directory, relative to the server set path]]></return>
-            <description><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory.
+            <description><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
+server reports directory.
 
-By default the value is read from the adim page Server Plugins, the directory.jasper.report property.
-A client is only able to set a path relative to the server report directory. 
-If the client modifies this property, its value will be used instead of the default one, for the whole client session and only for this client.
-Each client session has it's own relativeReportDirectory value.]]></description>
-            <summary><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory.]]></summary>
+By default the value is read from the adim page Server Plugins, the directory.jasper.report property. A client is
+only able to set a path relative to the server report directory. If the client modifies this property, its value
+will be used instead of the default one, for the whole client session and only for this client. Each client
+session has it's own relativeReportDirectory value.]]></description>
+            <summary><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
+server reports directory.]]></summary>
             <sample><![CDATA[plugins.jasperPluginRMI.relativeReportsDirectory = "/myReportsLocation";]]></sample>
           </property>
           <property deprecated="true" name="reportDirectory">
@@ -79,8 +315,8 @@ NOTE: Setting the absolute path for the report directory on the server is no lon
             <sample><![CDATA[var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;
 application.output(defaultExportFormats);
 
-// use the default export constants of the plugin, of the OUTPUT_FORMAT constants node;
-// the following formats are available for setting the viewer export formats:
+// use the default export constants of the plugin, of the OUTPUT_FORMAT constants node; 
+// the following formats are available for setting the viewer export formats: 
 // PDF, JRPRINT, RTF, ODT, HTML, XLS_1_SHEET, XLS, CSV, XML
 // and there is an extra Xml with Embedded Images export type available for the Viewer, denoted by 'xml_embd_img'
 // the first export format in the list will be the default one displayed in the Save dialog of the Viewer
@@ -107,14 +343,14 @@ plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[the compiled jasper report file]]></return>
             <description><![CDATA[Compile a Jasper Reports .jrxml file to a .jasper file.]]></description>
             <summary><![CDATA[Compile a Jasper Reports .]]></summary>
-            <sample><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name
-// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file.
-var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml');
-// The report name as a relative path. The file will be searched relative to the ReportDirectory.
-var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml');
-var success = plugins.jasperPluginRMI.compileReport('\\\\subdir\\\\myCustomerReport2.jrxml');
-// To specify a different destination file than the original filaname, the second parameter can be incouded.
-// If it is relative, the file will be created relative to the ReportDirectory.
+            <sample><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name 
+// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file. 
+var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml'); 
+// The report name as a relative path. The file will be searched relative to the ReportDirectory. 
+var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml'); 
+var success = plugins.jasperPluginRMI.compileReport( '\\\\subdir\\\\myCustomerReport2.jrxml'); 
+// To specify a different destination file than the original filaname, the second parameter can be incouded. 
+// If it is relative, the file will be created relative to the ReportDirectory. 
 var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');]]></sample>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -130,14 +366,14 @@ var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[the compiled jasper report file]]></return>
             <description><![CDATA[Compile a Jasper Reports .jrxml file to a .jasper file.]]></description>
             <summary><![CDATA[Compile a Jasper Reports .]]></summary>
-            <sample><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name
-// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file.
-var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml');
-// The report name as a relative path. The file will be searched relative to the ReportDirectory.
-var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml');
-var success = plugins.jasperPluginRMI.compileReport('\\\\subdir\\\\myCustomerReport2.jrxml');
-// To specify a different destination file than the original filaname, the second parameter can be incouded.
-// If it is relative, the file will be created relative to the ReportDirectory.
+            <sample><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name 
+// The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file. 
+var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml'); 
+// The report name as a relative path. The file will be searched relative to the ReportDirectory. 
+var success = plugins.jasperPluginRMI.compileReport('myCustomerReport1.jrxml'); 
+var success = plugins.jasperPluginRMI.compileReport( '\\\\subdir\\\\myCustomerReport2.jrxml'); 
+// To specify a different destination file than the original filaname, the second parameter can be incouded. 
+// If it is relative, the file will be created relative to the ReportDirectory. 
 var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');]]></sample>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -155,7 +391,7 @@ var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[true if the file was successfully deleted, false otherwise]]></return>
             <description><![CDATA[Delete a report file from the Server.]]></description>
             <summary><![CDATA[Delete a report file from the Server.]]></summary>
-            <sample><![CDATA[var reportFile2Delete = 'myCustomerReport.jrxml';
+            <sample><![CDATA[var reportFile2Delete = 'myCustomerReport.jrxml'; 
 plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);]]></sample>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -170,8 +406,8 @@ plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);]]></sample>
             <return type="com.servoy.j2db.dataprocessing.JSDataSet" typecode="com.servoy.j2db.dataprocessing.JSDataSet"><![CDATA[the JSDataSet with the report parameters]]></return>
             <description><![CDATA[Retrieve a JSDataSet with the report parameters, except the system defined ones.]]></description>
             <summary><![CDATA[Retrieve a JSDataSet with the report parameters, except the system defined ones.]]></summary>
-            <sample><![CDATA[var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml');
-var csv = ds.getAsText(',','\\n','\"',true);
+            <sample><![CDATA[var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml'); 
+var csv = ds.getAsText(',','\\n','\"',true); 
 application.output(csv);]]></sample>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -184,13 +420,13 @@ application.output(csv);]]></sample>
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the String array of available reports]]></return>
             <description><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></description>
             <summary><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></summary>
-            <sample><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports
-// No parameter returns all the reports
-var result = plugins.jasperPluginRMI.getReports('NONCOMPILED');
-application.output(result[0]);
-// using a string as the search filter
-//var result = plugins.jasperPluginRMI.getReports('*criteria*');
-//for(var i=0; i<result.length; i++)
+            <sample><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports 
+// No parameter returns all the reports 
+var result = plugins.jasperPluginRMI.getReports('NONCOMPILED'); 
+application.output(result[0]); 
+//using a string as the search filter 
+//var result = plugins.jasperPluginRMI.getReports('*criteria*'); 
+//for(var i=0; i<result.length; i++) 
 //application.output(result[i]);]]></sample>
           </function>
           <function name="getReports">
@@ -200,13 +436,13 @@ application.output(result[0]);
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the String array of available reports]]></return>
             <description><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></description>
             <summary><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></summary>
-            <sample><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports
-// No parameter returns all the reports
-var result = plugins.jasperPluginRMI.getReports('NONCOMPILED');
-application.output(result[0]);
-// using a string as the search filter
-//var result = plugins.jasperPluginRMI.getReports('*criteria*');
-//for(var i=0; i<result.length; i++)
+            <sample><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports 
+// No parameter returns all the reports 
+var result = plugins.jasperPluginRMI.getReports('NONCOMPILED'); 
+application.output(result[0]); 
+//using a string as the search filter 
+//var result = plugins.jasperPluginRMI.getReports('*criteria*'); 
+//for(var i=0; i<result.length; i++) 
 //application.output(result[i]);]]></sample>
             <parameters>
               <parameter name="filter" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -331,8 +567,8 @@ application.output(result[0]);
             <return type="byte[]" typecode="[B"><![CDATA[the report file retrieved as a byte array]]></return>
             <description><![CDATA[Retrieve a report file from the Server.]]></description>
             <summary><![CDATA[Retrieve a report file from the Server.]]></summary>
-            <sample><![CDATA[var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper');
-// Subfolders can be used to read files.
+            <sample><![CDATA[var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper'); 
+// Subfolders can be used to read files. 
 var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir\\\\myCustomerReport.jasper');]]></sample>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -349,69 +585,80 @@ var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir
               <argumentType typecode="java.lang.Object"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the generated reported as a byte array]]></return>
-            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.
-If using a table of contents and if needed, the table of contents can be moved to a specified page. 
-Please refer to the sample code for more details.]]></description>
+            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
+table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
+sample code for more details.]]></description>
             <summary><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
             <sample><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
 // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
 // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
-// Note: the parameters argument is used to send additional parameters into the report. For example:
-// {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value of dataprovider customer_id in the selected record on the customers form
+// Note: the parameters argument is used to send additional parameters into the report. For example: 
+// {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value 
+// of dataprovider customer_id in the selected record on the customers form 
 // The parameters argument is an Object, which can be instantiated in two ways: 
 // var o = new Object(); 
 // o.pcustomerid = forms.customers.customer_id; 
 // or: 
 // var o = {pcustomerid: forms.customers.customer_id}; 
-application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer
-var ds = foundset.getDataSource();
-var d = ds.split('/);
+application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer var
+ds = foundset.getDataSource(); 
+var d = ds.split('/); 
 var myServer = d[1];
-plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
+plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
 
-// To request a report in a different Language than the current language of the client, it's possible to specify a Locale string as the locale argument. For example: 'en' or 'es' or 'nl'
-// When the locale argument is not specified, the report will be in the current langauge of the Client
-// i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation
+// To request a report in a different Language than the current language of the client, it's possible to specify a Locale string
+// as the locale argument. For example: 'en' or 'es' or 'nl' 
+// When the locale argument is not specified, the report will be in the current langauge of the Client 
+// i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl');
 
-// To print the result of the customers report in the SmartClient (to a specified printer), the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT).
-// The third parameter can contain the name of the printer to which the report needs to be printed
-// or can contain true (boolean value) to show a print dialog before printing.
-// If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer.
-// Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT).
+// To print the result of the customers report in the SmartClient (to a specified printer), 
+// the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT). 
+// The third parameter can contain the name of the printer to  which the report needs to be printed 
+// or can contain true (boolean value) to show a print dialog before printing. 
+// If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer. 
+// Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT). 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 
-// To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive:
-// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml.
-// These are available as constants in the OUTPUT_FORMAT node of the plugin's tree.
-// Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id});
+// To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
+// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+// These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
+// Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.html',OUTPUT_FORMAT.HTML,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.pdf',OUTPUT_FORMAT.PDF,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.rtf',OUTPUT_FORMAT.RTF,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id}); 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomeri d : forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomeri d : forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
 
-// Jasper Reports supports queries with IN operators through the following notation: X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist)
+// Jasper Reports supports queries with IN operators through the following notation: 
+// X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist) 
 // When using this notation, the pcustomeridlist parameter needs to contain one or more values in the following way:
-//var idlist = new Array()
-//idlist[0] = 1
-//idlist[1] = 26
-//plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist});
-//The return value is a byte array with the content of the file generated that can be further used.
+//var idlist = new Array(); 
+//idlist[0] = 1; 
+//idlist[1] = 26 ;
+//plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist}); 
+
+//The return value is a byte array with the content of the file generated that can be further used. 
 //var res = plugins.jasperPluginRMI.runReport(myServer,'samplereport.jrxml', null, OUTPUT_FORMAT.PDF, null);
 //plugins.file.writeFile('e:\\\\sample.pdf', res);
 
-// In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\")
-// to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\"
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);]]></sample>
+// In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\") 
+// to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\" 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null,true);
+
+// Pass exporter parameters to the export process in runReport 
+//var params = new Object();
+//params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
+//params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
+//var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the server name or foundset to run the report on]]></description>
@@ -440,69 +687,80 @@ plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the generated reported as a byte array]]></return>
-            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.
-If using a table of contents and if needed, the table of contents can be moved to a specified page. 
-Please refer to the sample code for more details.]]></description>
+            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
+table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
+sample code for more details.]]></description>
             <summary><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
             <sample><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
 // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
 // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
-// Note: the parameters argument is used to send additional parameters into the report. For example:
-// {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value of dataprovider customer_id in the selected record on the customers form
+// Note: the parameters argument is used to send additional parameters into the report. For example: 
+// {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value 
+// of dataprovider customer_id in the selected record on the customers form 
 // The parameters argument is an Object, which can be instantiated in two ways: 
 // var o = new Object(); 
 // o.pcustomerid = forms.customers.customer_id; 
 // or: 
 // var o = {pcustomerid: forms.customers.customer_id}; 
-application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer
-var ds = foundset.getDataSource();
-var d = ds.split('/);
+application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer var
+ds = foundset.getDataSource(); 
+var d = ds.split('/); 
 var myServer = d[1];
-plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
+plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
 
-// To request a report in a different Language than the current language of the client, it's possible to specify a Locale string as the locale argument. For example: 'en' or 'es' or 'nl'
-// When the locale argument is not specified, the report will be in the current langauge of the Client
-// i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation
+// To request a report in a different Language than the current language of the client, it's possible to specify a Locale string
+// as the locale argument. For example: 'en' or 'es' or 'nl' 
+// When the locale argument is not specified, the report will be in the current langauge of the Client 
+// i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl');
 
-// To print the result of the customers report in the SmartClient (to a specified printer), the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT).
-// The third parameter can contain the name of the printer to which the report needs to be printed
-// or can contain true (boolean value) to show a print dialog before printing.
-// If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer.
-// Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT).
+// To print the result of the customers report in the SmartClient (to a specified printer), 
+// the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT). 
+// The third parameter can contain the name of the printer to  which the report needs to be printed 
+// or can contain true (boolean value) to show a print dialog before printing. 
+// If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer. 
+// Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT). 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 
-// To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive:
-// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml.
-// These are available as constants in the OUTPUT_FORMAT node of the plugin's tree.
-// Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id});
+// To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
+// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+// These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
+// Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.html',OUTPUT_FORMAT.HTML,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.pdf',OUTPUT_FORMAT.PDF,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.rtf',OUTPUT_FORMAT.RTF,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id}); 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomeri d : forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomeri d : forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
 
-// Jasper Reports supports queries with IN operators through the following notation: X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist)
+// Jasper Reports supports queries with IN operators through the following notation: 
+// X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist) 
 // When using this notation, the pcustomeridlist parameter needs to contain one or more values in the following way:
-//var idlist = new Array()
-//idlist[0] = 1
-//idlist[1] = 26
-//plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist});
-//The return value is a byte array with the content of the file generated that can be further used.
+//var idlist = new Array(); 
+//idlist[0] = 1; 
+//idlist[1] = 26 ;
+//plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist}); 
+
+//The return value is a byte array with the content of the file generated that can be further used. 
 //var res = plugins.jasperPluginRMI.runReport(myServer,'samplereport.jrxml', null, OUTPUT_FORMAT.PDF, null);
 //plugins.file.writeFile('e:\\\\sample.pdf', res);
 
-// In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\")
-// to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\"
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);]]></sample>
+// In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\") 
+// to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\" 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null,true);
+
+// Pass exporter parameters to the export process in runReport 
+//var params = new Object();
+//params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
+//params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
+//var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the server name or foundset to run the report on]]></description>
@@ -535,69 +793,80 @@ plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT
               <argumentType typecode="java.lang.Boolean"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the generated reported as a byte array]]></return>
-            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.
-If using a table of contents and if needed, the table of contents can be moved to a specified page. 
-Please refer to the sample code for more details.]]></description>
+            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
+table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
+sample code for more details.]]></description>
             <summary><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
             <sample><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
 // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
 // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
-// Note: the parameters argument is used to send additional parameters into the report. For example:
-// {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value of dataprovider customer_id in the selected record on the customers form
+// Note: the parameters argument is used to send additional parameters into the report. For example: 
+// {pcustomerid: forms.customers.customer_id} to send just 1 parameter called pcustomerid, which contains the value 
+// of dataprovider customer_id in the selected record on the customers form 
 // The parameters argument is an Object, which can be instantiated in two ways: 
 // var o = new Object(); 
 // o.pcustomerid = forms.customers.customer_id; 
 // or: 
 // var o = {pcustomerid: forms.customers.customer_id}; 
-application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer
-var ds = foundset.getDataSource();
-var d = ds.split('/);
+application.updateUI(); //to make sure the Servoy window doesn't grab focus after showing the Jasper Viewer var
+ds = foundset.getDataSource(); 
+var d = ds.split('/); 
 var myServer = d[1];
-plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
+plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
 
-// To request a report in a different Language than the current language of the client, it's possible to specify a Locale string as the locale argument. For example: 'en' or 'es' or 'nl'
-// When the locale argument is not specified, the report will be in the current langauge of the Client
-// i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation
+// To request a report in a different Language than the current language of the client, it's possible to specify a Locale string
+// as the locale argument. For example: 'en' or 'es' or 'nl' 
+// When the locale argument is not specified, the report will be in the current langauge of the Client 
+// i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl');
 
-// To print the result of the customers report in the SmartClient (to a specified printer), the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT).
-// The third parameter can contain the name of the printer to which the report needs to be printed
-// or can contain true (boolean value) to show a print dialog before printing.
-// If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer.
-// Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT).
+// To print the result of the customers report in the SmartClient (to a specified printer), 
+// the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT). 
+// The third parameter can contain the name of the printer to  which the report needs to be printed 
+// or can contain true (boolean value) to show a print dialog before printing. 
+// If false (boolean value) or null is specified, it will print without showing the print dialog to the default printer. 
+// Note: In the WebClient a PDF will be pushed to the Client when the outputType is specified as 'print' (OUTPUT_FORMAT.PRINT). 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 
-// To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive:
-// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml.
-// These are available as constants in the OUTPUT_FORMAT node of the plugin's tree.
-// Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id});
+// To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
+// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+// These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
+// Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.html',OUTPUT_FORMAT.HTML,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.pdf',OUTPUT_FORMAT.PDF,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.rtf',OUTPUT_FORMAT.RTF,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,{pcustomerid: forms.customers.customer_id}); 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.txt',OUTPUT_FORMAT.TXT,{pcustomeri d : forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.csv',OUTPUT_FORMAT.CSV,{pcustomeri d : forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
 
-// Jasper Reports supports queries with IN operators through the following notation: X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist)
+// Jasper Reports supports queries with IN operators through the following notation: 
+// X${IN,columnName,parameterName} like 'select * from customers where X$(IN,customer_id,pcustomeridlist) 
 // When using this notation, the pcustomeridlist parameter needs to contain one or more values in the following way:
-//var idlist = new Array()
-//idlist[0] = 1
-//idlist[1] = 26
-//plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist});
-//The return value is a byte array with the content of the file generated that can be further used.
+//var idlist = new Array(); 
+//idlist[0] = 1; 
+//idlist[1] = 26 ;
+//plugins.jasperPluginRMI.jasperReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomeridlist: idlist}); 
+
+//The return value is a byte array with the content of the file generated that can be further used. 
 //var res = plugins.jasperPluginRMI.runReport(myServer,'samplereport.jrxml', null, OUTPUT_FORMAT.PDF, null);
 //plugins.file.writeFile('e:\\\\sample.pdf', res);
 
-// In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\")
-// to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\"
-//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null, true);]]></sample>
+// In order to run the report and move the table of contents(marked with the string: \"HIDDEN TEXT TO MARK THE BEGINNING OF THE TABEL OF CONTENTS\") 
+// to the Insert page, which has to be identified by the string: \"HIDDEN TEXT TO MARK THE INSERT PAGE\" 
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id}, null,true);
+
+// Pass exporter parameters to the export process in runReport 
+//var params = new Object();
+//params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
+//params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
+//var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);]]></sample>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the server name or foundset to run the report on]]></description>
@@ -648,10 +917,10 @@ plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[true if the write was successful, false otherwise]]></return>
             <description><![CDATA[Store a reportFile on the Server.]]></description>
             <summary><![CDATA[Store a reportFile on the Server.]]></summary>
-            <sample><![CDATA[// .jasper or .jrxml files can be used
-var file = plugins.file.readFile('\\\\temp\\\\sample.jasper');
-plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file);
-// Writes to a subfolder from the reports directory. All the folders from the path must exist.
+            <sample><![CDATA[// .jasper or .jrxml files can be used var 
+file = plugins.file.readFile('\\\\temp\\\\sample.jasper');
+plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file); 
+// Writes to a subfolder from the reports directory. All the folders from the path must exist. 
 plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.jasper', file);]]></sample>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">

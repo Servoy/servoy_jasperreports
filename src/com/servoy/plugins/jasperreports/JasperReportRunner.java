@@ -114,7 +114,7 @@ public class JasperReportRunner implements IJasperReportRunner
 		return getJasperPrint(jasperReport, null, (JRDataSource) source, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
 	}
 
-	public static byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs, Map exporterParameters) throws IOException, JRException
+	public static byte[] getJasperBytes(String type, JasperPrint jasperPrint, String extraDirs, Map<String, Object> exporterParameters) throws IOException, JRException
 	{
 		// exporting the report
 		if (type.equalsIgnoreCase(OUTPUT_FORMAT.JRPRINT))
@@ -233,53 +233,49 @@ public class JasperReportRunner implements IJasperReportRunner
 			if (exporterParameters.containsKey(EXPORTER_PARAMETERS.OFFSET_Y)) exporter.setParameter(JRExporterParameter.OFFSET_Y, exporterParameters.get(EXPORTER_PARAMETERS.OFFSET_Y));
 
 			// add all fully qualified named jasperreports export paramters
-			for (Object key : exporterParameters.keySet())
+			for (Map.Entry<String, Object> entry : exporterParameters.entrySet())
 			{
-				if (key instanceof String)
+				String key = entry.getKey();
+				Object value = entry.getValue();
+				if (key.startsWith("EXPORTER_PARAMETER:"))
 				{
-					String s = (String) key;
-					if (s.startsWith("net.sf.jasperreports.engine.JRExporterParameter") || s.startsWith("net.sf.jasperreports.engine.export"))
+					String className = key.substring(key.lastIndexOf(":") + 1, key.lastIndexOf("."));
+					try
 					{
-						String className = s.substring(0, s.lastIndexOf("."));
-						if (className == null) continue;
-						try
+						Class<?> clz = Class.forName(className);
+						if (clz != null)
 						{
-							Class<?> clz = Class.forName(className);
-							if (clz != null)
+							String fieldName = key.substring(key.lastIndexOf(".") + 1);
+							if (fieldName != null)
 							{
-								String fieldName = s.substring(s.lastIndexOf(".") + 1);
-								if (fieldName != null)
+								Field field = clz.getField(fieldName);
+								if (field != null)
 								{
-									Field field = clz.getField(fieldName);
-									if (field != null)
-									{
-										JRExporterParameter exporterParameter = (JRExporterParameter) field.get(JRExporterParameter.class);
-										Object parameterValue = exporterParameters.get(key);
-										exporter.setParameter(exporterParameter, parameterValue);
-									}
+									JRExporterParameter exporterParameter = (JRExporterParameter) field.get(JRExporterParameter.class);
+									exporter.setParameter(exporterParameter, value);
 								}
 							}
 						}
-						catch (ClassNotFoundException e)
-						{
-							Debug.log(e);
-						}
-						catch (SecurityException e)
-						{
-							Debug.log(e);
-						}
-						catch (NoSuchFieldException e)
-						{
-							Debug.log(e);
-						}
-						catch (IllegalArgumentException e)
-						{
-							Debug.log(e);
-						}
-						catch (IllegalAccessException e)
-						{
-							Debug.log(e);
-						}
+					}
+					catch (ClassNotFoundException e)
+					{
+						Debug.log(e);
+					}
+					catch (SecurityException e)
+					{
+						Debug.log(e);
+					}
+					catch (NoSuchFieldException e)
+					{
+						Debug.log(e);
+					}
+					catch (IllegalArgumentException e)
+					{
+						Debug.log(e);
+					}
+					catch (IllegalAccessException e)
+					{
+						Debug.log(e);
 					}
 				}
 			}
