@@ -85,7 +85,6 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		relativeExtraDirs = "";
 	}
 
-	@Override
 	public Class<?>[] getAllReturnedTypes()
 	{
 		return new Class[] { OUTPUT_FORMAT.class, JR_SVY_VIEWER_DISPLAY_MODE.class };
