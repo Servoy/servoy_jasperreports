@@ -40,10 +40,12 @@ import javax.print.PrintService;
 import javax.swing.ImageIcon;
 import javax.swing.WindowConstants;
 
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRPrintElement;
 import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JRPrintText;
+import net.sf.jasperreports.engine.JRVirtualizationHelper;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.util.JRClassLoader;
@@ -597,6 +599,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 							String fileLocation = new File(file).getParent();
 							exporterParams.put("REPORT_FILE_LOCATION", fileLocation);
 						}
+						JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
 						jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(), type, jp, relativeExtraDirs, exporterParams);
 						if (!nooutput)
 						{
