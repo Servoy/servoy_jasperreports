@@ -87,6 +87,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		relativeExtraDirs = "";
 	}
 
+	@Override
 	public Class<?>[] getAllReturnedTypes()
 	{
 		return new Class[] { OUTPUT_FORMAT.class, JR_SVY_VIEWER_DISPLAY_MODE.class };
@@ -1055,7 +1056,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "4.0.0 b2";
+		return "4.0.0";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
