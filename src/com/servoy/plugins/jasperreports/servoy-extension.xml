@@ -291,8 +291,9 @@ plugins.jasperPluginRMI.relativeExtraDirectories = "extraDir1,extraDir2";]]></sa
             <description><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
 server reports directory.
 
-By default the value is read from the adim page Server Plugins, the directory.jasper.report property. A client is
-only able to set a path relative to the server report directory. If the client modifies this property, its value
+By default the value is read from the admin page Server Plugins, the directory.jasper.report property. If no value
+has been set in the admin page for the report directory, the default location will be set to /application_server/server/reports.
+A client is only able to set a path relative to the server report directory. If the client modifies this property, its value
 will be used instead of the default one, for the whole client session and only for this client. Each client
 session has it's own relativeReportDirectory value.]]></description>
             <summary><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
