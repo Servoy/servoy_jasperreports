@@ -910,16 +910,22 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	/**
 	 * TODO: add security checks
 	 */
-	public JasperReport loadReport(String clientID, String location)
-			throws Exception {
-		File file = new File(location);
-		if (fileIsOutsideReportsDirectory(file, getReportDirectory()))
+	public JasperReport loadReport(String clientID, String location) throws Exception {
+
+		String repDir = getReportDirectory();
+		String filePath2LoadFrom = repDir + (repDir.endsWith("/") ? "" : "/") + (location.startsWith("/") ? location.substring(1) : location);
+		if (fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), repDir))
+		{
 			throw new IllegalArgumentException("No jasperReport " + location + " has been found or loaded in directory " + getReportDirectory());
-		
-		Object obj = JRLoader.loadObject(file);
-		if (obj instanceof JasperReport) {
-			return  (JasperReport) obj;
 		}
+		else
+		{
+			Object obj = JRLoader.loadObject(filePath2LoadFrom);
+			if (obj instanceof JasperReport) {
+				return  (JasperReport) obj;
+			}
+		}
+		
 		return null;
 	}
 	

@@ -614,7 +614,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			catch (Exception e)
 			{
 				Debug.error(e);
-				throw new Exception(e.getMessage());
+				throw new Exception(e);
 			}
 			finally
 			{
