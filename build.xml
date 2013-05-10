@@ -48,6 +48,7 @@
 	    </copy>
 		<copy file="${resources}/ant-contrib-1.0b3.jar" todir="${install}/${lib}"/>
 		<copy file="${lib}/commons-io.jar" todir="${install}/${lib}"/>
+		<delete dir="${build}"/>
 	</target>
 
 	<target name="jar" depends="compile">
