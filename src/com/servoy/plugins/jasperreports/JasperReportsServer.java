@@ -52,8 +52,10 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -887,14 +889,20 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	 */
 	public byte[] loadImage(String clientID, String img) throws Exception {
 		
+		boolean absolute = false;
+		if (new File(img).isAbsolute())
+		{
+			absolute = true;
+			Debug.warn("Location '" + img + "' designates an absolute pathname; please use a relative pathname.");
+		}
+		
 		String[] xtraDirs = this.getExtraDirectories().split(",");
 		String filePath2LoadFrom = null;
-		
 		boolean foundImage = false;
 		for (String xtraDir : xtraDirs)
 		{
 			xtraDir = JasperReportRunner.adjustFileUnix(absolutePathFormatting(xtraDir));
-			filePath2LoadFrom = xtraDir + (xtraDir.endsWith("/") ? "" : "/") + img ;
+			filePath2LoadFrom = (absolute ? img : xtraDir + (xtraDir.endsWith("/") ? "" : "/") + img);
 			if (!fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), xtraDir))
 			{
 				foundImage = true;
@@ -903,6 +911,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 		
 		if (!foundImage) throw new IllegalArgumentException("No image file: " + img + " has been found in extra resources directories");
+		
+		Debug.trace("JasperTrace: Loading image file '" + filePath2LoadFrom + "'");
 		
 		return JRLoader.loadBytesFromLocation(filePath2LoadFrom);
 	}
@@ -913,17 +923,29 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	public JasperReport loadReport(String clientID, String location) throws Exception {
 
 		String repDir = getReportDirectory();
-		String filePath2LoadFrom = repDir + (repDir.endsWith("/") ? "" : "/") + (location.startsWith("/") ? location.substring(1) : location);
+		String filePath2LoadFrom = null;
+		
+		if (new File(location).isAbsolute())
+		{
+			Debug.warn("Location '" + location + "' designates an absolute pathname; please use a relative pathname.");
+			filePath2LoadFrom = location;
+		}
+		else
+		{
+			location = JasperReportRunner.adjustFileUnix(location);
+			filePath2LoadFrom = repDir + (repDir.endsWith("/") ? "" : "/") + location;
+		}
+		
 		if (fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), repDir))
 		{
 			throw new IllegalArgumentException("No jasperReport " + location + " has been found or loaded in directory " + getReportDirectory());
 		}
-		else
-		{
-			Object obj = JRLoader.loadObject(filePath2LoadFrom);
-			if (obj instanceof JasperReport) {
-				return  (JasperReport) obj;
-			}
+		
+		Debug.trace("JasperTrace: Loading report '" + filePath2LoadFrom + "'");
+
+		final Object obj = JRLoader.loadObject(filePath2LoadFrom);
+		if (obj instanceof JasperReport) {
+			return (JasperReport) obj;
 		}
 		
 		return null;
