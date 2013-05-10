@@ -332,14 +332,14 @@ public class JasperReportRunner implements IJasperReportRunner
 			// if the path is relative
 			if (!(new File(subReportDir)).isAbsolute())
 			{
-				subReportDir = jasperDirectory + (jasperDirectory.endsWith("/") ? "" : "/") + subReportDir;
+				subReportDir = (jasperDirectory != null && jasperDirectory.trim().length() > 0 ? (jasperDirectory.endsWith("/") ? "" : "/") + subReportDir : subReportDir);
 				subReportDir = adjustFileUnix(subReportDir);
 				parameters.put("SUBREPORT_DIR", subReportDir);
 			}
 			else
 			{
 				//SUBREPORT_DIR value is an absolute path - this is not allowed
-				throw new JRException("SUBREPORT_DIR cannot be specified as an absolute location; please use a location relative to the reports directory");
+				Debug.warn("SUBREPORT_DIR cannot be specified as an absolute location; please use a location relative to the reports directory");
 			}
 		}
 
