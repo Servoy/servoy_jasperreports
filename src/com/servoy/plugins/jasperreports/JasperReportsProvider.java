@@ -2,7 +2,7 @@
  * ============================================================================ GNU Lesser General Public License
  * ============================================================================
  * 
- * Servoy - Smart Technology For Smart Clients. Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Servoy - Smart Technology For Smart Clients. Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option) any later version.
@@ -388,6 +388,8 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				int applicationType = plugin.getIClientPluginAccess().getApplicationType();
 				JasperReportsI18NHandler.appendI18N(params, applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString);
 
+				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "com.servoy.plugins.jasperreports.ServoyThreadSubreportRunnerFactory");
+				
 				// Fill the report and get the JasperPrint instance.
 				// Also modify the JasperPrint in case you want to move the
 				// table of contents.

@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -896,17 +896,22 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			Debug.warn("Location '" + img + "' designates an absolute pathname; please use a relative pathname.");
 		}
 		
-		String[] xtraDirs = this.getExtraDirectories().split(",");
 		String filePath2LoadFrom = null;
 		boolean foundImage = false;
-		for (String xtraDir : xtraDirs)
+		String extraDirectories = this.getExtraDirectories();
+		if (extraDirectories != null)
 		{
-			xtraDir = JasperReportRunner.adjustFileUnix(absolutePathFormatting(xtraDir));
-			filePath2LoadFrom = (absolute ? img : xtraDir + (xtraDir.endsWith("/") ? "" : "/") + img);
-			if (!fileIsOutsideReportsDirectory(new File(filePath2LoadFrom), xtraDir))
+			String[] xtraDirs = extraDirectories.split(",");
+			for (String xtraDir : xtraDirs)
 			{
-				foundImage = true;
-				break;
+				xtraDir = JasperReportRunner.adjustFileUnix(absolutePathFormatting(xtraDir));
+				filePath2LoadFrom = (absolute ? img : xtraDir + (xtraDir.endsWith("/") ? "" : "/") + img);
+				File file = new File(filePath2LoadFrom);
+				if (!fileIsOutsideReportsDirectory(file, xtraDir) && file.exists())
+				{
+					foundImage = true;
+					break;
+				}
 			}
 		}
 		
@@ -943,11 +948,15 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		
 		Debug.trace("JasperTrace: Loading report '" + filePath2LoadFrom + "'");
 
+		if (filePath2LoadFrom.toLowerCase().endsWith(".jrxml"))
+		{
+			return JasperCompileManager.compileReport(filePath2LoadFrom);
+		}
+		
 		final Object obj = JRLoader.loadObject(filePath2LoadFrom);
 		if (obj instanceof JasperReport) {
 			return (JasperReport) obj;
 		}
-		
 		return null;
 	}
 	
