@@ -34,6 +34,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
 
+import net.sf.jasperreports.engine.JRTemplate;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
@@ -72,6 +73,8 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 
 	public String getCheckedRelativeReportsPath(String reportPath) throws RemoteException, Exception;
 	 
-	public String getCheckedExtraDirectoriesRelativePath(String extraDirsPath) throws RemoteException, Exception; 
+	public String getCheckedExtraDirectoriesRelativePath(String extraDirsPath) throws RemoteException, Exception;
+
+	public JRTemplate loadTemplate(String jasperReportsClientId, String name) throws RemoteException, Exception;
 
 }

@@ -30,6 +30,7 @@ package com.servoy.plugins.jasperreports;
 
 import java.awt.Image;
 
+import net.sf.jasperreports.engine.JRTemplate;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRImageLoader;
 
@@ -65,4 +66,18 @@ public class JasperReportsResourceLoader {
 		return report;
 	}
 	
+	public static JRTemplate loadStyle(String name) throws Exception {
+		
+		IJasperReportsService jasperReportsService = JasperReportsProvider.jasperReportsLocalService.get();
+		String jasperReportsClientId = JasperReportsProvider.jasperReportsLocalClientID.get();
+		
+		if (jasperReportsService == null || jasperReportsClientId == null)
+		{	
+			return null;
+		}
+	
+		JRTemplate style = jasperReportsService.loadTemplate(jasperReportsClientId, name);
+		
+		return style;
+	}
 }
