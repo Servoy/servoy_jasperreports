@@ -1146,6 +1146,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			else if (OUTPUT_FORMAT.XLS.equals(s)) defContribs.add("net.sf.jasperreports.view.save.JRMultipleSheetsXlsSaveContributor");
 			else if (OUTPUT_FORMAT.CSV.equals(s)) defContribs.add("net.sf.jasperreports.view.save.JRCsvSaveContributor");
 			else if (OUTPUT_FORMAT.XML.equals(s)) defContribs.add("net.sf.jasperreports.view.save.JRXmlSaveContributor");
+			else if (OUTPUT_FORMAT.DOCX.equals(s)) defContribs.add("net.sf.jasperreports.view.save.JRDocxSaveContributor");
 			else if ("xml_embd_img".equals(s)) defContribs.add("net.sf.jasperreports.view.save.JREmbeddedImagesXmlSaveContributor");
 		}
 
