@@ -29,6 +29,9 @@
 
 package com.servoy.plugins.jasperreports;
 
+import com.servoy.j2db.IServiceProvider;
+import com.servoy.j2db.J2DBGlobals;
+
 import net.sf.jasperreports.engine.fill.JRBaseFiller;
 import net.sf.jasperreports.engine.fill.JRFillSubreport;
 import net.sf.jasperreports.engine.fill.JRSubreportRunResult;
@@ -47,7 +50,8 @@ public class ServoyThreadSubreportRunnerFactory implements JRSubreportRunnerFact
 	private ClassLoader pluginContextClassLoader;
 	private IJasperReportsService jasperReportsService;
 	private String jasperReportsClientId;
-
+	private IServiceProvider application;
+	
 	public JRSubreportRunner createSubreportRunner(JRFillSubreport fillSubreport, JRBaseFiller subreportFiller)
 	{
 		return new JRThreadSubreportRunner(fillSubreport, subreportFiller){
@@ -58,7 +62,8 @@ public class ServoyThreadSubreportRunnerFactory implements JRSubreportRunnerFact
 				pluginContextClassLoader = Thread.currentThread().getContextClassLoader();
 				jasperReportsService = JasperReportsProvider.jasperReportsLocalService.get();
 				jasperReportsClientId = JasperReportsProvider.jasperReportsLocalClientID.get();
-				
+				// internal Servoy API, needed for in memory data sources
+				application = J2DBGlobals.getServiceProvider();
 				return super.start();
 			}
 
@@ -68,7 +73,7 @@ public class ServoyThreadSubreportRunnerFactory implements JRSubreportRunnerFact
 				Thread.currentThread().setContextClassLoader(pluginContextClassLoader);
 				JasperReportsProvider.jasperReportsLocalService.set(jasperReportsService);
 				JasperReportsProvider.jasperReportsLocalClientID.set(jasperReportsClientId);
-
+				J2DBGlobals.setServiceProvider(application);
 				super.run();
 			}};
 	}
