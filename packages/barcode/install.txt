@@ -55,7 +55,7 @@
     * Jakarta Commons Collections Component (version 2.1 or later) http://jakarta.apache.org/commons/collections/
     * Jakarta Commons Logging Component (version 1.0 or later) http://jakarta.apache.org/commons/logging/
  
- This build also includes support for charting and Groovy script language.
+ This build includes support for charting, Groovy script language and barcode usage using the barcode4j library.
  
  IREPORTS:
  The most used editor to build reports using JasperReports is iReports. For more information about iReports: http://jasperforge.org/projects/ireport

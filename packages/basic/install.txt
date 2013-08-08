@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2009 Servoy BV http://www.servoy.com
+ * Copyright © 1997-2013 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,8 +27,8 @@
  * http://www.servoy.com
  */
  CONTENT:
- This zipfile contains the JasperReports plugin for Servoy, version 3.0. 
- It is packages for Servoy 4.1.x and contains JasperReports engine version 3.6.0
+ This zipfile contains the JasperReports plugin for Servoy, version 4.0.0. 
+ It is packaged for Servoy 6.x and above and contains JasperReports engine version 4.6.0.
  
  For more information about Servoy, visit http://www.servoy.com
  For more information about JasperReports, visit: http://jasperforge.org/website/jasperreportswebsite/trunk/documentation.html
