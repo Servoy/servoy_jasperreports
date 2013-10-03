@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,8 +32,8 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import com.servoy.j2db.plugins.IClientPluginAccess;
-import com.servoy.j2db.server.headlessclient.IWebClientPluginAccess;
 import com.servoy.j2db.server.headlessclient.IPageContributor;
+import com.servoy.j2db.server.headlessclient.IWebClientPluginAccess;
 
 /**
  * WebClient view logic 

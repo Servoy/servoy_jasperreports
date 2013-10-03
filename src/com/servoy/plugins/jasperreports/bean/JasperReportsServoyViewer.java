@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,7 +54,6 @@ import com.servoy.j2db.scripting.IScriptable;
 import com.servoy.j2db.util.ComponentFactoryHelper;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.PersistHelper;
-import com.servoy.plugins.jasperreports.IJasperReportsService;
 import com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE;
 import com.servoy.plugins.jasperreports.JasperReportsPlugin;
 import com.servoy.plugins.jasperreports.JasperReportsProvider;
@@ -71,8 +70,6 @@ import com.servoy.plugins.jasperreports.JasperReportsProvider;
 public class JasperReportsServoyViewer extends JPanel implements IScriptable, IServoyAwareBean
 {
 	private static final long serialVersionUID = 1L;
-	private IJasperReportsService service = null;
-	private JasperReportsPlugin jasper = null;
 	private JasperReportsProvider provider = null;
 	protected String currentDisplayMode = null;
 	private String[] beanViewerExportFormats = null;
@@ -96,9 +93,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 
 	public void initialize(IClientPluginAccess app) {
 		try {
-			service = (IJasperReportsService) app.getServerService("servoy.IJasperReportService");
-			jasper = (JasperReportsPlugin)app.getPluginManager().getPlugin(IClientPlugin.class,"jasperPluginRMI");
-			provider = (JasperReportsProvider)jasper.getScriptObject();
+			provider = (JasperReportsProvider)((JasperReportsPlugin)app.getPluginManager().getPlugin(IClientPlugin.class,"jasperPluginRMI")).getScriptObject();
 		} catch (Exception e) {
 			Debug.error(e);
 		}
