@@ -496,7 +496,16 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 						}
 					}
 				}
-
+				else if (applicationType == IClientPluginAccess.HEADLESS_CLIENT)
+				{
+					// for view and print we default to pdf - printing to file
+					if (nooutput) throw new Exception("JasperTrace: Jasper Exception: Please specify an output file when calling jasper from a headless client.");
+					
+					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT)) type = "pdf"; 
+					
+					jsp = JasperReportRunner.getJasperBytes(type, jp, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
+					saveByteArrayToFile(file, jsp);
+				}
 				// 2. SmartClient
 				else
 				{
