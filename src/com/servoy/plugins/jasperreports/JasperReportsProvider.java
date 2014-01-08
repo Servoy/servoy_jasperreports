@@ -355,7 +355,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		String txid = null;
 		if (source instanceof String)
 		{
-			txid = plugin.getIClientPluginAccess().getTransactionID((String) source);
+			txid = plugin.getIClientPluginAccess().getDatabaseManager().getTransactionID((String) source);
 			jasperReportRunner = jasperReportService; // run report remote
 		}
 		else if (source instanceof JRDataSource)
@@ -389,7 +389,8 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				JasperReportsI18NHandler.appendI18N(params, applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString);
 
 				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "com.servoy.plugins.jasperreports.ServoyThreadSubreportRunnerFactory");
-				
+				// workaround for http://community.jaspersoft.com/jasperreports-library/issues/5824 can be removed when upgraded >= JR 4.7.1
+				JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
 				// Fill the report and get the JasperPrint instance.
 				// Also modify the JasperPrint in case you want to move the
 				// table of contents.
@@ -611,6 +612,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 							String fileLocation = new File(file).getParent();
 							exporterParams.put("REPORT_FILE_LOCATION", fileLocation);
 						}
+						// workaround for http://community.jaspersoft.com/jasperreports-library/issues/5824 can be removed when upgraded >= JR 4.7.1
 						JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
 						jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(), type, jp, relativeExtraDirs, exporterParams);
 						if (!nooutput)
