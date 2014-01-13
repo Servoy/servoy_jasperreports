@@ -231,10 +231,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id});
 	 * 
 	 * // To request a report in a different Language than the current language of the client, it's possible to specify a Locale string
-	 * // as the locale argument. For example: 'en' or 'es' or 'nl' 
+	 * // as the locale argument. For example: 'en_US' or 'es_ES' or 'nl_NL' 
 	 * // When the locale argument is not specified, the report will be in the current langauge of the Client 
 	 * // i18n keys of Servoy can be used inside Jasper Reports using the $R{i18n-key} notation 
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl');
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.VIEW,{pcustomerid: forms.customers.customer_id},'nl_NL');
 	 * 
 	 * // To print the result of the customers report in the SmartClient (to a specified printer), 
 	 * // the outputType should be specified as 'print' (OUTPUT_FORMAT.PRINT). 
