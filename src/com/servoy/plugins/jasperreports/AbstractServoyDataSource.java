@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -115,7 +115,7 @@ public abstract class AbstractServoyDataSource implements JRRewindableDataSource
 
 	/**
 	 * Call the global method, arguments may be specified.
-	 * @param name the name of the gloal method to call
+	 * @param name the name of the global method to call
 	 * @return the result of the global method call
 	 * @throws Exception 
 	 */	
