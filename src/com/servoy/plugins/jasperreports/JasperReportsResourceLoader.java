@@ -114,7 +114,7 @@ public class JasperReportsResourceLoader {
 	 * This method is needed when using the same datasource for two subreports.
 	 * See also http://community.jaspersoft.com/questions/521291/can-2-subreports-share-same-datasource
 	 */
-	public static JRRewindableDataSource rewindServoyDataSource(AbstractServoyDataSource dataSource) throws JRException {
+	public static JRRewindableDataSource rewindServoyDataSource(JRRewindableDataSource dataSource) throws JRException {
 		dataSource.moveFirst();
 		return dataSource;
 	}
