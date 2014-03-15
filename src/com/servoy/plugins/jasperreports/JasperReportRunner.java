@@ -63,6 +63,7 @@ import net.sf.jasperreports.engine.export.JRXmlExporterParameter;
 import net.sf.jasperreports.engine.export.oasis.JROdsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.fill.JRAbstractLRUVirtualizer;
 import net.sf.jasperreports.engine.fill.JRFileVirtualizer;
 import net.sf.jasperreports.engine.fill.JRGzipVirtualizer;
@@ -181,10 +182,17 @@ public class JasperReportRunner implements IJasperReportRunner
 			exporter.setParameter(JRXmlExporterParameter.IS_EMBEDDING_IMAGES, Boolean.TRUE);
 
 		}
-		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.EXCEL) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET))
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.EXCEL) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLSX))
 		{
 			// coding For Excel:
-			exporter = new JRXlsExporter();
+			if (!type.equalsIgnoreCase(OUTPUT_FORMAT.XLSX)) 
+			{
+				exporter = new JRXlsExporter();
+			}
+			else
+			{
+				exporter = new JRXlsxExporter();
+			}
 			// default is multiple sheets per page
 			exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
 			if (type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET))

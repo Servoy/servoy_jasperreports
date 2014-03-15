@@ -245,7 +245,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 	 * 
 	 * // To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
-	 * // Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+	 * // Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), xlsx, ods, rtf, txt, csv, odt, docx, jrprint and xml. 
 	 * // These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
 	 * // Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
@@ -258,6 +258,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,{pcustomerid: forms.customers.customer_id});
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
@@ -433,6 +434,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 					else if (type.equals(OUTPUT_FORMAT.DOCX))
 					{
 						mimeType = JasperReportsWebViewer.MIME_TYPE_DOCX;
+					} 
+					else if (type.equals(OUTPUT_FORMAT.XLSX))
+					{
+						mimeType = JasperReportsWebViewer.MIME_TYPE_XLSX;
 					}
 					else if (type.equals(OUTPUT_FORMAT.EXCEL))
 					{

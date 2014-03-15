@@ -2,124 +2,204 @@
 <servoyextension>
   <servoydoc>
     <beans>
-      <object publicName="JasperReportsServoyViewer" qualifiedName="com.servoy.plugins.jasperreports.bean.JasperReportsServoyViewer" scriptingName="beans.JasperReportsServoyViewer">
+      <object clientSupport="wc,sc" publicName="JasperReportsServoyViewer" qualifiedName="com.servoy.plugins.jasperreports.bean.JasperReportsServoyViewer" scriptingName="beans.JasperReportsServoyViewer">
         <properties>
-          <property name="background">
+          <property clientSupport="wc,sc" name="background">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the border color of the bean]]></return>
-            <description><![CDATA[Sets or gets the background color of the Bean.]]></description>
-            <summary><![CDATA[Sets or gets the background color of the Bean.]]></summary>
-            <sample><![CDATA[%%elementName%%.background='#00ff00';]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the background color of the Bean.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the background color of the Bean.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.background='#00ff00';]]></sample>
+            </samples>
           </property>
-          <property name="beanVersion">
+          <property clientSupport="wc,sc" name="beanVersion">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the version of the bean; this should be in sync with the version of the plugin used]]></return>
-            <description><![CDATA[This is a readonly property which returns the bean version.
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[This is a readonly property which returns the bean version.
 The bean version indicates which version of the Servoy JasperReports plugin the bean should be used with.]]></description>
-            <summary><![CDATA[This is a readonly property which returns the bean version.]]></summary>
-            <sample><![CDATA[application.output(%%elementName%%.beanVersion);]]></sample>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[This is a readonly property which returns the bean version.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[application.output(%%elementName%%.beanVersion);]]></sample>
+            </samples>
           </property>
-          <property name="beanViewerExportFormats">
+          <property clientSupport="wc,sc" name="beanViewerExportFormats">
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the file save/export formats of the viewer]]></return>
-            <description><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></description>
-            <summary><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></summary>
-            <sample><![CDATA[//also see plugins.jasperPluginRMI.viewerExportFormats
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Gets or gets the file save/export formats of the Bean's viewer.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//also see plugins.jasperPluginRMI.viewerExportFormats
 %%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];]]></sample>
+            </samples>
           </property>
-          <property name="border">
+          <property clientSupport="wc,sc" name="border">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[border type, width and color]]></return>
-            <description><![CDATA[Sets or gets the border type, width and color.]]></description>
-            <summary><![CDATA[Sets or gets the border type, width and color.]]></summary>
-            <sample><![CDATA[%%elementName%%.border='LineBorder,4,#000000';]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the border type, width and color.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the border type, width and color.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.border='LineBorder,4,#000000';]]></sample>
+            </samples>
           </property>
-          <property name="displayMode">
+          <property clientSupport="wc,sc" name="displayMode">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the display mode of the viewer]]></return>
-            <description><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></description>
-            <summary><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></summary>
-            <sample><![CDATA[%%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the display mode of the viewer in the Bean.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
 %%elementName%%.showReport(myDataSource,"myReport.jrxml",null);]]></sample>
+            </samples>
           </property>
-          <property deprecated="true" name="extraDirectories">
+          <property clientSupport="wc,sc" deprecated="true" name="extraDirectories">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
             <deprecated><![CDATA[replaced by the relativeExtraDirectories property]]></deprecated>
-            <sample/>
           </property>
-          <property name="font">
+          <property clientSupport="wc,sc" name="font">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the font type used in the viewer]]></return>
-            <description><![CDATA[Sets or gets the font type of the Bean's viewer.]]></description>
-            <summary><![CDATA[Sets or gets the font type of the Bean's viewer.]]></summary>
-            <sample><![CDATA[%%elementName%%.font='Tahoma,0,14';]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the font type of the Bean's viewer.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the font type of the Bean's viewer.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.font='Tahoma,0,14';]]></sample>
+            </samples>
           </property>
-          <property name="foreground">
+          <property clientSupport="wc,sc" name="foreground">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the foreground color]]></return>
-            <description><![CDATA[Sets or gets the foreground color.]]></description>
-            <summary><![CDATA[Sets or gets the foreground color.]]></summary>
-            <sample><![CDATA[%%elementName%%.foreground='#000000';]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the foreground color.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the foreground color.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.foreground='#000000';]]></sample>
+            </samples>
           </property>
-          <property name="name">
+          <property clientSupport="wc,sc" name="name">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the name of the Bean]]></return>
-            <description><![CDATA[Gets or sets the name of the Bean.]]></description>
-            <summary><![CDATA[Gets or sets the name of the Bean.]]></summary>
-            <sample><![CDATA[var beanName = %%elementName%%.name;]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Gets or sets the name of the Bean.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Gets or sets the name of the Bean.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var beanName = %%elementName%%.name;]]></sample>
+            </samples>
           </property>
-          <property name="relativeExtraDirectories">
+          <property clientSupport="wc,sc" name="relativeExtraDirectories">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the relative path or paths to the client set extra directory/directories]]></return>
-            <description><![CDATA[Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.
 The paths are set per client and are relative to the server corresponding directories setting.
 
 Please refer to the same property of the Servoy JasperReports plugin for more details.]]></description>
-            <summary><![CDATA[Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.]]></summary>
-            <sample><![CDATA[%%elementName%%.extraDirectories='relative/path/to/client/extraDirectory1';]]></sample>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Get or set the relative path or comma separated paths to the extra resource directories of the Servoy JasperReports plugin.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.extraDirectories='relative/path/to/client/extraDirectory1';]]></sample>
+            </samples>
           </property>
-          <property name="relativeReportsDirectory">
+          <property clientSupport="wc,sc" name="relativeReportsDirectory">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the location of the client set reports directory, relative to the server set path]]></return>
-            <description><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
 of the Servoy JasperReports plugin.
 
 Please refer to the same property of the Servoy JasperReports plugin for more details.]]></description>
-            <summary><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the server reports directory
 of the Servoy JasperReports plugin.]]></summary>
-            <sample><![CDATA[%%elementName%%.relativeReportsDirectory = 'relativePath/to/serverReportsDirectory';]]></sample>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.relativeReportsDirectory = 'relativePath/to/serverReportsDirectory';]]></sample>
+            </samples>
           </property>
-          <property deprecated="true" name="reportsDirectory">
+          <property clientSupport="wc,sc" deprecated="true" name="reportsDirectory">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
             <deprecated><![CDATA[replaced by the relativeReportsDirectory property]]></deprecated>
-            <sample/>
           </property>
-          <property name="transparent" undocumented="true">
+          <property clientSupport="wc,sc" name="transparent" undocumented="true">
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"/>
           </property>
         </properties>
         <functions>
-          <function name="getHeight">
+          <function clientSupport="wc,sc" name="getHeight">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the height of the Bean]]></return>
-            <description><![CDATA[Gets the height of the Bean.]]></description>
-            <summary><![CDATA[Gets the height of the Bean.]]></summary>
-            <sample><![CDATA[var h = %%elementName%%.getHeight();]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Gets the height of the Bean.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Gets the height of the Bean.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var h = %%elementName%%.getHeight();]]></sample>
+            </samples>
           </function>
-          <function name="getLocationX">
+          <function clientSupport="wc,sc" name="getLocationX">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the x-coordinate of the Bean's top-left corner location]]></return>
-            <description><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></description>
-            <summary><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></summary>
-            <sample><![CDATA[var x = %%elementName%%.getLocationX();]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Gets the x-coordinate of the Bean's top-left corner location.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var x = %%elementName%%.getLocationX();]]></sample>
+            </samples>
           </function>
-          <function name="getLocationY">
+          <function clientSupport="wc,sc" name="getLocationY">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the y-coordinate of the Bean's top-left corner location]]></return>
-            <description><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></description>
-            <summary><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></summary>
-            <sample><![CDATA[var y = %%elementName%%.getLocationY();]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Gets the y-coordinate of the Bean's top-left corner location.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var y = %%elementName%%.getLocationY();]]></sample>
+            </samples>
           </function>
-          <function name="getWidth">
+          <function clientSupport="wc,sc" name="getWidth">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"><![CDATA[the width of the Bean]]></return>
-            <description><![CDATA[Gets the width of the Bean.]]></description>
-            <summary><![CDATA[Gets the width of the Bean.]]></summary>
-            <sample><![CDATA[var w = %%elementName%%.getWidth();]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Gets the width of the Bean.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Gets the width of the Bean.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var w = %%elementName%%.getWidth();]]></sample>
+            </samples>
           </function>
-          <function name="setLocation" undocumented="true">
+          <function clientSupport="wc,sc" name="setLocation" undocumented="true">
             <argumentsTypes>
               <argumentType typecode="int"/>
               <argumentType typecode="int"/>
@@ -130,15 +210,21 @@ of the Servoy JasperReports plugin.]]></summary>
               <parameter name="y" type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int"/>
             </parameters>
           </function>
-          <function name="setSize">
+          <function clientSupport="wc,sc" name="setSize">
             <argumentsTypes>
               <argumentType typecode="int"/>
               <argumentType typecode="int"/>
             </argumentsTypes>
             <return type="void" typecode="void"/>
-            <description><![CDATA[Sets the size of the Bean.]]></description>
-            <summary><![CDATA[Sets the size of the Bean.]]></summary>
-            <sample><![CDATA[%%elementName%%.setSize(800,600);]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets the size of the Bean.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets the size of the Bean.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[%%elementName%%.setSize(800,600);]]></sample>
+            </samples>
             <parameters>
               <parameter name="width" type="com.servoy.j2db.documentation.scripting.docs.Number" typecode="int">
                 <description><![CDATA[the width of the bean]]></description>
@@ -148,18 +234,24 @@ of the Servoy JasperReports plugin.]]></summary>
               </parameter>
             </parameters>
           </function>
-          <function name="showReport">
+          <function clientSupport="wc,sc" name="showReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.Object"/>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="java.lang.Object"/>
             </argumentsTypes>
             <return type="void" typecode="void"/>
-            <description><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
-            <summary><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
-            <sample><![CDATA[var params = new Object();
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var params = new Object();
 params.SUBREPORT_DIR = "./Subreport_Tests/";
 var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
+            </samples>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
@@ -172,7 +264,7 @@ var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/ma
               </parameter>
             </parameters>
           </function>
-          <function name="showReport">
+          <function clientSupport="wc,sc" name="showReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.Object"/>
               <argumentType typecode="java.lang.String"/>
@@ -180,11 +272,17 @@ var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/ma
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="void" typecode="void"/>
-            <description><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
-            <summary><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
-            <sample><![CDATA[var params = new Object();
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var params = new Object();
 params.SUBREPORT_DIR = "./Subreport_Tests/";
 var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
+            </samples>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
@@ -200,7 +298,7 @@ var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/ma
               </parameter>
             </parameters>
           </function>
-          <function name="showReport">
+          <function clientSupport="wc,sc" name="showReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.Object"/>
               <argumentType typecode="java.lang.String"/>
@@ -209,11 +307,17 @@ var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/ma
               <argumentType typecode="java.lang.Boolean"/>
             </argumentsTypes>
             <return type="void" typecode="void"/>
-            <description><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
-            <summary><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
-            <sample><![CDATA[var params = new Object();
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Shows the indicated report in a JasperReports Viewer (in the Bean).]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var params = new Object();
 params.SUBREPORT_DIR = "./Subreport_Tests/";
 var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/main_report_fs.jrxml",params);]]></sample>
+            </samples>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the datasource (the server name, foundset or dataset) to run the report on]]></description>
@@ -236,45 +340,53 @@ var report = %%elementName%%.showReport(customers_to_orders,"/Subreport_Tests/ma
       </object>
     </beans>
     <plugins>
-      <object publicName="JR_SVY_VIEWER_DISPLAY_MODE" qualifiedName="com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE">
+      <object clientSupport="wc,sc" publicName="JR_SVY_VIEWER_DISPLAY_MODE" qualifiedName="com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE">
         <constants>
-          <constant name="ACTUAL_PAGE_SIZE">
+          <constant clientSupport="wc,sc" name="ACTUAL_PAGE_SIZE">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE;
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE;
 elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);]]></sample>
+            </samples>
           </constant>
-          <constant name="FIT_PAGE">
+          <constant clientSupport="wc,sc" name="FIT_PAGE">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE;
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE;
 elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);]]></sample>
+            </samples>
           </constant>
-          <constant name="FIT_WIDTH">
+          <constant clientSupport="wc,sc" name="FIT_WIDTH">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[elements.jrbean.displayMode = JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH;
 elements.jrbean.showReport(myDataSource,\"/myReport.jrxml\",null);]]></sample>
+            </samples>
           </constant>
         </constants>
       </object>
-      <object publicName="JasperReports" qualifiedName="com.servoy.plugins.jasperreports.JasperReportsProvider" scriptingName="plugins.JasperReports">
+      <object clientSupport="wc,sc" publicName="JasperReports" qualifiedName="com.servoy.plugins.jasperreports.JasperReportsProvider" scriptingName="plugins.JasperReports">
         <properties>
-          <property deprecated="true" name="extraDirectories">
+          <property clientSupport="wc,sc" deprecated="true" name="extraDirectories">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
             <deprecated><![CDATA[replaced by the relativeExtraDirectories property]]></deprecated>
-            <sample/>
           </property>
-          <property name="pluginVersion">
+          <property clientSupport="wc,sc" name="pluginVersion">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the plugin's version]]></return>
-            <description><![CDATA[Get the version of the Servoy JasperReports Plugin.]]></description>
-            <summary><![CDATA[Get the version of the Servoy JasperReports Plugin.]]></summary>
-            <sample><![CDATA[application.output(plugins.jasperPluginRMI.pluginVersion);]]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Get the version of the Servoy JasperReports Plugin.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Get the version of the Servoy JasperReports Plugin.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[application.output(plugins.jasperPluginRMI.pluginVersion);]]></sample>
+            </samples>
           </property>
-          <property name="relativeExtraDirectories">
+          <property clientSupport="wc,sc" name="relativeExtraDirectories">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the path to the extra directories relative to the server side set location]]></return>
-            <description><![CDATA[Property for retrieving and setting the paths to the extra resources directories. The paths are set per client
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Property for retrieving and setting the paths to the extra resources directories. The paths are set per client
 and are relative to the server corresponding directories setting.
 
 By default the value is read from the Admin Page: Server Plugins - the directories.jasper.extra property. If the
@@ -282,38 +394,57 @@ client modifies the default property, this value will be used instead of the def
 session and only for this client. Each client session has it's own extraDirectories value.
 
 NOTE: Extra directories are not searched recursively.]]></description>
-            <summary><![CDATA[Property for retrieving and setting the paths to the extra resources directories.]]></summary>
-            <sample><![CDATA[//setting the extra directories, relative to the server side location
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Property for retrieving and setting the paths to the extra resources directories.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//setting the extra directories, relative to the server side location
 plugins.jasperPluginRMI.relativeExtraDirectories = "extraDir1,extraDir2";]]></sample>
+            </samples>
           </property>
-          <property name="relativeReportsDirectory">
+          <property clientSupport="wc,sc" name="relativeReportsDirectory">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"><![CDATA[the location of the reports directory, relative to the server set path]]></return>
-            <description><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
 server reports directory.
 
 By default the value is read from the admin page Server Plugins, the directory.jasper.report property. If no value
-has been set in the admin page for the report directory, the default location will be set to /application_server/server/reports.
+has been set in the admin page for the report directory, the default location will be set to /path_to_install/application_server/server/reports.
 A client is only able to set a path relative to the server report directory. If the client modifies this property, its value
 will be used instead of the default one, for the whole client session and only for this client. Each client
 session has it's own relativeReportDirectory value.]]></description>
-            <summary><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Property for retrieving and setting the path to the reports directory, set by the current client, relative to the
 server reports directory.]]></summary>
-            <sample><![CDATA[plugins.jasperPluginRMI.relativeReportsDirectory = "/myReportsLocation";]]></sample>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[plugins.jasperPluginRMI.relativeReportsDirectory = "/myReportsLocation";]]></sample>
+            </samples>
           </property>
-          <property deprecated="true" name="reportDirectory">
+          <property clientSupport="wc,sc" deprecated="true" name="reportDirectory">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description><![CDATA[Property for retrieving the reports directory from the server.
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Property for retrieving the reports directory from the server.
 
 NOTE: Setting the absolute path for the report directory on the server is no longer supported.]]></description>
-            <summary><![CDATA[Property for retrieving the reports directory from the server.]]></summary>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Property for retrieving the reports directory from the server.]]></summary>
+            </summaries>
             <deprecated><![CDATA[replaced by the relativeReportsDirectory property]]></deprecated>
-            <sample/>
           </property>
-          <property name="viewerExportFormats">
+          <property clientSupport="wc,sc" name="viewerExportFormats">
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the list of desired export formats; the first one will be the default export format.]]></return>
-            <description><![CDATA[Property used in order to get or set the Jasper Viewer's export formats.]]></description>
-            <summary><![CDATA[Property used in order to get or set the Jasper Viewer's export formats.]]></summary>
-            <sample><![CDATA[var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Property used in order to get or set the Jasper Viewer's export formats.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Property used in order to get or set the Jasper Viewer's export formats.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var defaultExportFormats = plugins.jasperPluginRMI.viewerExportFormats;
 application.output(defaultExportFormats);
 
 // use the default export constants of the plugin, of the OUTPUT_FORMAT constants node; 
@@ -322,29 +453,47 @@ application.output(defaultExportFormats);
 // and there is an extra Xml with Embedded Images export type available for the Viewer, denoted by 'xml_embd_img'
 // the first export format in the list will be the default one displayed in the Save dialog of the Viewer
 plugins.jasperPluginRMI.viewerExportFormats = [OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.RTF, 'xml_embd_img'];]]></sample>
+            </samples>
           </property>
-          <property name="viewerIconURL">
+          <property clientSupport="wc,sc" name="viewerIconURL">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description><![CDATA[Sets or gets the Jasper Viewer's icon URL.]]></description>
-            <summary><![CDATA[Sets or gets the Jasper Viewer's icon URL.]]></summary>
-            <sample><![CDATA[plugins.jasperPluginRMI.viewerIconURL = 'myIcon.jpg']]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the Jasper Viewer's icon URL.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the Jasper Viewer's icon URL.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[plugins.jasperPluginRMI.viewerIconURL = 'myIcon.jpg']]></sample>
+            </samples>
           </property>
-          <property name="viewerTitle">
+          <property clientSupport="wc,sc" name="viewerTitle">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description><![CDATA[Sets or gets the Jasper Viewer's title text.]]></description>
-            <summary><![CDATA[Sets or gets the Jasper Viewer's title text.]]></summary>
-            <sample><![CDATA[plugins.jasperPluginRMI.viewerTitle = 'My Title']]></sample>
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Sets or gets the Jasper Viewer's title text.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Sets or gets the Jasper Viewer's title text.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[plugins.jasperPluginRMI.viewerTitle = 'My Title']]></sample>
+            </samples>
           </property>
         </properties>
         <functions>
-          <function name="compileReport">
+          <function clientSupport="wc,sc" name="compileReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[the compiled jasper report file]]></return>
-            <description><![CDATA[Compile a Jasper Reports .jrxml file to a .jasper file.]]></description>
-            <summary><![CDATA[Compile a Jasper Reports .]]></summary>
-            <sample><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Compile a Jasper Reports .jrxml file to a .jasper file.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Compile a Jasper Reports .]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name 
 // The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file. 
 var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml'); 
 // The report name as a relative path. The file will be searched relative to the ReportDirectory. 
@@ -353,21 +502,27 @@ var success = plugins.jasperPluginRMI.compileReport( '\\\\subdir\\\\myCustomerRe
 // To specify a different destination file than the original filaname, the second parameter can be incouded. 
 // If it is relative, the file will be created relative to the ReportDirectory. 
 var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');]]></sample>
+            </samples>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the .jrxml jasper report file]]></description>
               </parameter>
             </parameters>
           </function>
-          <function name="compileReport">
+          <function clientSupport="wc,sc" name="compileReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[the compiled jasper report file]]></return>
-            <description><![CDATA[Compile a Jasper Reports .jrxml file to a .jasper file.]]></description>
-            <summary><![CDATA[Compile a Jasper Reports .]]></summary>
-            <sample><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Compile a Jasper Reports .jrxml file to a .jasper file.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Compile a Jasper Reports .]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// Compile the .jrxml jasper report file to a .jasper file. The name of the compiled file is given by the report name 
 // The report name as an absolute path. Results the compiled c:\\temp\\samplereport.jasper file. 
 var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml'); 
 // The report name as a relative path. The file will be searched relative to the ReportDirectory. 
@@ -376,6 +531,7 @@ var success = plugins.jasperPluginRMI.compileReport( '\\\\subdir\\\\myCustomerRe
 // To specify a different destination file than the original filaname, the second parameter can be incouded. 
 // If it is relative, the file will be created relative to the ReportDirectory. 
 var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.jrxml', 'd:\\\\temp2\\\\destreport.jasper');]]></sample>
+            </samples>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the .jrxml jasper report file]]></description>
@@ -385,43 +541,60 @@ var success = plugins.jasperPluginRMI.compileReport('c:\\\\temp\\\\samplereport.
               </parameter>
             </parameters>
           </function>
-          <function name="deleteFileFromReportsDir">
+          <function clientSupport="wc,sc" name="deleteFileFromReportsDir">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[true if the file was successfully deleted, false otherwise]]></return>
-            <description><![CDATA[Delete a report file from the Server.]]></description>
-            <summary><![CDATA[Delete a report file from the Server.]]></summary>
-            <sample><![CDATA[var reportFile2Delete = 'myCustomerReport.jrxml'; 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Delete a report file from the Server.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Delete a report file from the Server.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var reportFile2Delete = 'myCustomerReport.jrxml'; 
 plugins.jasperPluginRMI.deleteFileFromReportsDir(reportFile2Delete);]]></sample>
+            </samples>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the name of the report file to delete]]></description>
               </parameter>
             </parameters>
           </function>
-          <function name="getReportParameters">
+          <function clientSupport="wc,sc" name="getReportParameters">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.dataprocessing.JSDataSet" typecode="com.servoy.j2db.dataprocessing.JSDataSet"><![CDATA[the JSDataSet with the report parameters]]></return>
-            <description><![CDATA[Retrieve a JSDataSet with the report parameters, except the system defined ones.]]></description>
-            <summary><![CDATA[Retrieve a JSDataSet with the report parameters, except the system defined ones.]]></summary>
-            <sample><![CDATA[var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml'); 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Retrieve a JSDataSet with the report parameters, except the system defined ones.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Retrieve a JSDataSet with the report parameters, except the system defined ones.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var ds = plugins.jasperPluginRMI.getReportParameters('sample.jrxml'); 
 var csv = ds.getAsText(',','\\n','\"',true); 
 application.output(csv);]]></sample>
+            </samples>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the name of the report file to get the parameters for]]></description>
               </parameter>
             </parameters>
           </function>
-          <function name="getReports">
+          <function clientSupport="wc,sc" name="getReports">
             <argumentsTypes/>
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the String array of available reports]]></return>
-            <description><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></description>
-            <summary><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></summary>
-            <sample><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports 
 // No parameter returns all the reports 
 var result = plugins.jasperPluginRMI.getReports('NONCOMPILED'); 
 application.output(result[0]); 
@@ -429,15 +602,21 @@ application.output(result[0]);
 //var result = plugins.jasperPluginRMI.getReports('*criteria*'); 
 //for(var i=0; i<result.length; i++) 
 //application.output(result[i]);]]></sample>
+            </samples>
           </function>
-          <function name="getReports">
+          <function clientSupport="wc,sc" name="getReports">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.String[]" typecode="[Ljava.lang.String;"><![CDATA[the String array of available reports]]></return>
-            <description><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></description>
-            <summary><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></summary>
-            <sample><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Retrieve a String array of available reports, based on the reports directory.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// COMPILED - only compiled reports, NONCOMPILED - only non-compiled reports 
 // No parameter returns all the reports 
 var result = plugins.jasperPluginRMI.getReports('NONCOMPILED'); 
 application.output(result[0]); 
@@ -445,35 +624,32 @@ application.output(result[0]);
 //var result = plugins.jasperPluginRMI.getReports('*criteria*'); 
 //for(var i=0; i<result.length; i++) 
 //application.output(result[i]);]]></sample>
+            </samples>
             <parameters>
               <parameter name="filter" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the string to be used as a search filter]]></description>
               </parameter>
             </parameters>
           </function>
-          <function deprecated="true" name="jasperCompile">
+          <function clientSupport="wc,sc" deprecated="true" name="jasperCompile">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"/>
-            <description/>
             <deprecated><![CDATA[replaced by compileReport(String)]]></deprecated>
-            <sample/>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the .jrxml jasper report file]]></description>
               </parameter>
             </parameters>
           </function>
-          <function deprecated="true" name="jasperCompile">
+          <function clientSupport="wc,sc" deprecated="true" name="jasperCompile">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="boolean"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"/>
-            <description/>
             <deprecated><![CDATA[replaced by compileReport(String)]]></deprecated>
-            <sample/>
             <parameters>
               <parameter name="report" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the .jrxml jasper report file]]></description>
@@ -483,7 +659,7 @@ application.output(result[0]);
               </parameter>
             </parameters>
           </function>
-          <function deprecated="true" name="jasperReport">
+          <function clientSupport="wc,sc" deprecated="true" name="jasperReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="java.lang.String"/>
@@ -492,9 +668,7 @@ application.output(result[0]);
               <argumentType typecode="java.lang.Object"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"/>
-            <description/>
             <deprecated><![CDATA[replaced by runReport(String, String, Object, String, Object)]]></deprecated>
-            <sample/>
             <parameters>
               <parameter name="dbalias" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the data base alias (server name or foundset)]]></description>
@@ -513,7 +687,7 @@ application.output(result[0]);
               </parameter>
             </parameters>
           </function>
-          <function deprecated="true" name="jasperReport">
+          <function clientSupport="wc,sc" deprecated="true" name="jasperReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="java.lang.String"/>
@@ -523,9 +697,7 @@ application.output(result[0]);
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"/>
-            <description/>
             <deprecated><![CDATA[replaced by runReport(String, String, Object, String, Object, String)]]></deprecated>
-            <sample/>
             <parameters>
               <parameter name="dbalias" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the data base alias (server name or foundset)]]></description>
@@ -547,37 +719,41 @@ application.output(result[0]);
               </parameter>
             </parameters>
           </function>
-          <function deprecated="true" name="readFile">
+          <function clientSupport="wc,sc" deprecated="true" name="readFile">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"/>
-            <description/>
             <deprecated><![CDATA[replaced by readFileFromReportsDir(String)]]></deprecated>
-            <sample/>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the name of the file to read from the reports directory]]></description>
               </parameter>
             </parameters>
           </function>
-          <function name="readFileFromReportsDir">
+          <function clientSupport="wc,sc" name="readFileFromReportsDir">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the report file retrieved as a byte array]]></return>
-            <description><![CDATA[Retrieve a report file from the Server.]]></description>
-            <summary><![CDATA[Retrieve a report file from the Server.]]></summary>
-            <sample><![CDATA[var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper'); 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Retrieve a report file from the Server.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Retrieve a report file from the Server.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('myCustomerReport.jasper'); 
 // Subfolders can be used to read files. 
 var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir\\\\myCustomerReport.jasper');]]></sample>
+            </samples>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the name of the file to read from the reports directory]]></description>
               </parameter>
             </parameters>
           </function>
-          <function name="runReport">
+          <function clientSupport="wc,sc" name="runReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.Object"/>
               <argumentType typecode="java.lang.String"/>
@@ -586,11 +762,16 @@ var reportFileArray = plugins.jasperPluginRMI.readFileFromReportsDir('\\\\subdir
               <argumentType typecode="java.lang.Object"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the generated reported as a byte array]]></return>
-            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
 table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
 sample code for more details.]]></description>
-            <summary><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
-            <sample><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
 // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
 // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
 // Note: the parameters argument is used to send additional parameters into the report. For example: 
@@ -622,7 +803,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 
 // To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
-// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), xlsx, ods, rtf, txt, csv, odt, docx, jrprint and xml. 
 // These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
 // Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
@@ -635,6 +816,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
@@ -660,6 +842,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
 //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
 //var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);]]></sample>
+            </samples>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the server name or foundset to run the report on]]></description>
@@ -678,7 +861,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
               </parameter>
             </parameters>
           </function>
-          <function name="runReport">
+          <function clientSupport="wc,sc" name="runReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.Object"/>
               <argumentType typecode="java.lang.String"/>
@@ -688,11 +871,16 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
               <argumentType typecode="java.lang.String"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the generated reported as a byte array]]></return>
-            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
 table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
 sample code for more details.]]></description>
-            <summary><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
-            <sample><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
 // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
 // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
 // Note: the parameters argument is used to send additional parameters into the report. For example: 
@@ -724,7 +912,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 
 // To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
-// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), xlsx, ods, rtf, txt, csv, odt, docx, jrprint and xml. 
 // These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
 // Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
@@ -737,6 +925,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
@@ -762,6 +951,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
 //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
 //var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);]]></sample>
+            </samples>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the server name or foundset to run the report on]]></description>
@@ -783,7 +973,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
               </parameter>
             </parameters>
           </function>
-          <function name="runReport">
+          <function clientSupport="wc,sc" name="runReport">
             <argumentsTypes>
               <argumentType typecode="java.lang.Object"/>
               <argumentType typecode="java.lang.String"/>
@@ -794,11 +984,16 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
               <argumentType typecode="java.lang.Boolean"/>
             </argumentsTypes>
             <return type="byte[]" typecode="[B"><![CDATA[the generated reported as a byte array]]></return>
-            <description><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale. If using a
 table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
 sample code for more details.]]></description>
-            <summary><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
-            <sample><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[This method runs a specified (client) report according to the output format, parameters and locale.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// The method runs a client report specified by the second parameter acording to the output format. 
 // The report can be a compiled jasper file or a jrxml file from a relative path to the reportDirectory or an absolute one. 
 // To view the result of the customers report in the Jasper Report viewer in the SmartClient or as PDF in the WebClient. 
 // Note: the parameters argument is used to send additional parameters into the report. For example: 
@@ -830,7 +1025,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper',null,OUTPUT_FORMAT.PRINT,{pcustomerid: forms.customers.customer_id});
 
 // To generate the report in the specified output format and save the result to 'myReport.html' in the root of the C drive: 
-// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), ods, rtf, txt, csv, odt, docx, jrprint and xml. 
+// Supported output formats are: xhtml, html, pdf, excel( or xls), xls_1_sheet (1 page per sheet), xlsx, ods, rtf, txt, csv, odt, docx, jrprint and xml. 
 // These are available as constants in the OUTPUT_FORMAT node of the plugin's tree. 
 // Note: in the WebClient, the file will be saved serverside, so the specified path needs to be valid serverside 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,{pcustomerid: forms.customers.customer_id}); 
@@ -843,6 +1038,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.odt',OUTPUT_FORMAT.ODT,{pcustomeri d : forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.docx',OUTPUT_FORMAT.DOCX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS,{pcustomerid: forms.customers.customer_id});
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,{pcustomerid: forms.customers.customer_id}); 
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.ods',OUTPUT_FORMAT.ODS,{pcustomerid: forms.customers.customer_id});
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jasper','c:/myReport.xml',OUTPUT_FORMAT.XML,{pcustomerid: forms.customers.customer_id});
@@ -868,6 +1064,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
 //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
 //var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);]]></sample>
+            </samples>
             <parameters>
               <parameter name="source" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
                 <description><![CDATA[the server name or foundset to run the report on]]></description>
@@ -892,15 +1089,13 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
               </parameter>
             </parameters>
           </function>
-          <function deprecated="true" name="writeFile">
+          <function clientSupport="wc,sc" deprecated="true" name="writeFile">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="java.lang.Object"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"/>
-            <description/>
             <deprecated><![CDATA[replaced by writeFileToReportsDir(String, Object)]]></deprecated>
-            <sample/>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the name and or relative path to the file to write to]]></description>
@@ -910,19 +1105,25 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
               </parameter>
             </parameters>
           </function>
-          <function name="writeFileToReportsDir">
+          <function clientSupport="wc,sc" name="writeFileToReportsDir">
             <argumentsTypes>
               <argumentType typecode="java.lang.String"/>
               <argumentType typecode="java.lang.Object"/>
             </argumentsTypes>
             <return type="com.servoy.j2db.documentation.scripting.docs.Boolean" typecode="boolean"><![CDATA[true if the write was successful, false otherwise]]></return>
-            <description><![CDATA[Store a reportFile on the Server.]]></description>
-            <summary><![CDATA[Store a reportFile on the Server.]]></summary>
-            <sample><![CDATA[// .jasper or .jrxml files can be used var 
+            <descriptions>
+              <description clientSupport="wc,sc"><![CDATA[Store a reportFile on the Server.]]></description>
+            </descriptions>
+            <summaries>
+              <summary clientSupport="wc,sc"><![CDATA[Store a reportFile on the Server.]]></summary>
+            </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// .jasper or .jrxml files can be used var 
 file = plugins.file.readFile('\\\\temp\\\\sample.jasper');
 plugins.jasperPluginRMI.writeFileToReportsDir('myCustomerReport.jasper', file); 
 // Writes to a subfolder from the reports directory. All the folders from the path must exist. 
 plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.jasper', file);]]></sample>
+            </samples>
             <parameters>
               <parameter name="fileName" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
                 <description><![CDATA[the name of the file to write to]]></description>
@@ -934,12 +1135,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
           </function>
         </functions>
       </object>
-      <object publicName="OUTPUT_FORMAT" qualifiedName="com.servoy.plugins.jasperreports.OUTPUT_FORMAT">
+      <object clientSupport="wc,sc" publicName="OUTPUT_FORMAT" qualifiedName="com.servoy.plugins.jasperreports.OUTPUT_FORMAT">
         <constants>
-          <constant name="CSV">
+          <constant clientSupport="wc,sc" name="CSV">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -948,6 +1149,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -955,11 +1157,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="DOCX">
+          <constant clientSupport="wc,sc" name="DOCX">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -968,6 +1171,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -975,11 +1179,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="EXCEL">
+          <constant clientSupport="wc,sc" name="EXCEL">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -988,6 +1193,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -995,11 +1201,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="HTML">
+          <constant clientSupport="wc,sc" name="HTML">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1008,6 +1215,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1015,11 +1223,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="JRPRINT">
+          <constant clientSupport="wc,sc" name="JRPRINT">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1028,6 +1237,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1035,11 +1245,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="ODS">
+          <constant clientSupport="wc,sc" name="ODS">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1048,6 +1259,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1055,11 +1267,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="ODT">
+          <constant clientSupport="wc,sc" name="ODT">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1068,6 +1281,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1075,11 +1289,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="PDF">
+          <constant clientSupport="wc,sc" name="PDF">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1088,6 +1303,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1095,11 +1311,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="PRINT">
+          <constant clientSupport="wc,sc" name="PRINT">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1108,6 +1325,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1115,11 +1333,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="RTF">
+          <constant clientSupport="wc,sc" name="RTF">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1128,6 +1347,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1135,11 +1355,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="TXT">
+          <constant clientSupport="wc,sc" name="TXT">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1148,6 +1369,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1155,11 +1377,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="VIEW">
+          <constant clientSupport="wc,sc" name="VIEW">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1168,6 +1391,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1175,11 +1399,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="XHTML">
+          <constant clientSupport="wc,sc" name="XHTML">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1188,6 +1413,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1195,11 +1421,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="XLS">
+          <constant clientSupport="wc,sc" name="XLS">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1208,6 +1435,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1215,11 +1443,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="XLS_1_SHEET">
+          <constant clientSupport="wc,sc" name="XLSX">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1228,6 +1457,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1235,11 +1465,12 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
-          <constant name="XML">
+          <constant clientSupport="wc,sc" name="XLS_1_SHEET">
             <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
-            <description/>
-            <sample><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
@@ -1248,6 +1479,7 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -1255,6 +1487,29 @@ plugins.jasperPluginRMI.writeFileToReportsDir('\\\\subdir\\\\myCustomerReport.ja
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
+          </constant>
+          <constant clientSupport="wc,sc" name="XML">
+            <return type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String"/>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.csv',OUTPUT_FORMAT.CSV,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xml',OUTPUT_FORMAT.XML,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.docx',OUTPUT_FORMAT.DOCX,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
+//plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);]]></sample>
+            </samples>
           </constant>
         </constants>
       </object>

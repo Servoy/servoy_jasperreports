@@ -52,7 +52,7 @@ public class JasperReportsWebViewer {
 	public static final String MIME_TYPE_ODS = "application/x-vnd.oasis.opendocument.spreadsheet";
 	public static final String MIME_TYPE_ODT = "application/x-vnd.oasis.opendocument.text";
 	public static final String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	//	public static final String MIME_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	public static final String MIME_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	
 	public static void show(IClientPluginAccess application, byte[] jsp, String file, String ext, String mimeType) {
 		IWebClientPluginAccess wapp = (IWebClientPluginAccess) application;

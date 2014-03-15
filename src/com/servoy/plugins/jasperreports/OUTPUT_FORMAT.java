@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,6 +45,7 @@ public abstract class OUTPUT_FORMAT implements IConstantsObject
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
@@ -89,6 +90,11 @@ public abstract class OUTPUT_FORMAT implements IConstantsObject
 	 * @sampleas XHTML
 	 */
 	public static final String XLS = "xls";
+	
+	/**
+	 * @sampleas XHTML
+	 */
+	public static final String XLSX = "xlsx";
 	
 	/**
 	 * @sampleas XHTML
