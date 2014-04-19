@@ -157,9 +157,16 @@ public class JasperReportRunner implements IJasperReportRunner
 			exporter = new JROdsExporter();
 
 		}
-		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML))
+		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML) || type.equalsIgnoreCase(OUTPUT_FORMAT.XHTML))
 		{
-			exporter = new JRHtmlExporter();
+			if (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML))
+			{
+				exporter = new JRHtmlExporter();
+			}
+			else
+			{
+				exporter = new JRXhtmlExporter();
+			}
 			String location = (exporterParameters != null ? adjustFileUnix((String) exporterParameters.get("REPORT_FILE_LOCATION")) : null);
 			if (location != null)
 			{
@@ -169,11 +176,6 @@ public class JasperReportRunner implements IJasperReportRunner
 				exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, jasperPrint.getName() + ".html_files/"); // backslash is important
 				exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.TRUE);
 			}
-
-		}
-		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XHTML))
-		{
-			exporter = new JRXhtmlExporter();
 
 		}
 		else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XML))

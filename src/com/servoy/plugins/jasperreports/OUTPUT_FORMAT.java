@@ -36,7 +36,7 @@ public abstract class OUTPUT_FORMAT implements IConstantsObject
 {
 	/**
 	 * @sample
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xhtml',OUTPUT_FORMAT.XHTML,null);
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.XHTML,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
