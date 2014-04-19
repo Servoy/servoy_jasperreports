@@ -4,7 +4,7 @@
 	<property name="plugins" value="plugins"/>
 	<property name="servoy_jasperreports" value="servoy_jasperreports"/>
 	<property name="path2JR" value="${pathToJasperReportsEngineJar}"/>
-	<property name="jasper_reports_project" value="${pathToJasperReportsLibs}"/>
+	<property name="jasper_reports_project" value="${pathToJasperReportsProject}"/>
 	<property name="lib" value="lib"/>
 			
 	
@@ -87,7 +87,7 @@
 		 		<propertycopy name="current_JAR_packages" from="${dvarpack}"/>
 		 		<property name="dvarver" value="${var}.version"/>
 		 		<propertycopy name="current_JAR_version" from="${dvarver}"/>
-		 		<copy todir="${plugins}/${servoy_jasperreports}" file="${pathToJasperReportsLibs}/${current_JAR_path}"/>	
+		 		<copy todir="${plugins}/${servoy_jasperreports}" file="${pathToJasperReportsProject}/${current_JAR_path}"/>	
 		 		<antcall target="createJnlpLine"/>
 		 	</else>
 		</if>

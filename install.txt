@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2010 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2010 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,18 +37,18 @@ CONTENT:
  	* Jakarta POI: for report XLS output facility
  	* JFreeChart and its required dependency, JCommon: for chart support
  
- This zipfile contains the JasperReports plugin for Servoy, version 3.7.1. 
- It is to be used with Servoy 4.x and/or higher and is consistent with JasperReports version 3.7.1.
+ This zipfile contains the JasperReports plugin for Servoy, version 5.0.0. 
+ It is to be used with Servoy 6.x and/or higher and is consistent with JasperReports version 5.5.1.
  
  For more information about Servoy, visit http://www.servoy.com.
- For more information about JasperReports, visit: http://jasperforge.org/projects/jasperreports.
+ For more information about JasperReports, visit: http://community.jaspersoft.com/project/jasperreports-library.
  
  
 INSTALLATION:
  1. Download the JasperReports project archive file (zip or tar.gz) and the JasperReports engine jar file from the link mentioned above. Also please extract the contents of the JasperReports project archive into a folder of your choice.
  2. Edit the servoy_jasperreports.properties file. 
-	2.1 Specify the path to the JasperReports (extracted) project folder and to the JasperReports engine jar file (this path must end with the name of the jar file), downloaded at step 1: pathToJasperReportsEngineJar=C:/Downloads/JasperReports/jasperreports-x.x.x.jar, pathToJasperReportsLibs=C:/Downloads/JasperReports/jasperreports-x.x.x-project.
-	2.2 The servoy_jasperreports.properties file contains records of all the libraries that might be required by the JasperReports engine. The properties file has been written with respect to JasperReports version 3.7.1. If using a different version of JasperReports, please verify and update the library record information if necessary (path, package, version, as found in the JasperReports project folder).
+	2.1 Specify the path to the JasperReports (extracted) project folder and to the JasperReports engine jar file (this path must end with the name of the jar file), downloaded at step 1: pathToJasperReportsEngineJar=C:/Downloads/JasperReports/jasperreports-x.x.x.jar, pathToJasperReportsProject=C:/Downloads/JasperReports/jasperreports-x.x.x-project.
+	2.2 The servoy_jasperreports.properties file contains records of all the libraries that might be required by the JasperReports engine. The properties file has been written with respect to JasperReports version 5.5.1. If using a different version of JasperReports, please verify and update the library record information if necessary (path, package, version, as found in the JasperReports project folder).
  3. Generate the plugin files (required by Servoy), using ant and providing the configure.xml (contained in the present downloaded zip) as the argument: for example, start in the same folder where the configure.xml is located and run ant (C:/path/to/configure_xml/ant), if you have the "path" system variable pointing to the bin folder of the ant binaries, or start from the bin folder located in the ant binaries folder and run ant pointing to configure.xml (C:/path/to/ant_binaries/bin/ant -buildfile C:/path/to/configure_xml/configure.xml).  
 	3.1 If you do not have ant installed, please download the binaries from http://ant.apache.org/bindownload.cgi and configure the system "path" variable to point to the bin folder of the ant binaries download.
 	3.2 This step configures the plugin with a minimal set of required libraries and creates the necessary jnlp file (according to the properties specified in the servoy_jasperreports.properties file).
@@ -60,11 +60,12 @@ DEPENDANCIES:
  In the case of any conflicts between the servoy_jasperreports plugin libraries and the equivalent Servoy libraries, please replace the Servoy libraries with their equivalent version from the JasperReports project. When copying and replacing the new libraries in Servoy, please make sure their name matches the Servoy given names, so please rename the libraries after copying them.
  
 
-IREPORTS:
- The most used editor to build reports using JasperReports is iReports. For more information about iReports: http://jasperforge.org/projects/ireport
- Please note that if using an iReport version lower than the version of the JasperReports engine, conflicts may arise due to the library versions used when building the report in iReport. In such cases, we recommend the updating of iReport to the equivalent version of the JasperReports engine. 
- Also please make sure, to avoid conflicts, that the library versions of the equivalent libraries used in Servoy, JasperReports and iReports are the same.
+DESIGN CLIENT (REPORT EDITOR):
+ As of JasperReports 5.5.0, JasperSoft Studio is the official design client for JasperReports. See http://community.jaspersoft.com/project/ireport-designer. 
+ For more information about JasperSoft Studio refer to http://community.jaspersoft.com/project/jaspersoft-studio.
+ Please note that if using a JasperSoft Studio version lower than the version of the JasperReports engine, conflicts may arise due to the library versions used when building the report in JasperSoft Studio. In such cases, we recommend the updating of JasperSoft Studio to the equivalent version of the JasperReports engine. 
+ Also please make sure, to avoid conflicts, that the library versions of the equivalent libraries used in Servoy, JasperReports and JasperSoft Studio are the same.
 
  
 INFORMATION, FEATURE REQUESTS, BUG REPORTS:
- http://code.google.com/p/servoy-jasperreports-plugin/
+ https://www.servoyforge.net/projects/servoy-jasperreports

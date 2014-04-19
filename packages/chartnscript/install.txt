@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2013 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2013 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,18 +28,18 @@
  */
 
  CONTENT:
- This zipfile contains the JasperReports plugin for Servoy, version 4.0.0. 
- It is packaged for Servoy 6.x and above and contains JasperReports engine version 4.6.0.
+ This zipfile contains the JasperReports plugin for Servoy, version 5.0.0. 
+ It is to be used with Servoy 6.x and/or higher and is consistent with JasperReports version 5.5.1.
  
- For more information about Servoy, visit http://www.servoy.com
- For more information about JasperReports, visit: http://jasperforge.org/website/jasperreportswebsite/trunk/documentation.html
+ For more information about Servoy, visit http://www.servoy.com.
+ For more information about JasperReports, visit: http://community.jaspersoft.com/project/jasperreports-library.
   
  INSTALLATION:
  Unpack the plugins directory in this zipfile into the plugins directory of your Servoy application server.
  
- DEPENDANCIES:
+ DEPENDENCIES:
  The JasperReport engine depends on external libraries. 
- See http://jasperforge.org/website/jasperreportswebsite/trunk/requirements.html for more information
+ See http://community.jaspersoft.com/wiki/jasperreports-library-requirements for more information.
  
  Some of these libraries are included in this package. 
     * Jakarta Commons BeanUtils Component (version 1.7 or later) http://jakarta.apache.org/commons/beanutils/
@@ -57,13 +57,15 @@
  
  This build also includes support for charting and Groovy script language.
  
- IREPORTS:
- The most used editor to build reports using JasperReports is iReports. For more information about iReports: http://jasperforge.org/projects/ireport
+ JASPERSOFT STUDIO:
+ As of version 5.5.0, Jaspersoft Studio will be the official design client for JasperReports. See http://community.jaspersoft.com/project/jaspersoft-studio
  
  UPGRADING THE JASPERREPORT ENGINE:
- The JasperReports engine can be upgraded separatly when a new version of the engine is released. 
- To do so, download the new engine from http://jasperforge.org/website/jasperreportswebsite/trunk/ and place the jasperreports-x.x.x.jar file into the ../plugins/servoy_jasperreports folder and remove the old jar from there.
- Also update the reference in the plugins jnlp file (../plugins/servoy_jasperreports.jar.jnlp)
+ The JasperReports engine can be upgraded separately when a new version of the engine is released. 
+ To do so, download the new engine from http://community.jaspersoft.com/project/jasperreports-library/resources and place the jasperreports-x.x.x.jar file into the ../plugins/servoy_jasperreports folder and remove the old jar from there.
+ Update any other libraries which have changed in the new version of the engine (see the full project libraries for this).
+ Also update the reference in the plugins jnlp file (../plugins/servoy_jasperreports.jar.jnlp).
+ Do note that this step must be handled with great caution. Please keep libraries in sync between Servoy, JasperReports and the plugin.
  
  INFORMATION, FEATURE REQUESTS, BUG REPORTS:
- http://code.google.com/p/servoy-jasperreports-plugin/
+ https://www.servoyforge.net/projects/servoy-jasperreports
