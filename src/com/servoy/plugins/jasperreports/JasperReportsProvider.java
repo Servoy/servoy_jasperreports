@@ -619,7 +619,19 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 						}
 						// workaround for http://community.jaspersoft.com/jasperreports-library/issues/5824 can be removed when upgraded >= JR 4.7.1
 						JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
-						jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(), type, jp, relativeExtraDirs, exporterParams);
+						
+						// check if we must force the export on the client
+						if (forceClientSideExporting(type)) 
+						{
+							// in some cases we must render on the client, so that resource paths are correctly created (i.e. html/xhtml extra folders..)
+							jsp = JasperReportRunner.getJasperBytes(type, jp ,jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
+						} 
+						else
+						{
+							// the following will be executed on the server (!)
+							jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(), type, jp, relativeExtraDirs, exporterParams);
+						}
+						
 						if (!nooutput)
 						{
 							saveByteArrayToFile(file, jsp);
@@ -644,6 +656,19 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		}
 		Debug.error("JasperTrace: Jasper Exception: No service running");
 		throw new Exception("JasperTrace: Jasper Exception: No service running");
+	}
+	
+	/**
+	 * In some situations, as html/xhtml exporting with additional resources, more files/folders need to be created
+	 * on the client. This is needed for storing references or the additional resources themselves on the client,
+	 * in order for the proper displaying of the html report. 
+	 * Do note, that normally, exporting is done server-side. (this problem is not present for a Developer debug smart client)
+	 * @param type the export type for which we need to defer rendering to the client
+	 * @return true if exporting is to be done on the client, else will done on the server (or same client for the Developer) 
+	 */
+	private boolean forceClientSideExporting(String type) 
+	{
+		return type.equalsIgnoreCase(OUTPUT_FORMAT.HTML) || type.equalsIgnoreCase(OUTPUT_FORMAT.XHTML);
 	}
 
 	public void saveByteArrayToFile(String filename, byte[] buffertje) throws Exception
