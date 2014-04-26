@@ -414,6 +414,13 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				Map<String, Object> exporterParams = createExporterParametersMap(params);
 				byte[] jsp = null;
 
+				// we need the REPORT_FILE_LOCATION parameters for html/xhtml based reporting in all client type scenarios 
+				if (!nooutput)
+				{
+					String fileLocation = new File(file).getParent();
+					exporterParams.put("REPORT_FILE_LOCATION", fileLocation);
+				}
+				
 				// 1. WebClient
 				if (applicationType == IClientPluginAccess.WEB_CLIENT)
 				{
@@ -612,11 +619,6 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 					}
 					else
 					{
-						if (!nooutput)
-						{
-							String fileLocation = new File(file).getParent();
-							exporterParams.put("REPORT_FILE_LOCATION", fileLocation);
-						}
 						// workaround for http://community.jaspersoft.com/jasperreports-library/issues/5824 can be removed when upgraded >= JR 4.7.1
 						JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
 						
