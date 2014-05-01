@@ -38,5 +38,20 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public interface IJasperReportRunner { 
 
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception;
+	/**
+	 * This method creates and fills the JasperPrint document. The resulting document can be viewed, printed or exported to other formats.
+	 * Note: the filling of the report is done on the Server for SQL based reports and on the client for foundset based. 
+	 *  
+	 * @param clientID the ID of the client
+	 * @param source the data source of the report
+	 * @param txid the transaction ID
+	 * @param report the report template 
+	 * @param parameters the parameters for the report
+	 * @param repdir the report directory
+	 * @param extraDirs the list of extra directories
+	 * @return the filled JasperPrint
+	 * @throws RemoteException
+	 * @throws Exception
+	 */
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception;
 }

@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -63,7 +63,7 @@ public class JasperReportsI18NHandler {
 		return new Locale(language, country, variant);
 	}
 
-	public static Map appendI18N(Map parameters, boolean isWebClient, IClientPluginAccess application, String localeString) {
+	public static Map<String, Object> appendI18N(Map<String, Object> parameters, boolean isWebClient, IClientPluginAccess application, String localeString) {
 		Locale l = null;
 		if (localeString != null && !localeString.equals("")) {
 			l = stringToLocale(localeString);

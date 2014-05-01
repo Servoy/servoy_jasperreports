@@ -196,7 +196,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		return jasperReport;
 	}
 
-	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs, Map exporterParams) throws Exception { 
+	public byte[] getJasperBytes(String clientID, String type, JasperPrint jasperPrint, String extraDirs, Map<String, Object> exporterParams) throws Exception { 
 		
 		if (!hasAccess(clientID)) return null;
 		
@@ -228,7 +228,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws Exception {
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws Exception {
 		
 		repdir = getCheckedRelativeReportsPath(repdir);
 		
@@ -928,7 +928,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			return JasperCompileManager.compileReport(filePath2LoadFrom);
 		}
 		
-		final Object obj = JRLoader.loadObject(filePath2LoadFrom);
+		final Object obj = JRLoader.loadObjectFromFile(filePath2LoadFrom);
 		if (obj instanceof JasperReport) {
 			return (JasperReport) obj;
 		}

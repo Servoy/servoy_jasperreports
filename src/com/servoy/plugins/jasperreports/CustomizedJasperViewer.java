@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,8 @@ import net.sf.jasperreports.view.JasperViewer;
 /**
  * Modified JasperViewer, so that we have access to the JRViewer instance
  * inside.
+ * 
+ * @author acostache
  * 
  */
 public class CustomizedJasperViewer extends JasperViewer {

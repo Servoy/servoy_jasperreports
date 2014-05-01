@@ -91,7 +91,7 @@ public class JasperReportRunner implements IJasperReportRunner
 		this.jasperReportsService = jasperReportsService;
 	}
 
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map parameters, String repdir, String extraDirs) throws RemoteException, Exception
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception
 	{
 		if (source == null)
 		{
@@ -318,7 +318,7 @@ public class JasperReportRunner implements IJasperReportRunner
 
 	private static JRAbstractLRUVirtualizer virtualizer = null;
 
-	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map parameters, String repdir, String extraDirs) throws JRException
+	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException
 	{
 		// client - fill (the compiled) report
 		Debug.trace("JasperTrace: Directory: " + repdir);
@@ -326,7 +326,7 @@ public class JasperReportRunner implements IJasperReportRunner
 		// make directory unix style
 		String jasperDirectory = adjustFileUnix(repdir);
 
-		if (parameters == null) parameters = new HashMap();
+		if (parameters == null) parameters = new HashMap<String, Object>();
 
 		parameters.put("report_directory", jasperDirectory);
 		if (!jasperDirectory.endsWith("/")) jasperDirectory = jasperDirectory + '/';
@@ -368,7 +368,7 @@ public class JasperReportRunner implements IJasperReportRunner
 		String pageOutDir = System.getProperty("java.io.tmpdir");
 		Number maxRowsPerSheet = null;
 
-		for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();)
+		for (Iterator<String> iter = parameters.keySet().iterator(); iter.hasNext();)
 		{
 			Object key = iter.next();
 			Object value = parameters.get(key);

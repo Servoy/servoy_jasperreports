@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,12 @@ package com.servoy.plugins.jasperreports;
 
 import com.servoy.j2db.scripting.IConstantsObject;
 
+/**
+ * Constants (class) for exporting parameters.
+ * 
+ * @author acostache
+ * 
+ */
 public abstract class EXPORTER_PARAMETERS implements IConstantsObject 
 {
 	public static final String PAGE_INDEX = "PAGE_INDEX";

@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -81,8 +81,8 @@ public class JSArgumentsUnwrap {
 		if (o instanceof Map) {
 
 			Map<Object, Object> params = new HashMap<Object, Object>();
-			Map h = (Map)o;
-			Iterator it = h.keySet().iterator();
+			Map<Object, Object> h = (Map<Object, Object>)o;
+			Iterator<Object> it = h.keySet().iterator();
 			while (it.hasNext()) {
 				Object key = it.next();
 				params.put(key, unwrapJSObject(h.get(key), clientPluginAccess));

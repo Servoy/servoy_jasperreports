@@ -390,8 +390,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				JasperReportsI18NHandler.appendI18N(params, applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString);
 
 				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "com.servoy.plugins.jasperreports.ServoyThreadSubreportRunnerFactory");
-				// workaround for http://community.jaspersoft.com/jasperreports-library/issues/5824 can be removed when upgraded >= JR 4.7.1
-				JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
+
 				// Fill the report and get the JasperPrint instance.
 				// Also modify the JasperPrint in case you want to move the
 				// table of contents.
@@ -619,9 +618,6 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 					}
 					else
 					{
-						// workaround for http://community.jaspersoft.com/jasperreports-library/issues/5824 can be removed when upgraded >= JR 4.7.1
-						JRVirtualizationHelper.setThreadJasperReportsContext(DefaultJasperReportsContext.getInstance());
-						
 						// check if we must force the export on the client
 						if (forceClientSideExporting(type)) 
 						{
