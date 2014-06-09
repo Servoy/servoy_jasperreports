@@ -30,6 +30,7 @@ package com.servoy.plugins.jasperreports;
 
 import java.awt.Image;
 
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRRewindableDataSource;
 import net.sf.jasperreports.engine.JRTemplate;
@@ -63,7 +64,7 @@ public class JasperReportsResourceLoader {
 		
 		byte[] imgBytes = jasperReportsService.loadImage(jasperReportsClientId, image);
 		
-		return JRImageLoader.loadImage(imgBytes);
+		return JRImageLoader.getInstance(DefaultJasperReportsContext.getInstance()).loadAwtImageFromBytes(imgBytes);
 	}
 	
 	/**

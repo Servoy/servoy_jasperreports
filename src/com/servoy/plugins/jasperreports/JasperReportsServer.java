@@ -167,7 +167,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			tempFile = new File(reportCompiled);
 		}
 		if (tempFile.exists()) {
-			jasperReport = (JasperReport) JRLoader.loadObjectFromLocation(reportCompiled);
+			jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportCompiled);
 		} else {
 
 			String reportSource = new String(report);
@@ -894,7 +894,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		
 		Debug.trace("JasperTrace: Loading image file '" + filePath2LoadFrom + "'");
 		
-		return JRLoader.loadBytesFromLocation(filePath2LoadFrom);
+		return JRLoader.loadBytes(new File(filePath2LoadFrom));
 	}
 	
 	/**

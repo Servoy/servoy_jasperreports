@@ -29,6 +29,7 @@
 package com.servoy.plugins.jasperreports;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.print.Book;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
@@ -37,11 +38,12 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRGraphics2DExporter;
-import net.sf.jasperreports.engine.export.JRGraphics2DExporterParameter;
 import net.sf.jasperreports.engine.util.JRGraphEnvInitializer;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleGraphics2DExporterOutput;
+import net.sf.jasperreports.export.SimpleGraphics2DReportConfiguration;
 
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
@@ -120,9 +122,18 @@ public class JasperReportsPrinter implements Printable {
 
 	try {
 	    JRGraphics2DExporter exporter = new JRGraphics2DExporter();
-	    exporter.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-	    exporter.setParameter(JRGraphics2DExporterParameter.GRAPHICS_2D, graphics);
-	    exporter.setParameter(JRExporterParameter.PAGE_INDEX, new Integer(pageIndex));
+	    
+	    SimpleExporterInput exportInput = new SimpleExporterInput(this.jasperPrint);
+	    exporter.setExporterInput(exportInput);
+	    
+	    SimpleGraphics2DExporterOutput exporterOutput = new SimpleGraphics2DExporterOutput();
+	    exporterOutput.setGraphics2D((Graphics2D) graphics);
+	    exporter.setExporterOutput(exporterOutput);
+
+	    SimpleGraphics2DReportConfiguration exporterReportConfiguration = new SimpleGraphics2DReportConfiguration();
+	    exporterReportConfiguration.setPageIndex(new Integer(pageIndex));
+	    exporter.setConfiguration(exporterReportConfiguration);
+	    
 	    exporter.exportReport();
 	} catch (JRException e) {
 	    e.printStackTrace();
