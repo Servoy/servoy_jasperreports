@@ -75,7 +75,6 @@ import com.servoy.j2db.util.Utils;
 /**
  * Iserver impl.
  */
-@SuppressWarnings("rawtypes")
 public class JasperReportsServer implements IJasperReportsService, IServerPlugin {
 	
 	private Properties settings;
@@ -189,15 +188,11 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 				try {
 					Thread.currentThread().setContextClassLoader(JasperReportRunner.class.getClassLoader()); // get the client class loader (is this "bulletproof"?)
 					jasperDesign = JRXmlLoader.load(reportSource);
-				} catch (Exception ex) {
-					jasperDesign = null;
 				} finally {
 					Thread.currentThread().setContextClassLoader(savedCl);
 				}
 				if (jasperDesign != null) {
 					jasperReport = JasperCompileManager.compileReport(jasperDesign);
-				} else {
-					jasperReport = null;
 				}
 			} else {
 				throw new IllegalArgumentException("No jasperReport " + report + " has been found or loaded in directory " + jasperDirectory);
