@@ -19,9 +19,11 @@ package com.servoy.plugins.jasperreports;
 
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -45,8 +47,10 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRPrintElement;
 import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JRPrintText;
+import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.type.OrientationEnum;
 import net.sf.jasperreports.engine.util.JRClassLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.view.JRSaveContributor;
@@ -61,8 +65,7 @@ import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
 /**
- * IScriptObject impl. For external library dependencies, see: http://www.jasperforge
- * .org/jaspersoft/opensource/business_intelligence/jasperreports /requirements.html
+ * IScriptObject impl. For external library dependencies, see https://community.jaspersoft.com/wiki/jasperreports-library-requirements.
  */
 @ServoyDocumented(category = ServoyDocumented.PLUGINS, publicName = JasperReportsPlugin.PLUGIN_NAME, scriptingName = "plugins." + JasperReportsPlugin.PLUGIN_NAME)
 public class JasperReportsProvider implements IScriptable, IReturnedTypesProvider
@@ -89,7 +92,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	@Override
 	public Class<?>[] getAllReturnedTypes()
 	{
-		return new Class[] { OUTPUT_FORMAT.class, JR_SVY_VIEWER_DISPLAY_MODE.class };
+		return new Class[] { INPUT_TYPE.class, OUTPUT_FORMAT.class, JR_SVY_VIEWER_DISPLAY_MODE.class };
 	}
 
 	/**
@@ -172,44 +175,102 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	}
 
 	/**
-	 * @clonedesc js_runReport(Object,String,Object,String,Object,String,Boolean)
-	 * @sampleas js_runReport(Object,String,Object,String,Object,String,Boolean)
+	 * @clonedesc js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
 	 * 
-	 * @param source the server name or foundset to run the report on
+	 * @param reportDataSource the server name or foundset to run the report on
 	 * @param report the report file (relative to the reports directory)
-	 * @param arg the output file (must specify an absolute path) or null if not needed
-	 * @param type the output format; use the constants node for available output formats
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
 	 * @param parameters a parameter map to be used when running the report
 	 * 
 	 * @return the generated reported as a byte array
 	 */
-	public byte[] js_runReport(Object source, String report, Object arg, String type, Object parameters) throws Exception
+	public byte[] js_runReport(Object reportDataSource, String report, Object outputOptions, String outputType, Object parameters) throws Exception
 	{
-		return js_runReport(source, report, arg, type, parameters, null);
+		return js_runReport(null, reportDataSource, null, report, outputOptions, outputType, parameters, null);
+	}
+	
+	/**
+	 * @clonedesc js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * 
+	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE
+	 * @param reportDataSource the server name or foundset to run the report on
+	 * @param inputOptions additional input options (e.g. which node to iterate in the xml datasource document)
+	 * @param report the report file (relative to the reports directory)
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @return the generated reported as a byte array
+	 * @throws Exception
+	 */
+	public byte[] js_runReport(String inputType, Object reportDataSource, String inputOptions, String report, Object outputOptions, String outputType, Object parameters) throws Exception
+	{
+		return js_runReport(inputType, reportDataSource, inputOptions, report, outputOptions, outputType, parameters, null);
 	}
 
 	/**
-	 * @clonedesc js_runReport(Object,String,Object,String,Object,String,Boolean)
-	 * @sampleas js_runReport(Object,String,Object,String,Object,String,Boolean)
+	 * @clonedesc js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
 	 * 
-	 * @param source the server name or foundset to run the report on
+	 * @param reportDataSource the server name or foundset to run the report on
 	 * @param report the report file (relative to the reports directory)
-	 * @param arg the output file (must specify an absolute path) or null if not needed
-	 * @param type the output format; use the constants node for available output formats
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
 	 * @param parameters a parameter map to be used when running the report
 	 * @param localeString the string which specifies the locale
 	 * 
 	 * @return the generated reported as a byte array
 	 */
-	public byte[] js_runReport(Object source, String report, Object arg, String type, Object parameters, String localeString) throws Exception
+	public byte[] js_runReport(Object reportDataSource, String report, Object outputOptions, String outputType, Object parameters, String localeString) throws Exception
 	{
-		return js_runReport(source, report, arg, type, parameters, localeString, Boolean.FALSE);
+		return js_runReport(null, reportDataSource, null, report, outputOptions, outputType, parameters, localeString, Boolean.FALSE);
+	}
+	
+	/**
+	 * @clonedesc js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * 
+	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE
+	 * @param reportDataSource reportDataSource the server name or foundset to run the report on
+	 * @param inputOptions additional input options (e.g. which node to iterate in the xml datasource document)
+	 * @param report the report file (relative to the reports directory)
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString a string which indicates the locale
+	 * @return the generated reported as a byte array
+	 * @throws Exception
+	 */
+	public byte[] js_runReport(String inputType, Object reportDataSource, String inputOptions, String report, Object outputOptions, String outputType, Object parameters, String localeString) throws Exception
+	{
+		return js_runReport(inputType, reportDataSource, inputOptions, report, outputOptions, outputType, parameters, localeString, Boolean.FALSE);
 	}
 
 	/**
-	 * This method runs a specified (client) report according to the output format, parameters and locale. If using a
-	 * table of contents and if needed, the table of contents can be moved to a specified page. Please refer to the
-	 * sample code for more details.
+	 * @clonedesc js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(String,Object,String,String,Object,String,Object,String,Boolean) 
+	 * 
+	 * @param reportDataSource the server name or foundset to run the report on
+	 * @param report the report file (relative to the reports directory)
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString the string which specifies the locale
+	 * @param moveTableOfContent true in order to move the table of contents, false otherwise
+	 * 
+	 * @return the generated reported as a byte array
+	 */
+	public byte[] js_runReport(Object reportDataSource, String report, Object outputOptions, String outputType, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception
+	{
+		return js_runReport(null, reportDataSource, null, report, outputOptions, outputType, parameters, localeString, Boolean.TRUE.equals(moveTableOfContent));
+	}
+	
+	/**
+	 * This method runs a specified (client) report according to the output format, parameters and locale. 
+	 * If using a table of contents and if needed, the table of contents can be moved to a specified page. 
+	 * Please refer to the sample code for more details.
 	 * 
 	 * @sample 
 	 * // The method runs a client report specified by the second parameter acording to the output format. 
@@ -284,30 +345,102 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
 	 * //var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);
 	 * 
-	 * @param source the server name or foundset to run the report on
+	 * // Using an XML/CSV file as the datasource of the report.
+	 * //var $parameters = null; //...
+	 * //var $repfile = 'report.jrxml';
+	 * //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
+	 * //var $locale = 'en';
+	 * //plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
+	 * 
+	 * // Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
+	 * //var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
+	 * //var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
+	 * //var $list = new java.util.ArrayList();
+	 * //$list.add($jp1);
+	 * //$list.add($jp2);
+	 * //var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);  
+	 * 
+	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE
+	 * @param reportDataSource the server name or foundset to run the report on
+	 * @param inputOptions additional input options (e.g. which node to iterate in the xml datasource document)
 	 * @param report the report file (relative to the reports directory)
-	 * @param arg the output file (must specify an absolute path) or null if not needed
-	 * @param type the output format; use the constants node for available output formats
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
 	 * @param parameters a parameter map to be used when running the report
-	 * @param localeString the string which specifies the locale
+	 * @param localeString a string which indicates the locale
+	 * @param moveTableOfContent true in order to move the table of contents, false otherwise 
+	 * @return the generated reported as a byte array
+	 * @throws Exception
+	 */
+	public byte[] js_runReport(String inputType, Object reportDataSource, String inputOptions, String report, Object outputOptions, String outputType, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception
+	{
+		return runReport(inputType, reportDataSource, inputOptions, report, outputOptions, outputType, parameters, localeString, Boolean.TRUE.equals(moveTableOfContent), false);
+	}
+	
+	/**
+	 * @clonedesc js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * @sampleas js_runReport(String,Object,String,String,Object,String,Object,String,Boolean)
+	 * 
+	 * @param reportDataSource the server name or foundset to run the report on
+	 * @param report the report file (relative to the reports directory)
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString a string which indicates the locale
 	 * @param moveTableOfContent true in order to move the table of contents, false otherwise
+	 * @return the generated reported as a byte array
+	 * @throws Exception
+	 */
+	// public, but not scriptable - just for the corresponding Bean's usage
+	public byte[] runReportForBean(Object reportDataSource, String report, Object outputOptions, String outputType, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception
+	{
+		return runReportForBean(null, reportDataSource, null, report, outputOptions, outputType, parameters, localeString, moveTableOfContent);
+	}
+	
+	/**
+	 * @clonedesc runReportForBean(Object, String, Object, String, Object, String, Boolean)
+	 * @sampleas runReportForBean(Object, String, Object, String, Object, String, Boolean)
+	 * 
+	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE
+	 * @param reportDataSource the server name or foundset to run the report on
+	 * @param inputOptions additional input options (e.g. which node to iterate in the xml datasource document)
+	 * @param report the report file (relative to the reports directory)
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString a string which indicates the locale
+	 * @param moveTableOfContent true in order to move the table of contents, false otherwise 
 	 * 
 	 * @return the generated reported as a byte array
+	 * 
+	 * @throws Exception
 	 */
-	public byte[] js_runReport(Object source, String report, Object arg, String type, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception
+	public byte[] runReportForBean(String inputType, Object reportDataSource, String inputOptions, String report, Object outputOptions, String outputType, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception
 	{
-		return runReport(source, report, arg, type, parameters, localeString, Boolean.TRUE.equals(moveTableOfContent), false);
+		return runReport(inputType, reportDataSource, inputOptions, report, outputOptions, outputType, parameters, localeString, Boolean.TRUE.equals(moveTableOfContent), true);
 	}
 
-	// public, but not scriptable - just for the corresponding Bean's usage
-	public byte[] runReportForBean(Object source, String report, Object arg, String type, Object parameters, String localeString, Boolean moveTableOfContent) throws Exception
+	/**
+	 * @clonedesc runReportForBean(Object, String, Object, String, Object, String, Boolean)
+	 * @sampleas runReportForBean(Object, String, Object, String, Object, String, Boolean)
+	 * 
+	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE
+	 * @param reportDataSource the server name or foundset to run the report on
+	 * @param inputOptions additional input options (e.g. which node to iterate in the xml datasource document)
+	 * @param reportName the report file (relative to the reports directory)
+	 * @param outputOptions the output file (must specify an absolute path) or null if not needed
+	 * @param outputType the output format; use the constants node for available output formats
+	 * @param parameters a parameter map to be used when running the report
+	 * @param localeString a string which indicates the locale
+	 * @param moveTableOfContent true in order to move the table of contents, false otherwise
+	 * @param returnJustJasperPrint true if we want to use the current functin for the bean viewer functionality
+	 * 
+	 * @return the generated reported as a byte array
+	 * 
+	 * @throws Exception
+	 */
+	private byte[] runReport(String inputType, Object reportDataSource, String inputOptions, String reportName, Object outputOptions, String outputType, Object parameters, String localeString, boolean moveTableOfContent, boolean returnJustJasperPrint) throws Exception
 	{
-		return runReport(source, report, arg, type, parameters, localeString, Boolean.TRUE.equals(moveTableOfContent), true);
-	}
-
-	private byte[] runReport(Object source, String report, Object arg, String exportFormat, Object parameters, String localeString, boolean moveTableOfContent, boolean returnJustJasperPrint) throws Exception
-	{
-
 		// Check if the directory.jasper.report setting has not yet been set.
 		String pluginReportsDirectory = plugin.getJasperReportsDirectory();
 		if (pluginReportsDirectory == null || (pluginReportsDirectory != null && ("").equals(pluginReportsDirectory.trim())))
@@ -317,32 +450,15 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			throw new Exception(noPluginDirMsg);
 		}
 
-		String type = exportFormat.toLowerCase();
-
-		// unwrapping of arguments
-		source = JSArgumentsUnwrap.unwrapJSObject(source, plugin.getIClientPluginAccess());
+		// unwrapping of datasource and parameters
+		reportDataSource = JSArgumentsUnwrap.unwrapJSObject(reportDataSource, plugin.getIClientPluginAccess());
+		@SuppressWarnings("unchecked")
 		Map<String, Object> params = (Map<String, Object>) JSArgumentsUnwrap.unwrapJSObject(parameters, plugin.getIClientPluginAccess());
-		if (params == null) params = new HashMap<String, Object>();
-
-		boolean showPrintDialog = false;
-		String file = "";
-		boolean nooutput = false;
-		if (arg instanceof String)
-		{
-			file = arg.toString();
+		if (params == null) {
+			params = new HashMap<String, Object>();
 		}
-		else if (arg instanceof Boolean)
-		{
-			showPrintDialog = Utils.getAsBoolean(arg);
-		}
-		else
-		{
-			if (arg != null) file = arg.toString(); // To support passing in a
-													// JSFile object
-			else nooutput = true;
-		}
-
-		if (source == null)
+		
+		if (reportDataSource == null)
 		{
 			throw new Exception("No data source <null> has been provided");
 		}
@@ -350,30 +466,12 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 
 		IJasperReportsService jasperReportService = plugin.connectJasperService();
 
-		// check out type of data source (and how to run reports)
-		IJasperReportRunner jasperReportRunner;
-		String txid = null;
-		if (source instanceof String)
-		{
-			txid = plugin.getIClientPluginAccess().getDatabaseManager().getTransactionID((String) source);
-			jasperReportRunner = jasperReportService; // run report remote
-		}
-		else if (source instanceof JRDataSource)
-		{
-			jasperReportRunner = new JasperReportRunner(jasperReportService); // run
-																				// reports
-																				// in
-																				// client
-		}
-		else
-		{
-			throw new Exception("Unsupported data source: " + source.getClass());
-		}
+		// decide the appropriate report runner (server/remote or client) 
+		IJasperReportRunner jasperReportRunner = getReportRunner(jasperReportService, inputType, reportDataSource);
 
 		// in case the server is not started in developer
 		if (jasperReportService != null)
 		{
-
 			// needed before filling
 			jasperReportsLocalService.set(jasperReportService);
 			jasperReportsLocalClientID.set(this.getPluginClientID());
@@ -388,12 +486,14 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				int applicationType = plugin.getIClientPluginAccess().getApplicationType();
 				JasperReportsI18NHandler.appendI18N(params, applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString);
 
+				// subreport running own factory setting
 				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "com.servoy.plugins.jasperreports.ServoyThreadSubreportRunnerFactory");
 
-				// Fill the report and get the JasperPrint instance.
-				// Also modify the JasperPrint in case you want to move the
-				// table of contents.
-				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), source, txid, report, params, relativeReportsDir, relativeExtraDirs);
+				// Fill the report and get the JasperPrint instance; also modify the JasperPrint in case you want to move the table of contents.
+				// we only have a transaction id for the reports run on the server
+				String txid = (reportDataSource instanceof String && jasperReportRunner instanceof IJasperReportsService) ? plugin.getIClientPluginAccess().getDatabaseManager().getTransactionID((String) reportDataSource) : null;
+				//OLD: JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), reportDataSource, txid, reportName, params, relativeReportsDir, relativeExtraDirs);
+				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), inputType, reportDataSource, inputOptions, txid, reportName, params, relativeReportsDir, relativeExtraDirs);
 
 				if (moveTableOfContent)
 				{
@@ -401,242 +501,22 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 					jp = moveTableOfContents(jp, iP);
 				}
 
-				// this is for the JasperViewerServoyBean
+				byte[] resultExportedJasperReport = null;
 				if (returnJustJasperPrint)
 				{
+					// this is for the JasperViewerServoyBean
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					JRSaver.saveObject(jp, baos);
-					return baos.toByteArray();
+					resultExportedJasperReport = baos.toByteArray();
 				}
-
-				Map<String, Object> exporterParams = createExporterParametersMap(params);
-				byte[] jsp = null;
-
-				// we need the REPORT_FILE_LOCATION parameters for html/xhtml based reporting in all client type scenarios 
-				if (!nooutput)
+				else 
 				{
-					String fileLocation = new File(file).getParent();
-					exporterParams.put("REPORT_FILE_LOCATION", fileLocation);
+					// all other export formats come here
+					resultExportedJasperReport = getExportedJasperReport(jasperReportService, jp, outputType, outputOptions, params, localeString, applicationType);
 				}
+
+				return resultExportedJasperReport;
 				
-				// 1. WebClient
-				if (applicationType == IClientPluginAccess.WEB_CLIENT)
-				{
-
-					String mimeType = "application/octet-stream";
-					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
-					}
-					else if (type.equals(OUTPUT_FORMAT.PDF))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
-					}
-					else if (type.equals(OUTPUT_FORMAT.CSV))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_CSV;
-					}
-					else if (type.equals(OUTPUT_FORMAT.DOCX))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_DOCX;
-					} 
-					else if (type.equals(OUTPUT_FORMAT.XLSX))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XLSX;
-					}
-					else if (type.equals(OUTPUT_FORMAT.EXCEL))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
-					}
-					else if (type.equals(OUTPUT_FORMAT.HTML))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_HTML;
-					}
-					else if (type.equals(OUTPUT_FORMAT.ODS))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_ODS;
-					}
-					else if (type.equals(OUTPUT_FORMAT.ODT))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_ODT;
-					}
-					else if (type.equals(OUTPUT_FORMAT.RTF))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_RTF;
-					}
-					else if (type.equals(OUTPUT_FORMAT.TXT))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_TXT;
-					}
-					else if (type.equals(OUTPUT_FORMAT.XHTML))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XHTML;
-					}
-					else if (type.equals(OUTPUT_FORMAT.XLS))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
-					}
-					else if (type.equals(OUTPUT_FORMAT.XLS_1_SHEET))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
-					}
-					else if (type.equals(OUTPUT_FORMAT.XML))
-					{
-						mimeType = JasperReportsWebViewer.MIME_TYPE_XML;
-					}
-					else
-					{
-						throw new Exception("JasperTrace: Jasper Exception: Unsupported web client output format");
-					}
-
-					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT))
-					{
-						jsp = JasperReportRunner.getJasperBytes("pdf", jp, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
-						JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, "pdf", mimeType);
-					}
-					else
-					{
-						jsp = JasperReportRunner.getJasperBytes(type, jp, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
-						if (nooutput)
-						{
-							JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), jsp, file, type, mimeType);
-						}
-						else
-						{
-							saveByteArrayToFile(file, jsp);
-						}
-					}
-				}
-				else if (applicationType == IClientPluginAccess.HEADLESS_CLIENT)
-				{
-					// for view and print we default to pdf - printing to file
-					if (nooutput) throw new Exception("JasperTrace: Jasper Exception: Please specify an output file when calling jasper from a headless client.");
-					
-					if (type.equals(OUTPUT_FORMAT.VIEW) || type.equals(OUTPUT_FORMAT.PRINT)) type = "pdf"; 
-					
-					jsp = JasperReportRunner.getJasperBytes(type, jp, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
-					saveByteArrayToFile(file, jsp);
-				}
-				// 2. SmartClient
-				else
-				{
-
-					// a. SmartClient "view"
-					if (type.toLowerCase().startsWith("view"))
-					{
-						CustomizedJasperViewer jasperviewer;
-
-						if (localeString != null)
-						{
-							jasperviewer = new CustomizedJasperViewer(jp, false, new Locale(localeString));
-						}
-						else
-						{
-							jasperviewer = new CustomizedJasperViewer(jp, false);
-						}
-
-						if (viewerExportFormats != null) setViewerSaveContributors(jasperviewer.getJRViewer(), viewerExportFormats);
-
-						if (viewerTitle != null) jasperviewer.setTitle(viewerTitle);
-						if (viewerIconURL != null)
-						{
-							URL mediaURL = null;
-							try
-							{
-								mediaURL = new URL(viewerIconURL);
-							}
-							catch (MalformedURLException ex)
-							{
-								// fallback to media:///
-								try
-								{
-									mediaURL = new URL("media:///" + viewerIconURL);
-								}
-								catch (MalformedURLException ex1)
-								{
-									Debug.error(ex1);
-								}
-							}
-							if (mediaURL != null) jasperviewer.setIconImage(new ImageIcon(mediaURL).getImage());
-						}
-
-						if (jp != null && jp.getPages() != null && jp.getPages().size() > 0)
-						{
-							jasperviewer.setVisible(true);
-							jasperviewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-						}
-						else
-						{
-							jasperviewer.dispose();
-						}
-					}
-
-					// b. SmartClient "print"
-					// Printing only supported in SC. Printing in WC handled
-					// previously though PDF push.
-					else if (type.toLowerCase().startsWith("print"))
-					{
-						// Shows print dialog before printing (if arg is
-						// true/"true")
-						if (showPrintDialog || file.equalsIgnoreCase("true") || file == null)
-						{
-							JasperPrintManager.printReport(jp, true);
-						}
-						// Skips print dialog (if arg is false/"false" or null)
-						else if ((!showPrintDialog && file.equals("")) // also
-																		// equivalent
-																		// to
-																		// arg
-																		// ==
-																		// null
-								|| file.equalsIgnoreCase("false") || file.equalsIgnoreCase("default"))
-						{
-							JasperPrintManager.printReport(jp, false);
-						}
-						// Assumes parameter file contains a printerName
-						else
-						{
-							Debug.trace("JasperTrace: printer: " + file);
-							PrinterJob printJob = PrinterJob.getPrinterJob();
-							// fix for bug ID 6255588 from Sun bug database
-							initPrinterJobFields(printJob);
-							/*
-							 * or another workaround try { printerJob.setPrintService (printerJob.getPrintService()); } catch (PrinterException e) {}
-							 */
-
-							if (setPrintService(printJob, file))
-							{
-								JasperReportsPrinter.printPages(jp, printJob);
-							}
-							else
-							{
-								Debug.trace("JasperTrace: unable to specify printer: " + file);
-							}
-						}
-						// 3. SmartClient other output formats
-					}
-					else
-					{
-						// check if we must force the export on the client
-						if (forceClientSideExporting(type)) 
-						{
-							// in some cases we must render on the client, so that resource paths are correctly created (i.e. html/xhtml extra folders..)
-							jsp = JasperReportRunner.getJasperBytes(type, jp ,jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
-						} 
-						else
-						{
-							// the following will be executed on the server (!)
-							jsp = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(), type, jp, relativeExtraDirs, exporterParams);
-						}
-						
-						if (!nooutput)
-						{
-							saveByteArrayToFile(file, jsp);
-						}
-					}
-				}
-				Debug.trace("JasperTrace: JasperReport finished");
-				return jsp;
 			}
 			catch (Exception e)
 			{
@@ -653,6 +533,553 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		}
 		Debug.error("JasperTrace: Jasper Exception: No service running");
 		throw new Exception("JasperTrace: Jasper Exception: No service running");
+	}
+	
+	/**
+	 * This method decides the appropriate report runner (server/remote or client) based on the input type and data source.
+	 * If throws an exception if the source does not match the input type or if the data source is unsupported.
+	 * 
+	 * @param jasperReportService the server service
+	 * @param inputType the report input type
+	 * @param reportDataSource the report data source
+	 * 
+	 * @return the report runner (client or server service)
+	 * 
+	 * @throws Exception
+	 */
+	private IJasperReportRunner getReportRunner(IJasperReportsService jasperReportService, String inputType, Object reportDataSource) throws Exception {
+		IJasperReportRunner jasperReportRunner = null;
+		if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType))  {
+			if (reportDataSource instanceof JRDataSource) {
+				jasperReportRunner = new JasperReportRunner(jasperReportService); // run reports in clients
+			} else { 
+				throw new Exception("Source does not match inputtype: " + inputType + " / " + reportDataSource.getClass());
+			}
+		} else if (INPUT_TYPE.DB.equalsIgnoreCase(inputType)) {
+			if (reportDataSource instanceof String) {
+				jasperReportRunner = jasperReportService; // run report remote (on the server)
+			}
+			else { 
+				throw new Exception("Unsupported data source: " + reportDataSource.getClass());
+			}
+		} else {
+			
+			if (inputType != null) {
+				// we have some report type..
+				jasperReportRunner = jasperReportService; // run report remote
+			} else {
+				// legacy/default behavior: inputType is null, XML or CSV
+				if (reportDataSource instanceof String) {
+					jasperReportRunner = jasperReportService; // run report remote
+				} else if (reportDataSource instanceof JRDataSource) {
+					jasperReportRunner = new JasperReportRunner(jasperReportService); // run reports in client
+				} else {
+					throw new Exception("Unsupported data source: " + reportDataSource.getClass());
+				}
+			}
+		}
+		return jasperReportRunner;
+	}
+	
+	/**
+	 * This method should do the "real" exporting, i.e. call the report service/runner to generate/exported the report, 
+	 * considering the options and parameters provided.
+	 * 
+	 * @param jasperReportService the server service
+	 * @param rawJasperPrint the raw jasper print
+	 * @param outputType the type of export
+	 * @param outputOptions the output options (i.e. file name to export to or specific options for the print output type)
+	 * @param params the parameters for the report
+	 * @param localeString the locale identifying string
+	 * @param applicationType the application type (smart/web/headless client)
+	 * 
+	 * @return the exported jasper report as an array of bytes
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	private byte[] getExportedJasperReport(IJasperReportsService jasperReportService, JasperPrint rawJasperPrint, String outputType, Object outputOptions, Map<String, Object> params, String localeString, int applicationType) throws Exception 
+	{
+		Debug.trace("JasperTrace: JasperReport starting");
+		
+		// the result of the export
+		byte[] exportResult = null;
+		
+		String type = outputType.toLowerCase();
+		String fileName = null;
+		String printerName = null;
+		boolean showPrintDialog = false;
+		// "nooutput" is true when (outputOptions == null)
+		
+		// process the output options
+		Map<String,Object> auxArgs = new HashMap<String,Object>(); // FIXME are these args ever used? (the key/values?)
+		if (outputOptions instanceof String)
+		{
+			fileName = outputOptions.toString();
+			auxArgs.put("FILENAME", fileName);
+		}
+		else if (outputOptions instanceof Boolean)
+		{
+			showPrintDialog = Utils.getAsBoolean(outputOptions);
+			auxArgs.put("SHOWPRINTDIALOG", showPrintDialog);
+		}
+		else	
+		{
+			if (outputOptions != null) 
+			{
+				// the map coming in here (new for XML/CSV dataources feature) 
+				if (outputOptions instanceof Map) 
+				{
+					auxArgs = (Map<String,Object>) JSArgumentsUnwrap.unwrapJSObject(outputOptions, plugin.getIClientPluginAccess());
+					if (auxArgs.containsKey("PRINTERNAME")) 
+					{
+						printerName = (String) auxArgs.get("PRINTERNAME");
+					}
+					if (auxArgs.containsKey("FILENAME"))
+					{
+						fileName = (String) auxArgs.get("FILENAME");
+					}
+					if (auxArgs.containsKey("SHOWPRINTDIALOG"))
+					{
+						showPrintDialog = (Boolean) auxArgs.get("SHOWPRINTDIALOG");
+					}
+				}
+				else
+				{
+					// To support passing in a JSFile object
+					fileName = outputOptions.toString();
+				}
+			}
+		}
+		
+		// some backwards compatibility
+		if (type.startsWith("print") ) 
+		{ 
+			if ((fileName == null) || fileName.equalsIgnoreCase("true"))
+			{
+				fileName = null; 
+				showPrintDialog = true;
+			}
+			else if ((!showPrintDialog && fileName.equals("")) || fileName.equalsIgnoreCase("false") || fileName.equalsIgnoreCase("default"))
+			{
+				fileName = null; 
+				showPrintDialog = false;
+			}	
+			else 
+			{ 
+				if (printerName == null)
+				{
+					printerName = fileName;
+				}
+			}
+		}	
+		
+		// this may occur when calling getExportedJasperReport from mergeReport with no params map
+		if (params == null) 
+		{
+			params = new HashMap<String, Object>();
+		}
+		
+		// add the auxiliary arguments to the parameters map
+		if (auxArgs != null && !auxArgs.isEmpty()) 
+		{
+			params.putAll(auxArgs);
+		}
+		Map<String, Object> exporterParams = createExporterParametersMap(params);
+		// should not occur, but the call above may return null
+		if (exporterParams == null) 
+		{
+			exporterParams = new HashMap<String, Object>();
+		}
+		if (outputOptions != null && fileName != null)
+		{
+			// we need the REPORT_FILE_LOCATION parameters for HTML/XHTML based exporting, in all client type scenarios 
+			exporterParams.put("REPORT_FILE_LOCATION", new File(fileName).getParent());
+		}
+		
+		// 1. WebClient
+		if (applicationType == IClientPluginAccess.WEB_CLIENT)
+		{
+			exportResult = handleWebClientExport(jasperReportService, rawJasperPrint, type, outputOptions, fileName, exporterParams);
+		}
+		// 2. HeadlessClient
+		else if (applicationType == IClientPluginAccess.HEADLESS_CLIENT)
+		{
+			exportResult = handleHeadlessClientExport(jasperReportService, rawJasperPrint, type, outputOptions, fileName, exporterParams);
+		}
+		// 3. SmartClient (default)
+		else
+		{
+			exportResult = handleSmartClientExport(jasperReportService, rawJasperPrint, type, outputOptions, fileName, showPrintDialog, localeString, exporterParams);
+		}
+		Debug.trace("JasperTrace: JasperReport finished");
+		
+		return exportResult;
+	}
+	
+	/**
+	 * This method handles the web client specific export and returns the exported report as a byte array.
+	 * 
+	 * @param jasperReportService the report service (client or server)
+	 * @param rawJasperPrint the raw (filled) jasper print to be exported
+	 * @param outputType the export type
+	 * @param outputOptions the output options (i.e. file name to export to or specific options for the print output type)
+	 * @param fileName the name of the file to export to or the printer name
+	 * @param exporterParams the parameters for the exporter
+	 * 
+	 * @return the exported report as a byte array
+	 * 
+	 * @throws Exception
+	 */
+	private byte[] handleWebClientExport(IJasperReportsService jasperReportService, JasperPrint rawJasperPrint, String outputType, Object outputOptions, String fileName, Map<String, Object> exporterParams) throws Exception 
+	{
+		byte[] exportResult = null;
+		String mimeType = getWebClientMimeTypeUsingExportType(outputType);
+		if (outputType.equals(OUTPUT_FORMAT.VIEW) || outputType.equals(OUTPUT_FORMAT.PRINT))
+		{
+			exportResult = JasperReportRunner.getJasperBytes("pdf", rawJasperPrint, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
+			JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), exportResult, fileName, "pdf", mimeType);
+		}
+		else
+		{
+			exportResult = JasperReportRunner.getJasperBytes(outputType, rawJasperPrint, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
+			if (outputOptions == null)
+			{
+				JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), exportResult, fileName, outputType, mimeType);
+			}
+			else
+			{
+				saveByteArrayToFile(fileName, exportResult);
+			}
+		}	
+		return exportResult;
+	}
+	
+	/**
+	 * This method handles the headless client specific export and returns the exported report as a byte array.
+	 * 
+	 * @param jasperReportService the report service (client or server)
+	 * @param rawJasperPrint the raw (filled) jasper print to be exported
+	 * @param outputType the export type
+	 * @param outputOptions the output options (i.e. file name to export to or specific options for the print output type)
+	 * @param fileName the name of the file to export to or the printer name
+	 * @param exporterParams the parameters for the exporter
+	 * 
+	 * @return the exported report as a byte array
+	 * 
+	 * @throws Exception
+	 */
+	private byte[] handleHeadlessClientExport(IJasperReportsService jasperReportService, JasperPrint rawJasperPrint, String outputType, Object outputOptions, String fileName, Map<String, Object> exporterParams) throws Exception
+	{
+		byte[] exportResult = null;
+
+		// for view and print we default to pdf - printing to file
+		if (outputOptions == null) throw new Exception("JasperTrace: Jasper Exception: Please specify an output file when calling jasper from a headless client.");
+		
+		if (outputType.equals(OUTPUT_FORMAT.VIEW) || outputType.equals(OUTPUT_FORMAT.PRINT)) outputType = "pdf"; 
+		
+		exportResult = JasperReportRunner.getJasperBytes(outputType, rawJasperPrint, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
+		saveByteArrayToFile(fileName, exportResult);
+		
+		return exportResult;
+	}
+	
+	/**
+	 * This method handles the smart client specific export. It also returns the exported report as a byte array.
+	 * 
+	 * @param jasperReportService the report service (client or server)
+	 * @param rawJasperPrint the raw (filled) jasper print to be exported
+	 * @param outputType the export type
+	 * @param outputOptions the output options (i.e. file name to export to or specific options for the print output type)
+	 * @param fileName the name of the file to export to or the printer name
+	 * @param showPrintDialog true if the system print dialog is shown; false otherwise 
+	 * @param localeString the locale identifying string
+	 * @param exporterParams the parameters for the exporter
+	 * 
+	 * @return the exported report as a byte array
+	 * 
+	 * @throws Exception
+	 */
+	private byte[] handleSmartClientExport(IJasperReportsService jasperReportService, JasperPrint rawJasperPrint, String outputType, Object outputOptions, String fileName, boolean showPrintDialog, String localeString, Map<String, Object> exporterParams) throws Exception
+	{
+		byte[] exportResult = null;
+		
+		// a. SmartClient "view"
+		if (outputType.startsWith(OUTPUT_FORMAT.VIEW))
+		{
+			CustomizedJasperViewer jasperviewer;
+			if (localeString != null)
+			{
+				jasperviewer = new CustomizedJasperViewer(rawJasperPrint, false, new Locale(localeString));
+			}
+			else
+			{
+				jasperviewer = new CustomizedJasperViewer(rawJasperPrint, false);
+			}
+
+			// add our own preferences to the customized jasper viewer
+			if (viewerExportFormats != null) setViewerSaveContributors(jasperviewer.getJRViewer(), viewerExportFormats);
+			if (viewerTitle != null) jasperviewer.setTitle(viewerTitle);
+			if (viewerIconURL != null)
+			{
+				URL mediaURL = null;
+				try
+				{
+					mediaURL = new URL(viewerIconURL);
+				}
+				catch (MalformedURLException ex)
+				{
+					// fallback to media:///
+					try
+					{
+						mediaURL = new URL("media:///" + viewerIconURL);
+					}
+					catch (MalformedURLException ex1)
+					{
+						Debug.error(ex1);
+					}
+				}
+				if (mediaURL != null) jasperviewer.setIconImage(new ImageIcon(mediaURL).getImage());
+			}
+
+			if (rawJasperPrint != null && rawJasperPrint.getPages() != null && rawJasperPrint.getPages().size() > 0)
+			{
+				jasperviewer.setVisible(true);
+				jasperviewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			}
+			else
+			{
+				jasperviewer.dispose();
+			}
+		}
+		// b. SmartClient "print". Printing only supported in SC. Printing in WC handled previously though PDF push.
+		else if (outputType.startsWith(OUTPUT_FORMAT.PRINT))
+		{
+			// Shows print dialog before printing (if arg is true/"true")
+			if (showPrintDialog || fileName.equalsIgnoreCase("true") || fileName == null)
+			{
+				JasperPrintManager.printReport(rawJasperPrint, true);
+			}
+			// Skips print dialog (if arg is false/"false" or null)
+			else if ((!showPrintDialog && fileName.equals("")) // also equivalent to arg == null
+					|| fileName.equalsIgnoreCase("false") || fileName.equalsIgnoreCase("default"))
+			{
+				JasperPrintManager.printReport(rawJasperPrint, false);
+			}
+			// Assumes parameter file contains a printerName
+			else
+			{
+				Debug.trace("JasperTrace: printer: " + fileName);
+				PrinterJob printJob = PrinterJob.getPrinterJob();
+				// fix for bug ID 6255588 from Sun bug database
+				initPrinterJobFields(printJob);
+				/*
+				 * or another workaround try { printerJob.setPrintService (printerJob.getPrintService()); } catch (PrinterException e) {}
+				 */
+
+				if (setPrintService(printJob, fileName))
+				{
+					JasperReportsPrinter.printPages(rawJasperPrint, printJob);
+				}
+				else
+				{
+					Debug.trace("JasperTrace: unable to specify printer: " + fileName);
+				}
+			}
+		}
+		// c. SmartClient other output formats
+		else
+		{
+			// check if we must force the export on the client
+			if (forceClientSideExporting(outputType)) 
+			{
+				// in some cases we must render on the client, so that resource paths are correctly created (i.e. html/xhtml extra folders..)
+				exportResult = JasperReportRunner.getJasperBytes(outputType, rawJasperPrint ,jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
+			} 
+			else
+			{
+				// the following will be executed on the server (!)
+				exportResult = jasperReportService.getJasperBytes(plugin.getIClientPluginAccess().getClientID(), outputType, rawJasperPrint, relativeExtraDirs, exporterParams);
+			}
+			
+			if (outputOptions != null)
+			{
+				saveByteArrayToFile(fileName, exportResult);
+			}
+		}
+		
+		return exportResult;
+	}
+	
+	/**
+	 * Helper method to get the webclient mime type for the export.
+	 * 
+	 * @param exportType the report indicated export type
+	 * 
+	 * @return the corresponding web mime type
+	 * 
+	 * @throws Exception
+	 */
+	private String getWebClientMimeTypeUsingExportType(String exportType) throws Exception
+	{
+		String mimeType = null; //"application/octet-stream";
+		// TODO refactor to use a switch (java 7 and above..) or use a map perhaps
+		if (exportType.equals(OUTPUT_FORMAT.VIEW) || exportType.equals(OUTPUT_FORMAT.PRINT))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.PDF))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.CSV))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_CSV;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.DOCX))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_DOCX;
+		} 
+		else if (exportType.equals(OUTPUT_FORMAT.XLSX))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_XLSX;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.EXCEL))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.HTML))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_HTML;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.ODS))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_ODS;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.ODT))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_ODT;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.RTF))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_RTF;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.TXT))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_TXT;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.XHTML))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_XHTML;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.XLS))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.XLS_1_SHEET))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_XLS;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.XML))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_XML;
+		}
+		else
+		{
+			throw new Exception("JasperTrace: Jasper Exception: Unsupported web client output format: " + exportType);
+		}
+		return mimeType;
+	}
+	
+	/**
+	 * Function to merge two or more reports into a single report file.
+	 * 
+	 * @param printList the list of reports to merge; the objects in the list must be jasperPrint objects (or reports exported as jasper print)
+	 * @param orientation the orientation of the result report
+	 * @param outputType the output type of the result report
+	 * @param outputOptions the output options of the report, as provided for the runReport function
+	 * @param localeString localeString the string which specifies the locale
+	 * 
+	 * @return the result report as an Object
+	 * 
+	 * @throws Exception
+	 */
+	public Object js_mergeJasperPrint(ArrayList<Object> printList, String orientation, String outputType, Object outputOptions, String localeString) throws Exception 
+	{
+		Object result = null;
+		
+		try {
+			if ((printList != null) && (printList.size() > 0)) {
+
+				JasperPrint mergedJRPrint = new JasperPrint();
+
+				mergedJRPrint.setName("printedDocs");
+
+				// NOTE: fixed size A4 here for merging, as no other formats used currently!!!
+				int pageHeight = 842;
+				int pageWidth = 595;
+				OrientationEnum pageOrientation = OrientationEnum.PORTRAIT;
+
+				if (orientation.equalsIgnoreCase("landscape")) {
+					pageHeight = 595;
+					pageWidth = 842;
+					pageOrientation = OrientationEnum.LANDSCAPE;					
+				}
+
+				for (int i = 0; i < printList.size(); i++) 
+				{
+					Object aux = printList.get(i);
+					JasperPrint jrPrint = null;
+					if (aux instanceof byte[]) {
+						ByteArrayInputStream in = new ByteArrayInputStream((byte[]) aux);
+					    ObjectInputStream is = new ObjectInputStream(in);
+						jrPrint = (JasperPrint) is.readObject();
+					} else if (aux instanceof JasperPrint) {
+						jrPrint = (JasperPrint)aux;
+					}
+
+					// try to adjust to the current Page-Size/Orientation
+					pageHeight = jrPrint.getPageHeight();
+					pageWidth = jrPrint.getPageWidth();
+					pageOrientation = jrPrint.getOrientationValue();
+
+					Map<String, JRStyle> mergeStyles = mergedJRPrint.getStylesMap();
+					Map<String, JRStyle> aktStyles = jrPrint.getStylesMap();
+
+					Iterator<JRStyle> styleIt = aktStyles.values().iterator();
+					while (styleIt.hasNext()) {
+						JRStyle aktStyle = styleIt.next();
+						if (!mergeStyles.keySet().contains(aktStyle.getName())) {
+							mergedJRPrint.addStyle(aktStyle);
+						}
+					}
+
+					java.util.List<JRPrintPage> pageList = jrPrint.getPages();
+					for (int j = 0; j < pageList.size(); j++) {
+						mergedJRPrint.addPage(pageList.get(j));
+					}
+
+				}
+
+				mergedJRPrint.setPageHeight(pageHeight);
+				mergedJRPrint.setPageWidth(pageWidth);
+				mergedJRPrint.setOrientation(pageOrientation);
+
+				result = getExportedJasperReport(plugin.connectJasperService(), mergedJRPrint, outputType, outputOptions, null, localeString, plugin.getIClientPluginAccess().getApplicationType());
+
+			} else {
+				Debug.error("List is empty");
+				throw new Exception("List is empty");
+			}
+		}
+
+		catch (Exception ex) {
+			Debug.error(ex);
+			throw new Exception(ex.getMessage());
+		}
+		
+		return result;
+
 	}
 	
 	/**
@@ -1017,10 +1444,15 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		else return getReports(filter);
 	}
 
+	/**
+	 * Returns an array of available reports, based on the indicated filtering criteria.
+	 * @param filter a specific filter to base the results of the search on (COMPILED, NONCOMPILED or a naming criteria)
+	 * @return an array of available reports, based on the indicated filtering criteria 
+	 * @throws Exception
+	 */
 	private String[] getReports(String filter) throws Exception
 	{
 		String[] reports = null;
-
 		try
 		{
 			Debug.trace("JasperTrace: getReports starting");
@@ -1035,11 +1467,16 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		return reports;
 	}
 
+	/**
+	 * The internal method which gets the reports (compiled and/or not) from the jasper service.
+	 * @param compiled true for getting compiled reports
+	 * @param uncompiled true for getting uncompiled reports
+	 * @return a list of report names
+	 * @throws Exception
+	 */
 	private String[] getReports(boolean compiled, boolean uncompiled) throws Exception
 	{
-
 		String[] reports = null;
-
 		try
 		{
 			Debug.trace("JasperTrace: getReports starting");
@@ -1051,7 +1488,6 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			Debug.error(e);
 			throw new Exception(e.getMessage());
 		}
-
 		return reports;
 	}
 
@@ -1234,8 +1670,8 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	}
 
 	/**
-	 * 
-	 * @param jasperPrint
+	 * Finds and return the page to be inserted from the provided jasper print.
+	 * @param jasperPrint the jasper print which contains the page to insert
 	 * @return the Page, where the moved page(s) will be inserted
 	 * @performs Iterates over the JasperPrint pages searching for the FIRST appearence of the String:
 	 * "HIDDEN TEXT TO MARK THE INSERT PAGE"; and returning that particular page the Pages to move will be placed in the
@@ -1298,10 +1734,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	}
 
 	/**
-	 * 
-	 * @param JasperPrint Object - jasperPrint
-	 * @param int - insertPage (where to insert)
-	 * @return JasperPrint Object
+	 * Moves the table of contents page, from the japsper print, to the page indicated.
+	 * @param jasperPrint the jasperPrint object
+	 * @param insertPage an integer indicating where to insert the page
+	 * @return a resuting jasper print object with the inserted page 
 	 * @performs The Moving
 	 */
 	private static JasperPrint moveTableOfContents(JasperPrint jasperPrint, int insertPage)
@@ -1354,6 +1790,12 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		return jasperPrint;
 	}
 
+	/**
+	 * Converts the provided object into an array of bytes.
+	 * @param obj the input object
+	 * @return the result array of bytes
+	 * @throws java.io.IOException
+	 */
 	public static byte[] getBytes(Object obj) throws java.io.IOException
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -1366,11 +1808,21 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		return data;
 	}
 
+	/**
+	 * @return the id of the client plugin
+	 */
 	public String getPluginClientID()
 	{
 		return plugin.getIClientPluginAccess().getClientID();
 	}
 
+	/**
+	 * Creates a map containing parameters for the exporter using the map provided as input. 
+	 * This method converts the parameters provided to the run report function to parameters which are
+	 * needed (and in a format which is understood) for the exporter.
+	 * @param parameters the map with parameters for the exporter
+	 * @return a map with specific exporter parameters
+	 */
 	private Map<String, Object> createExporterParametersMap(Map<String, Object> parameters)
 	{
 		if (parameters == null) return null;
@@ -1392,5 +1844,4 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 
 		return aux;
 	}
-
 }

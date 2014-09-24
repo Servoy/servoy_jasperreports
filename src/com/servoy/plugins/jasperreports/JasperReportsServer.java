@@ -33,6 +33,7 @@
 package com.servoy.plugins.jasperreports;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -54,6 +55,8 @@ import net.sf.jasperreports.engine.JRTemplate;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRCsvDataSource;
+import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -231,74 +234,6 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			if (serviceSet) {
 				JasperReportsProvider.jasperReportsLocalService.set(null);
 			}
-			if (clientIdSet) {
-				JasperReportsProvider.jasperReportsLocalClientID.set(null);
-			}
-		}
-	}
-	
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws Exception {
-		
-		repdir = getCheckedRelativeReportsPath(repdir);
-		
-		String dbalias = null;
-		JRDataSource jrds = null;
-		
-		if (source == null) {
-			throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
-		}
-
-		if (source instanceof String) {
-			dbalias = (String)source;
-		} else if (source instanceof JRDataSource) {
-			jrds = (JRDataSource) source;
-		}
-
-		Connection conn = null;
-
-		if (report == null) {
-			throw new IllegalArgumentException("No jasperReport <null> has been found or loaded");
-		}
-		
-		boolean serviceSet = false;
-		if (JasperReportsProvider.jasperReportsLocalService.get() == null) {
-			serviceSet = true;
-			JasperReportsProvider.jasperReportsLocalService.set(this);
-		}
-
-		boolean clientIdSet = false; //clientId setting for the server threadLocal
-		if (JasperReportsProvider.jasperReportsLocalClientID.get() == null) {
-			clientIdSet = true;
-			JasperReportsProvider.jasperReportsLocalClientID.set(clientID);
-		}
-		
-		try {
-			if (dbalias != null) {
-				Debug.trace("JasperTrace: getconnection for: " + dbalias);
-				conn = application.getDBServerConnection(dbalias, txid);
-				if (conn == null) {
-					throw new IllegalArgumentException("No connection returned for database: " + dbalias);
-				}
-			}
-
-			Debug.trace("JasperTrace: Directory: " + repdir);
-			
-			JasperReport jasperReport = getJasperReport(clientID, report, repdir);
-			
-			return JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, repdir, getCheckedExtraDirectoriesRelativePath(extraDirs));
-
-		} finally {
-			if (conn != null)
-				if (txid != null) {
-					Utils.releaseConnection(conn);
-				} else {
-					Utils.closeConnection(conn);
-				}
-				
-			if (serviceSet) {
-				JasperReportsProvider.jasperReportsLocalService.set(null);
-			}
-			
 			if (clientIdSet) {
 				JasperReportsProvider.jasperReportsLocalClientID.set(null);
 			}
@@ -1006,5 +941,130 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			return false; //NO access
 		}
 	}
+
+	/**
+	 * @deprecated use {@link #getJasperPrint(String, String, Object, String, String, String, Map, String, String)}
+	 */
+	public JasperPrint getJasperPrint(String clientID, Object reportDataSource, String txid, String reportName, Map<String, Object> parameters, String repdir, String extraDirs) throws Exception {
+		return getJasperPrint(null, clientID, reportDataSource, null, txid, reportName, parameters, repdir, extraDirs);
+	}
+	
+	@Override
+	public JasperPrint getJasperPrint(String clientID, String inputType, Object reportDataSource, String inputOptions, String txid,
+			String reportName, Map<String, Object> parameters, String relativeReportsDir, String relativeExtraDirs) throws RemoteException, Exception {
+
+		// first and most important checks: we need a report (name) and a datasource
+		if (reportName == null) {
+			throw new IllegalArgumentException("No jasperReport <null> has been found or loaded");
+		}
+		if (reportDataSource == null) {
+			throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
+		}
+		
+		// members
+		String dbalias = null;
+		JRDataSource jrds = null;
+		Connection conn = null;
+		JRXmlDataSource dataXMLSource = null;
+		JRCsvDataSource dataCSVSource = null;
+		JRDataSource dataJRSource = null;
+		String dataStrSource = null;
+		
+		// for legacy purposes (FIXME duplicates or similar around line 1016 )
+		if (inputType == null) {
+			if (reportDataSource instanceof String) {
+				dbalias = (String)reportDataSource;
+				inputType = INPUT_TYPE.DB;
+			} else if (reportDataSource instanceof JRDataSource) {
+				jrds = (JRDataSource) reportDataSource;
+				inputType = INPUT_TYPE.JRD;
+			}
+		}
+		
+		// safety
+		relativeReportsDir = getCheckedRelativeReportsPath(relativeReportsDir);
+		relativeExtraDirs = getCheckedExtraDirectoriesRelativePath(relativeExtraDirs);
+
+		boolean serviceSet = false;
+		if (JasperReportsProvider.jasperReportsLocalService.get() == null) {
+			serviceSet = true;
+			JasperReportsProvider.jasperReportsLocalService.set(this);
+		}
+
+		boolean clientIdSet = false; //clientId setting for the server threadLocal
+		if (JasperReportsProvider.jasperReportsLocalClientID.get() == null) {
+			clientIdSet = true;
+			JasperReportsProvider.jasperReportsLocalClientID.set(clientID);
+		}
+		
+		try {
+			Debug.trace("JasperTrace: Directory: " + relativeReportsDir);
+			
+			JasperPrint result = null;
+			JasperReport jasperReport = getJasperReport(clientID, reportName, relativeReportsDir);
+			
+			if (INPUT_TYPE.DB.equalsIgnoreCase(inputType)) {
+				dbalias = (String) reportDataSource;
+				Debug.trace("JasperTrace: getconnection for: " + dbalias);
+				conn = application.getDBServerConnection(dbalias, txid);
+				if (conn == null) {
+					throw new IllegalArgumentException("No connection returned for database: " + dbalias);
+				}
+				// FIXME find a better solution; using the connection twice is ugly
+				result = JasperReportRunner.getJasperPrint(inputType, conn, conn, jasperReport, parameters, relativeReportsDir, relativeExtraDirs);
+			}		
+			else if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType)) {
+				dataJRSource = (JRDataSource) reportDataSource;
+				result = JasperReportRunner.getJasperPrint(inputType, null, dataJRSource, jasperReport, parameters, relativeReportsDir, relativeExtraDirs);
+			}
+			else if (INPUT_TYPE.XML.equalsIgnoreCase(inputType)) {
+				dataStrSource = (String) reportDataSource;
+				byte[] bytes = dataStrSource.getBytes("UTF-8");
+				dataXMLSource = new JRXmlDataSource(new ByteArrayInputStream(bytes), inputOptions);
+				result = JasperReportRunner.getJasperPrint(inputType, null, dataXMLSource, jasperReport, parameters, relativeReportsDir, relativeExtraDirs);
+			} else if (INPUT_TYPE.CSV.equalsIgnoreCase(inputType)) {
+				dataStrSource = (String) reportDataSource;
+				byte[] bytes = dataStrSource.getBytes("UTF-8");
+				dataCSVSource = new JRCsvDataSource(new ByteArrayInputStream(bytes));
+				inputOptions = (inputOptions == null) ? "," : inputOptions;
+				dataCSVSource.setFieldDelimiter(inputOptions.charAt(0));
+				// dataCSVSource.setFieldDelimiter(',');
+				dataCSVSource.setRecordDelimiter("\n");
+				dataCSVSource.setUseFirstRowAsHeader(true);
+				result = JasperReportRunner.getJasperPrint(inputType, null, dataCSVSource, jasperReport, parameters, relativeReportsDir, relativeExtraDirs);
+			} else {
+				
+				// no input type specified (legacy behavior)
+				if (dbalias != null) {
+					Debug.trace("JasperTrace: getconnection for: " + dbalias);
+					conn = application.getDBServerConnection(dbalias, txid);
+					if (conn == null) {
+						throw new IllegalArgumentException("No connection returned for database: " + dbalias);
+					}
+				}
+				result = JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, relativeReportsDir, relativeExtraDirs);
+			}
+				
+			//return JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, relativeReportsDir, getCheckedExtraDirectoriesRelativePath(relativeExtraDirs));
+			return result;
+
+		} finally {
+			if (conn != null)
+				if (txid != null) {
+					Utils.releaseConnection(conn);
+				} else {
+					Utils.closeConnection(conn);
+				}
+				
+			if (serviceSet) {
+				JasperReportsProvider.jasperReportsLocalService.set(null);
+			}
+			
+			if (clientIdSet) {
+				JasperReportsProvider.jasperReportsLocalClientID.set(null);
+			}
+		}
+	}
+	
 	
 }

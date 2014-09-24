@@ -46,6 +46,8 @@ import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRCsvDataSource;
+import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import net.sf.jasperreports.engine.export.FileHtmlResourceHandler;
 import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.HtmlResourceHandler;
@@ -100,36 +102,38 @@ public class JasperReportRunner implements IJasperReportRunner
 	{
 		this.jasperReportsService = jasperReportsService;
 	}
-
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception
+	
+	/**
+	 * @deprecated use {@link #getJasperPrint(String, String, Object, String, String, String, Map, String, String)}
+	 */
+	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception {
+		return getJasperPrint(clientID, null, source, null, txid, report, parameters, repdir, extraDirs); 
+	}
+	
+	public JasperPrint getJasperPrint(String clientID, String inputType, Object inputSource, String inputOptions, String txid, String reportName, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception
 	{
-		if (source == null)
+		if (inputSource == null)
 		{
 			throw new IllegalArgumentException("no data source");
 		}
-		if (!(source instanceof JRDataSource))
-		{
-			throw new IllegalArgumentException("non-datasource argument: " + source.getClass());
-		}
 
-		if (report == null)
+		if (reportName == null)
 		{
 			throw new IllegalArgumentException("No jasperReport <null> has been found or loaded");
 		}
 
 		Debug.trace("JasperTrace: Directory: " + repdir);
 
-		JasperReport jasperReport = jasperReportsService.getJasperReport(clientID, report, repdir);
+		JasperReport jasperReport = jasperReportsService.getJasperReport(clientID, reportName, repdir);
 
-		return getJasperPrint(jasperReport, null, (JRDataSource) source, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
+		return getJasperPrint(inputType, null, inputSource, jasperReport, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
 	}
 
 	/**
-	 * if (HTML, RTF, CSV, TXT, XML exporters) {//text or char based
+	 * Check if the type matches a text of char based export type (i.e. HTML, RTF, CSV, TXT, XML export)
 	 * 
-	 *  
-	 * @param type
-	 * @return
+	 * @param type the indicated export type
+	 * @return true if the indicated export type is a text or char based export type, false otherwise
 	 */
 	private static boolean isTextOrCharBasedExport(String type) {
 		return (type.equalsIgnoreCase(OUTPUT_FORMAT.HTML) || 
@@ -140,7 +144,12 @@ public class JasperReportRunner implements IJasperReportRunner
 				type.equalsIgnoreCase(OUTPUT_FORMAT.XML));
 	}
 	
-	//if (PDF and XLS exporters) { //export to binary file formats
+	/**
+	 * Check if the type matches a binary export type (i.e. PDF and XLS export)
+	 * 
+	 * @param type the indicated export type
+	 * @return true if the indicated export type is a binary export type, false otherwise
+	 */
 	private static boolean isBinaryExport(String type) {
 		return (type.equalsIgnoreCase(OUTPUT_FORMAT.PDF) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS) ||
 				type.equalsIgnoreCase(OUTPUT_FORMAT.XLSX) || type.equalsIgnoreCase(OUTPUT_FORMAT.XLS_1_SHEET) ||
@@ -387,9 +396,63 @@ public class JasperReportRunner implements IJasperReportRunner
 
 		return baos.toByteArray();
 	}
+
+	/**
+	 * This function returns the page oriented document, using the provided compiled report template.
+	 * The result of this function can be viewed, printed, exported.
+	 * 
+	 * @param jasperReport the compiled report template object
+	 * @param connection the database specific connection
+	 * @param jrDataSource the jasperreports speific datasource object 
+	 * @param parameters the parameters map for report filling
+	 * @param repdir the relative reports directory
+	 * @param extraDirs the relative reports directory
+	 * 
+	 * @return the result as a JasperPrint, which can be viewed, printed, exported
+	 * 
+	 * @throws JRException
+	 * 
+	 * @deprecated use {@link #getJasperPrint(String, Object, String, JasperReport, Map, String, String)}
+	 */
+	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException {
+		// call new functionality
+		return getJasperPrint(null, connection, jrDataSource, jasperReport, parameters, repdir, extraDirs);
+	}
 	
-	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException
+	/**
+	 * This function returns the page oriented document, using the provided compiled report template.
+	 * The result of this function can be viewed, printed, exported.
+	 * 
+	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE 
+	 * @param conn the database specific connection
+	 * @param dataSource the jasperreports speific datasource object
+	 * @param jasperReport the compiled report template object
+	 * @param parameters the parameters map for report filling
+	 * @param repdir the relative reports directory
+	 * @param extraDirs the relative reports directory
+	 * @return the result as a JasperPrint, which can be viewed, printed, exported
+	 * 
+	 * @throws JRException
+	 */
+	public static JasperPrint getJasperPrint(String inputType, Connection conn, Object dataSource, JasperReport jasperReport, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException
 	{
+		//  TODO: possible fixes for 'xpath2' query language usage
+//		jasperReport.setProperty(
+//				"net.sf.jasperreports.query.executer.factory.plsql",
+//				"com.jaspersoft.jrx.query.PlSqlQueryExecuterFactory");
+//
+//		// Maybe this too, but not positive
+//		JRProperties.setProperty(
+//				JRQueryExecuterFactory.QUERY_EXECUTER_FACTORY_PREFIX + "plsql",
+//				"com.jaspersoft.jrx.query.PlSqlQueryExecuterFactory");
+		
+		Connection connection = conn;
+		
+		// input = connection || jrdatasource
+		if (dataSource == null) {
+			throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
+		}
+		
 		// client - fill (the compiled) report
 		Debug.trace("JasperTrace: Directory: " + repdir);
 
@@ -487,8 +550,7 @@ public class JasperReportRunner implements IJasperReportRunner
 		}
 		else if (virtualizerType != null)
 		{
-			// virtualizer type has been specified but is not of a supported
-			// type
+			// virtualizer type has been specified but is not of a supported type
 			virtErrMsg = "The virtualizer type specified '" + virtualizerType + "' is not supported.";
 			Debug.error(virtErrMsg);
 			throw new JRException(virtErrMsg);
@@ -531,21 +593,31 @@ public class JasperReportRunner implements IJasperReportRunner
 
 		// create JasperPrint using fillReport() method
 		JasperPrint jp = null;
-
-		if (connection == null && jrDataSource == null) throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
-		else try
+		try
 		{
-			if (connection != null)
-			{
+			// new approach, using the input type
+			if (INPUT_TYPE.DB.equalsIgnoreCase(inputType)) {
+				// Connection connection, JRDataSource jrDataSource
+				connection = (Connection) dataSource;
 				jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
-			}
-			else if (jrDataSource != null)
-			{
+			} else if (INPUT_TYPE.XML.equalsIgnoreCase(inputType)) {
+				JRXmlDataSource jrXMLSource = (JRXmlDataSource) dataSource;
+				jp = JasperFillManager.fillReport(jasperReport, parameters, jrXMLSource);
+			} else if (INPUT_TYPE.CSV.equalsIgnoreCase(inputType)) {
+				JRCsvDataSource jrCSVSource = (JRCsvDataSource) dataSource;
+				jp = JasperFillManager.fillReport(jasperReport, parameters, jrCSVSource);
+			} else if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType)) {
+				JRDataSource jrDataSource = (JRDataSource) dataSource;
 				jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
+			} else {
+				// for old/legacy behavior
+				if (connection != null) {
+					jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
+				} else if (dataSource != null) {
+					jp = JasperFillManager.fillReport(jasperReport, parameters, (JRDataSource)dataSource);
+				} 
 			}
-			// else
-			// throw new
-			// IllegalArgumentException("No model or db connection <null> has been found or loaded");
+			// else throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
 		}
 		catch (Exception e)
 		{
