@@ -1042,12 +1042,22 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 						throw new IllegalArgumentException("No connection returned for database: " + dbalias);
 					}
 				}
-				result = JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, relativeReportsDir, relativeExtraDirs);
+				result = JasperReportRunner.getJasperPrint(null, conn, jrds, jasperReport, parameters, relativeReportsDir, relativeExtraDirs);
 			}
 				
-			//return JasperReportRunner.getJasperPrint(jasperReport, conn, jrds, parameters, relativeReportsDir, getCheckedExtraDirectoriesRelativePath(relativeExtraDirs));
 			return result;
-
+			
+		} catch (ClassCastException classCastException) {
+			
+			String exceptionMessage = "";
+			if (inputType != null) {
+				exceptionMessage = "Input type " + inputType + " has been used with an incorrect datasource of type: " + reportDataSource.getClass();
+			} else {
+				exceptionMessage = classCastException.getMessage();
+			}
+			Debug.error(classCastException);
+			throw new Exception(exceptionMessage);
+			
 		} finally {
 			if (conn != null)
 				if (txid != null) {

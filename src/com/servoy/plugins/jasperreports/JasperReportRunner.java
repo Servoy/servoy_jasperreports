@@ -401,28 +401,6 @@ public class JasperReportRunner implements IJasperReportRunner
 	 * This function returns the page oriented document, using the provided compiled report template.
 	 * The result of this function can be viewed, printed, exported.
 	 * 
-	 * @param jasperReport the compiled report template object
-	 * @param connection the database specific connection
-	 * @param jrDataSource the jasperreports speific datasource object 
-	 * @param parameters the parameters map for report filling
-	 * @param repdir the relative reports directory
-	 * @param extraDirs the relative reports directory
-	 * 
-	 * @return the result as a JasperPrint, which can be viewed, printed, exported
-	 * 
-	 * @throws JRException
-	 * 
-	 * @deprecated use {@link #getJasperPrint(String, Object, String, JasperReport, Map, String, String)}
-	 */
-	public static JasperPrint getJasperPrint(JasperReport jasperReport, Connection connection, JRDataSource jrDataSource, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException {
-		// call new functionality
-		return getJasperPrint(null, connection, jrDataSource, jasperReport, parameters, repdir, extraDirs);
-	}
-	
-	/**
-	 * This function returns the page oriented document, using the provided compiled report template.
-	 * The result of this function can be viewed, printed, exported.
-	 * 
 	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE 
 	 * @param conn the database specific connection
 	 * @param dataSource the jasperreports speific datasource object
@@ -619,10 +597,21 @@ public class JasperReportRunner implements IJasperReportRunner
 			}
 			// else throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
 		}
+		catch (ClassCastException classCastException) 
+		{
+			String exceptionMessage = "";
+			if (inputType != null) {
+				exceptionMessage = "Input type " + inputType + " has been used with an incorrect datasource of type: " + dataSource.getClass();
+			} else {
+				exceptionMessage = classCastException.getMessage();
+			}
+			Debug.error("Error filling report", classCastException);
+			throw new JRException("Cause: " + classCastException.getCause() + "\nMessage: " + exceptionMessage);
+		}
 		catch (Exception e)
 		{
 			Debug.error("Error filling report", e);
-			throw new JRException("Cause: " + e.getCause() +"\nMessage:  " + e.getMessage());
+			throw new JRException("Cause: " + e.getCause() +"\nMessage: " + e.getMessage());
 		}
 
 		if (virtualizer != null)

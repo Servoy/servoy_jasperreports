@@ -563,12 +563,12 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				throw new Exception("Unsupported data source: " + reportDataSource.getClass());
 			}
 		} else {
-			
-			if (inputType != null) {
+			// InpuType: XML or CSV
+			if (inputType != null) { 
 				// we have some report type..
-				jasperReportRunner = jasperReportService; // run report remote
+				jasperReportRunner = jasperReportService; // run report remote (on the server)
 			} else {
-				// legacy/default behavior: inputType is null, XML or CSV
+				// legacy/default behavior (inputType is null)
 				if (reportDataSource instanceof String) {
 					jasperReportRunner = jasperReportService; // run report remote
 				} else if (reportDataSource instanceof JRDataSource) {
@@ -1020,7 +1020,8 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				int pageWidth = 595;
 				OrientationEnum pageOrientation = OrientationEnum.PORTRAIT;
 
-				if (orientation.equalsIgnoreCase("landscape")) {
+				// here is the point where orientation is decided
+				if (OrientationEnum.LANDSCAPE.getName().equalsIgnoreCase(orientation)) {
 					pageHeight = 595;
 					pageWidth = 842;
 					pageOrientation = OrientationEnum.LANDSCAPE;					
@@ -1038,10 +1039,14 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 						jrPrint = (JasperPrint)aux;
 					}
 
-					// try to adjust to the current Page-Size/Orientation
-					pageHeight = jrPrint.getPageHeight();
-					pageWidth = jrPrint.getPageWidth();
-					pageOrientation = jrPrint.getOrientationValue();
+					// try to adjust to the current Page-Size 
+					// (acostache: try to fit the size) 
+					if (pageHeight < jrPrint.getPageHeight()) {
+						pageHeight = jrPrint.getPageHeight();
+					}
+					if (pageWidth < jrPrint.getPageWidth()) {
+						pageWidth = jrPrint.getPageWidth();
+					}
 
 					Map<String, JRStyle> mergeStyles = mergedJRPrint.getStylesMap();
 					Map<String, JRStyle> aktStyles = jrPrint.getStylesMap();
