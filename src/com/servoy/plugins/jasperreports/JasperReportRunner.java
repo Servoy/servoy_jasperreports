@@ -103,13 +103,6 @@ public class JasperReportRunner implements IJasperReportRunner
 		this.jasperReportsService = jasperReportsService;
 	}
 	
-	/**
-	 * @deprecated use {@link #getJasperPrint(String, String, Object, String, String, String, Map, String, String)}
-	 */
-	public JasperPrint getJasperPrint(String clientID, Object source, String txid, String report, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception {
-		return getJasperPrint(clientID, null, source, null, txid, report, parameters, repdir, extraDirs); 
-	}
-	
 	public JasperPrint getJasperPrint(String clientID, String inputType, Object inputSource, String inputOptions, String txid, String reportName, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception
 	{
 		if (inputSource == null)
@@ -192,10 +185,10 @@ public class JasperReportRunner implements IJasperReportRunner
 			return baos.toByteArray();
 		}
 		
-		Exporter exporter = null;
+		Exporter exporter;
 		SimpleReportExportConfiguration reportExportConfiguration = null;
 		ExporterInput exporterInput = null;
-		ExporterOutput exporterOutput = null;
+		ExporterOutput exporterOutput;
 
 		/**
 		 *  Exporter type and Exporter Output
@@ -245,6 +238,8 @@ public class JasperReportRunner implements IJasperReportRunner
 				exporterOutput = new SimpleXmlExporterOutput((File)null);
 				((SimpleXmlExporterOutput)exporterOutput).setEmbeddingImages(Boolean.TRUE);
 			}
+			// should not get here
+			else throw new IllegalStateException("unexpected text based report type " + type);
 		} 
 		else if (isBinaryExport(type)) 
 		{
@@ -296,6 +291,9 @@ public class JasperReportRunner implements IJasperReportRunner
 			{
 				exporter = new JRDocxExporter();
 			}
+			// should not get here
+			else throw new IllegalStateException("unexpected binary report type " + type);
+			
 			exporterOutput = new SimpleOutputStreamExporterOutput(baos);
 		} 
 		else 
@@ -512,7 +510,12 @@ public class JasperReportRunner implements IJasperReportRunner
 		else testDir = null;
 
 		// Virtualizers
-		virtualizer = null;
+		// cleanup, if virtualizers have been used (NOTE: file virtualizer does	cleanup itself)
+		if (virtualizer != null)
+		{
+			virtualizer.cleanup();
+			virtualizer = null;
+		}
 		if (VIRTUALIZER_FILE.equalsIgnoreCase(virtualizerType))
 		{
 			virtualizer = new JRFileVirtualizer(2, pageOutDir);
@@ -570,48 +573,31 @@ public class JasperReportRunner implements IJasperReportRunner
 		}
 
 		// create JasperPrint using fillReport() method
-		JasperPrint jp = null;
-		try
-		{
-			// new approach, using the input type
-			if (INPUT_TYPE.DB.equalsIgnoreCase(inputType)) {
-				// Connection connection, JRDataSource jrDataSource
-				connection = (Connection) dataSource;
+		JasperPrint jp;
+		// new approach, using the input type
+		if (INPUT_TYPE.DB.equalsIgnoreCase(inputType) && dataSource instanceof Connection) {
+			// Connection connection, JRDataSource jrDataSource
+			connection = (Connection) dataSource;
+			jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
+		} else if (INPUT_TYPE.XML.equalsIgnoreCase(inputType) && dataSource instanceof JRXmlDataSource) {
+			JRXmlDataSource jrXMLSource = (JRXmlDataSource) dataSource;
+			jp = JasperFillManager.fillReport(jasperReport, parameters, jrXMLSource);
+		} else if (INPUT_TYPE.CSV.equalsIgnoreCase(inputType) && dataSource instanceof JRCsvDataSource) {
+			JRCsvDataSource jrCSVSource = (JRCsvDataSource) dataSource;
+			jp = JasperFillManager.fillReport(jasperReport, parameters, jrCSVSource);
+		} else if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType) && dataSource instanceof JRDataSource) {
+			JRDataSource jrDataSource = (JRDataSource) dataSource;
+			jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
+		} else {
+			// for old/legacy behavior
+			if (connection != null) {
 				jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
-			} else if (INPUT_TYPE.XML.equalsIgnoreCase(inputType)) {
-				JRXmlDataSource jrXMLSource = (JRXmlDataSource) dataSource;
-				jp = JasperFillManager.fillReport(jasperReport, parameters, jrXMLSource);
-			} else if (INPUT_TYPE.CSV.equalsIgnoreCase(inputType)) {
-				JRCsvDataSource jrCSVSource = (JRCsvDataSource) dataSource;
-				jp = JasperFillManager.fillReport(jasperReport, parameters, jrCSVSource);
-			} else if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType)) {
-				JRDataSource jrDataSource = (JRDataSource) dataSource;
-				jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
-			} else {
-				// for old/legacy behavior
-				if (connection != null) {
-					jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
-				} else if (dataSource != null) {
-					jp = JasperFillManager.fillReport(jasperReport, parameters, (JRDataSource)dataSource);
-				} 
-			}
-			// else throw new IllegalArgumentException("No model or db connection <null> has been found or loaded");
-		}
-		catch (ClassCastException classCastException) 
-		{
-			String exceptionMessage = "";
-			if (inputType != null) {
-				exceptionMessage = "Input type " + inputType + " has been used with an incorrect datasource of type: " + dataSource.getClass();
-			} else {
-				exceptionMessage = classCastException.getMessage();
-			}
-			Debug.error("Error filling report", classCastException);
-			throw new JRException("Cause: " + classCastException.getCause() + "\nMessage: " + exceptionMessage);
-		}
-		catch (Exception e)
-		{
-			Debug.error("Error filling report", e);
-			throw new JRException("Cause: " + e.getCause() +"\nMessage: " + e.getMessage());
+			} else if (dataSource instanceof JRDataSource) {
+				jp = JasperFillManager.fillReport(jasperReport, parameters, (JRDataSource)dataSource);
+			} 
+		    else {
+		    	throw new JRException("Input type " + inputType + " has been used with an incorrect datasource of type: " + dataSource.getClass());
+		    }
 		}
 
 		if (virtualizer != null)
