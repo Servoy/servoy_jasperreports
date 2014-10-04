@@ -352,14 +352,6 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * //var $locale = 'en';
 	 * //plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
 	 * 
-	 * // Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-	 * //var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-	 * //var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-	 * //var $list = new java.util.ArrayList();
-	 * //$list.add($jp1);
-	 * //$list.add($jp2);
-	 * //var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);  
-	 * 
 	 * @param inputType the type of the datasource, as one of the constants in INPUT_TYPE
 	 * @param reportDataSource the server name or foundset to run the report on
 	 * @param inputOptions additional input options (e.g. which node to iterate in the xml datasource document)
@@ -993,6 +985,15 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	
 	/**
 	 * Function to merge two or more reports into a single report file.
+	 * 
+	 * @sample
+	 * // Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
+	 * // var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
+	 * // var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
+	 * // var $list = new java.util.ArrayList();
+	 * // $list.add($jp1);
+	 * // $list.add($jp2);
+	 * // var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);
 	 * 
 	 * @param printList the list of reports to merge; the objects in the list must be jasperPrint objects (or reports exported as jasper print)
 	 * @param orientation the orientation of the result report

@@ -765,6 +765,15 @@ application.output(result[0]);
             <summaries>
               <summary clientSupport="wc,sc"><![CDATA[Function to merge two or more reports into a single report file.]]></summary>
             </summaries>
+            <samples>
+              <sample clientSupport="wc,sc"><![CDATA[// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
+// var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
+// var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
+// var $list = new java.util.ArrayList();
+// $list.add($jp1);
+// $list.add($jp2);
+// var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+            </samples>
             <parameters>
               <parameter name="printList" type="java.util.ArrayList" typecode="java.util.ArrayList">
                 <description><![CDATA[the list of reports to merge; the objects in the list must be jasperPrint objects (or reports exported as jasper print)]]></description>
@@ -912,15 +921,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //var $repfile = 'report.jrxml';
 //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 //var $locale = 'en';
-//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
-
-// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-//var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $list = new java.util.ArrayList();
-//$list.add($jp1);
-//$list.add($jp2);
-//var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)]]></sample>
             </samples>
             <parameters>
               <parameter name="reportDataSource" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
@@ -1036,15 +1037,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //var $repfile = 'report.jrxml';
 //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 //var $locale = 'en';
-//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
-
-// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-//var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $list = new java.util.ArrayList();
-//$list.add($jp1);
-//$list.add($jp2);
-//var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)]]></sample>
             </samples>
             <parameters>
               <parameter name="reportDataSource" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
@@ -1164,15 +1157,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //var $repfile = 'report.jrxml';
 //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 //var $locale = 'en';
-//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
-
-// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-//var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $list = new java.util.ArrayList();
-//$list.add($jp1);
-//$list.add($jp2);
-//var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)]]></sample>
             </samples>
             <parameters>
               <parameter name="reportDataSource" type="com.servoy.j2db.documentation.scripting.docs.Object" typecode="java.lang.Object">
@@ -1295,15 +1280,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //var $repfile = 'report.jrxml';
 //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 //var $locale = 'en';
-//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
-
-// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-//var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $list = new java.util.ArrayList();
-//$list.add($jp1);
-//$list.add($jp2);
-//var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)]]></sample>
             </samples>
             <parameters>
               <parameter name="inputType" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -1427,15 +1404,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //var $repfile = 'report.jrxml';
 //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 //var $locale = 'en';
-//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
-
-// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-//var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $list = new java.util.ArrayList();
-//$list.add($jp1);
-//$list.add($jp2);
-//var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)]]></sample>
             </samples>
             <parameters>
               <parameter name="inputType" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
@@ -1563,15 +1532,7 @@ plugins.jasperPluginRMI.runReport(myServer, 'myCustomerReport.jasper',null,OUTPU
 //var $repfile = 'report.jrxml';
 //var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 //var $locale = 'en';
-//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)
-
-// Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
-//var $jp1 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report1.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $jp2 = plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate', 'report2.jrxml', null, plugins.jasperPluginRMI.OUTPUT_FORMAT.JRPRINT, $parameters, $locale);
-//var $list = new java.util.ArrayList();
-//$list.add($jp1);
-//$list.add($jp2);
-//var $jasper_result = plugins.jasperPluginRMI.mergeJasperPrint($list, 'landscape', plugins.jasperPluginRMI.OUTPUT_FORMAT.VIEW, null, $locale);]]></sample>
+//plugins.jasperPluginRMI.runReport(plugins.jasperPluginRMI.INPUT_TYPE.XML, $xmlDataCombined, '/node/to/iterate/on', $repfile, null, OUTPUT_FORMAT.VIEW, $parameters, null)]]></sample>
             </samples>
             <parameters>
               <parameter name="inputType" type="com.servoy.j2db.documentation.scripting.docs.String" typecode="java.lang.String">
