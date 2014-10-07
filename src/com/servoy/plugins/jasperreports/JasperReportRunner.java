@@ -235,7 +235,7 @@ public class JasperReportRunner implements IJasperReportRunner
 			else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XML)) 
 			{
 				exporter = new JRXmlExporter();
-				exporterOutput = new SimpleXmlExporterOutput((File)null);
+				exporterOutput = new SimpleXmlExporterOutput(baos,"UTF-8");
 				((SimpleXmlExporterOutput)exporterOutput).setEmbeddingImages(Boolean.TRUE);
 			}
 			// should not get here
