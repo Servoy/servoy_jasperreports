@@ -1070,6 +1070,13 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				mergedJRPrint.setPageHeight(pageHeight);
 				mergedJRPrint.setPageWidth(pageWidth);
 				mergedJRPrint.setOrientation(pageOrientation);
+				
+				// we need to explicitly add a MAXIMUM_ROWS_PER_SHEET for spreadsheet exports
+				if (OUTPUT_FORMAT.EXCEL.equalsIgnoreCase(outputType) || OUTPUT_FORMAT.XLS.equalsIgnoreCase(outputType) 
+						|| OUTPUT_FORMAT.XLS_1_SHEET.equalsIgnoreCase(outputType) || OUTPUT_FORMAT.XLSX.equalsIgnoreCase(outputType)) {
+					// adding the maximum value, as there no user setting for it currently for the merged report
+					mergedJRPrint.setProperty("MAXIMUM_ROWS_PER_SHEET", String.valueOf(65535));
+				}
 
 				result = getExportedJasperReport(plugin.connectJasperService(), mergedJRPrint, outputType, outputOptions, null, localeString, plugin.getIClientPluginAccess().getApplicationType());
 
