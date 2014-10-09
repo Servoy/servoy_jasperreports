@@ -985,6 +985,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	
 	/**
 	 * Function to merge two or more reports into a single report file.
+	 * The reports to merge must have been previously exported as JRPRINTs.
 	 * 
 	 * @sample
 	 * // Merge two report files into a single output report file. Note that the list of reports to merge must jasper print exported reports.
@@ -1032,6 +1033,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				{
 					Object aux = printList.get(i);
 					JasperPrint jrPrint = null;
+					// the reports to merge must have been exported as JRPRINTs
 					if (aux instanceof byte[]) {
 						ByteArrayInputStream in = new ByteArrayInputStream((byte[]) aux);
 					    ObjectInputStream is = new ObjectInputStream(in);
