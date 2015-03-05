@@ -690,7 +690,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		}
 		
 		// 1. WebClient
-		if (applicationType == IClientPluginAccess.WEB_CLIENT)
+		if (isWebClient(applicationType))
 		{
 			exportResult = handleWebClientExport(jasperReportService, rawJasperPrint, type, outputOptions, fileName, exporterParams);
 		}
@@ -1548,7 +1548,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "5.0.0 a2";
+		return "5.0.0 a3";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
@@ -1858,5 +1858,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		}
 
 		return aux;
+	}
+	
+	private static boolean isWebClient(int applicationType)
+	{
+		return (applicationType == IClientPluginAccess.WEB_CLIENT) || (applicationType == 9);	// 9 = NGClient
 	}
 }

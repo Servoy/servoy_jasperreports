@@ -28,12 +28,14 @@
  */
 package com.servoy.plugins.jasperreports;
 
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import com.servoy.j2db.plugins.IClientPluginAccess;
 import com.servoy.j2db.server.headlessclient.IPageContributor;
 import com.servoy.j2db.server.headlessclient.IWebClientPluginAccess;
+import com.servoy.j2db.util.Debug;
 
 /**
  * WebClient view logic 
@@ -55,18 +57,48 @@ public class JasperReportsWebViewer {
 	public static final String MIME_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	
 	public static void show(IClientPluginAccess application, byte[] jsp, String file, String ext, String mimeType) {
-		IWebClientPluginAccess wapp = (IWebClientPluginAccess) application;
-		IPageContributor pc = wapp.getPageContributor();
-		if (pc != null) {
-			if (file == null || file.length() == 0) {
-				Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-				String DATE_FORMAT = "yyyyMMddHHmmss";
-				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT);
-				sdf.setTimeZone(TimeZone.getDefault());
-				file = "report_" + sdf.format(cal.getTime()) + "." + ext;
+		if(application instanceof IWebClientPluginAccess)
+		{
+			IWebClientPluginAccess wapp = (IWebClientPluginAccess) application;
+			IPageContributor pc = wapp.getPageContributor();
+			if (pc != null) {
+				String url = wapp.serveResource(getFixedFileName(file, ext), jsp, mimeType);
+				wapp.showURL(url, "_self", null, 0);
 			}
-			String url = wapp.serveResource(file, jsp, mimeType);
-			wapp.showURL(url, "_self", null, 0);
 		}
+		else
+		{
+			try
+			{
+				Method mServeResource = application.getClass().getMethod("serveResource", String.class, byte[].class, String.class);
+				String url = (String)mServeResource.invoke(application, getFixedFileName(file, ext), jsp, mimeType);
+				Method mShowURL = application.getClass().getMethod("showURL", String.class, String.class, String.class, int.class);
+				mShowURL.invoke(application, url, "_self", null, 0);
+			}
+			catch(Exception ex)
+			{
+				Debug.error(ex);
+			}
+		}
+	}
+	
+	private static String getFixedFileName(String file, String ext)
+	{
+		String fixedFileName;
+		
+		if (file == null || file.length() == 0)
+		{
+			Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+			String DATE_FORMAT = "yyyyMMddHHmmss";
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT);
+			sdf.setTimeZone(TimeZone.getDefault());
+			fixedFileName = "report_" + sdf.format(cal.getTime()) + "." + ext;
+		}
+		else
+		{
+			fixedFileName = file;
+		}
+		
+		return fixedFileName;
 	}
 }
