@@ -571,33 +571,43 @@ public class JasperReportRunner implements IJasperReportRunner
 				}
 			}
 		}
-
+		
 		// create JasperPrint using fillReport() method
 		JasperPrint jp;
-		// new approach, using the input type
-		if (INPUT_TYPE.DB.equalsIgnoreCase(inputType) && dataSource instanceof Connection) {
-			// Connection connection, JRDataSource jrDataSource
-			connection = (Connection) dataSource;
-			jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
-		} else if (INPUT_TYPE.XML.equalsIgnoreCase(inputType) && dataSource instanceof JRXmlDataSource) {
-			JRXmlDataSource jrXMLSource = (JRXmlDataSource) dataSource;
-			jp = JasperFillManager.fillReport(jasperReport, parameters, jrXMLSource);
-		} else if (INPUT_TYPE.CSV.equalsIgnoreCase(inputType) && dataSource instanceof JRCsvDataSource) {
-			JRCsvDataSource jrCSVSource = (JRCsvDataSource) dataSource;
-			jp = JasperFillManager.fillReport(jasperReport, parameters, jrCSVSource);
-		} else if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType) && dataSource instanceof JRDataSource) {
-			JRDataSource jrDataSource = (JRDataSource) dataSource;
-			jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
-		} else {
-			// for old/legacy behavior
-			if (connection != null) {
+		// switch to the client classloader when filling the report (needed for spring to properly load fontextensions in webclient)
+		ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
+		try
+		{
+			Thread.currentThread().setContextClassLoader(JasperReportRunner.class.getClassLoader()); // get the client class loader (is this "bulletproof"?)
+			// new approach, using the input type
+			if (INPUT_TYPE.DB.equalsIgnoreCase(inputType) && dataSource instanceof Connection) {
+				// Connection connection, JRDataSource jrDataSource
+				connection = (Connection) dataSource;
 				jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
-			} else if (dataSource instanceof JRDataSource) {
-				jp = JasperFillManager.fillReport(jasperReport, parameters, (JRDataSource)dataSource);
-			} 
-		    else {
-		    	throw new JRException("Input type " + inputType + " has been used with an incorrect datasource of type: " + dataSource.getClass());
-		    }
+			} else if (INPUT_TYPE.XML.equalsIgnoreCase(inputType) && dataSource instanceof JRXmlDataSource) {
+				JRXmlDataSource jrXMLSource = (JRXmlDataSource) dataSource;
+				jp = JasperFillManager.fillReport(jasperReport, parameters, jrXMLSource);
+			} else if (INPUT_TYPE.CSV.equalsIgnoreCase(inputType) && dataSource instanceof JRCsvDataSource) {
+				JRCsvDataSource jrCSVSource = (JRCsvDataSource) dataSource;
+				jp = JasperFillManager.fillReport(jasperReport, parameters, jrCSVSource);
+			} else if (INPUT_TYPE.JRD.equalsIgnoreCase(inputType) && dataSource instanceof JRDataSource) {
+				JRDataSource jrDataSource = (JRDataSource) dataSource;
+				jp = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
+			} else {
+				// for old/legacy behavior
+				if (connection != null) {
+					jp = JasperFillManager.fillReport(jasperReport, parameters, connection);
+				} else if (dataSource instanceof JRDataSource) {
+					jp = JasperFillManager.fillReport(jasperReport, parameters, (JRDataSource)dataSource);
+				} 
+			    else {
+			    	throw new JRException("Input type " + inputType + " has been used with an incorrect datasource of type: " + dataSource.getClass());
+			    }
+			}
+		}
+		finally
+		{
+			Thread.currentThread().setContextClassLoader(savedCl);
 		}
 
 		if (virtualizer != null)
