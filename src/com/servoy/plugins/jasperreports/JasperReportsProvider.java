@@ -484,30 +484,38 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				// Fill the report and get the JasperPrint instance; also modify the JasperPrint in case you want to move the table of contents.
 				// we only have a transaction id for the reports run on the server
 				String txid = (reportDataSource instanceof String && jasperReportRunner instanceof IJasperReportsService) ? plugin.getIClientPluginAccess().getDatabaseManager().getTransactionID((String) reportDataSource) : null;
-				//OLD: JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), reportDataSource, txid, reportName, params, relativeReportsDir, relativeExtraDirs);
-				JasperPrint jp = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), inputType, reportDataSource, inputOptions, txid, reportName, params, relativeReportsDir, relativeExtraDirs);
+				JasperPrintResult jpResults = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), inputType, reportDataSource, inputOptions, txid, reportName, params, relativeReportsDir, relativeExtraDirs);
+				JasperPrint jp = jpResults.getJasperPrint();
+				
+				try {
+					if (moveTableOfContent)
+					{
+						int iP = getInsertPage(jp);
+						jp = moveTableOfContents(jp, iP);
+					}
 
-				if (moveTableOfContent)
-				{
-					int iP = getInsertPage(jp);
-					jp = moveTableOfContents(jp, iP);
-				}
+					byte[] resultExportedJasperReport = null;
+					if (returnJustJasperPrint)
+					{
+						// this is for the JasperViewerServoyBean
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						JRSaver.saveObject(jp, baos);
+						resultExportedJasperReport = baos.toByteArray();
+					}
+					else 
+					{
+						// all other export formats come here
+						resultExportedJasperReport = getExportedJasperReport(jasperReportService, jp, outputType, outputOptions, params, localeString, applicationType);
+					}
 
-				byte[] resultExportedJasperReport = null;
-				if (returnJustJasperPrint)
-				{
-					// this is for the JasperViewerServoyBean
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					JRSaver.saveObject(jp, baos);
-					resultExportedJasperReport = baos.toByteArray();
+					return resultExportedJasperReport;
+					
+				} finally {
+					
+					if (jpResults.getGarbageMan() != null) {
+						jasperReportRunner.cleanupJasperPrint(jpResults.getGarbageMan());
+					}
 				}
-				else 
-				{
-					// all other export formats come here
-					resultExportedJasperReport = getExportedJasperReport(jasperReportService, jp, outputType, outputOptions, params, localeString, applicationType);
-				}
-
-				return resultExportedJasperReport;
 				
 			}
 			catch (Exception e)

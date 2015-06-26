@@ -942,15 +942,8 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 
-	/**
-	 * @deprecated use {@link #getJasperPrint(String, String, Object, String, String, String, Map, String, String)}
-	 */
-	public JasperPrint getJasperPrint(String clientID, Object reportDataSource, String txid, String reportName, Map<String, Object> parameters, String repdir, String extraDirs) throws Exception {
-		return getJasperPrint(null, clientID, reportDataSource, null, txid, reportName, parameters, repdir, extraDirs);
-	}
-	
 	@Override
-	public JasperPrint getJasperPrint(String clientID, String inputType, Object reportDataSource, String inputOptions, String txid,
+	public JasperPrintResult getJasperPrint(String clientID, String inputType, Object reportDataSource, String inputOptions, String txid,
 			String reportName, Map<String, Object> parameters, String relativeReportsDir, String relativeExtraDirs) throws RemoteException, Exception {
 
 		// first and most important checks: we need a report (name) and a datasource
@@ -1000,7 +993,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		try {
 			Debug.trace("JasperTrace: Directory: " + relativeReportsDir);
 			
-			JasperPrint result = null;
+			JasperPrintResult result = null;
 			JasperReport jasperReport = getJasperReport(clientID, reportName, relativeReportsDir);
 			
 			if (INPUT_TYPE.DB.equalsIgnoreCase(inputType)) {
@@ -1076,5 +1069,9 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 	
+	@Override
+	public void cleanupJasperPrint(GarbageMan garbageMan) {
+		garbageMan.cleanup();
+	}
 	
 }

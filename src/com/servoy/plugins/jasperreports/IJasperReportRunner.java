@@ -31,8 +31,6 @@ package com.servoy.plugins.jasperreports;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-import net.sf.jasperreports.engine.JasperPrint;
-
 /**
  * Run reports.
  */
@@ -55,8 +53,15 @@ public interface IJasperReportRunner {
 	 * @throws RemoteException
 	 * @throws Exception
 	 */
-	public JasperPrint getJasperPrint(String clientID, String inputType, 
+	 JasperPrintResult getJasperPrint(String clientID, String inputType, 
 			Object reportDataSource, String inputOptions, String txid,
 			String reportName, Map<String, Object> parameters,
 			String relativeReportsDir, String relativeExtraDirs) throws RemoteException, Exception;
+
+	 /**
+	  * Cleanup anything after jasper print has been used to create a report.
+	  * 
+	  * @param garbageMan
+	  */
+	void cleanupJasperPrint(GarbageMan garbageMan) throws RemoteException;
 }

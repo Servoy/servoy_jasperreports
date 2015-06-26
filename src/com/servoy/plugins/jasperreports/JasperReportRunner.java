@@ -37,12 +37,14 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRVirtualizer;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -83,10 +85,10 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
 import com.servoy.j2db.util.Debug;
+import com.servoy.j2db.util.UUID;
 
 public class JasperReportRunner implements IJasperReportRunner
 {
-
 	private static final int TEXT_PAGE_WIDTH_IN_CHARS = 120;
 	private static final int TEXT_PAGE_HEIGHT_IN_CHARS = 60;
 
@@ -96,14 +98,14 @@ public class JasperReportRunner implements IJasperReportRunner
 
 	private final IJasperReportsService jasperReportsService;
 	
-	private static JRAbstractLRUVirtualizer virtualizer = null;
-
+	private static final List <VirtualizerState>virtualizers = new ArrayList<VirtualizerState>();
+	
 	public JasperReportRunner(IJasperReportsService jasperReportsService)
 	{
 		this.jasperReportsService = jasperReportsService;
 	}
 	
-	public JasperPrint getJasperPrint(String clientID, String inputType, Object inputSource, String inputOptions, String txid, String reportName, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception
+	public JasperPrintResult getJasperPrint(String clientID, String inputType, Object inputSource, String inputOptions, String txid, String reportName, Map<String, Object> parameters, String repdir, String extraDirs) throws RemoteException, Exception
 	{
 		if (inputSource == null)
 		{
@@ -121,7 +123,12 @@ public class JasperReportRunner implements IJasperReportRunner
 
 		return getJasperPrint(inputType, null, inputSource, jasperReport, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
 	}
-
+	
+	@Override
+	public void cleanupJasperPrint(GarbageMan garbageMan) {
+		garbageMan.cleanup();
+	}
+	
 	/**
 	 * Check if the type matches a text of char based export type (i.e. HTML, RTF, CSV, TXT, XML export)
 	 * 
@@ -385,13 +392,6 @@ public class JasperReportRunner implements IJasperReportRunner
 
 		exporter.exportReport();
 
-		// cleanup, if virtualizers have been used (NOTE: file virtualizer does	cleanup itself)
-		if (virtualizer != null)
-		{
-			virtualizer.cleanup();
-			virtualizer = null;
-		}
-
 		return baos.toByteArray();
 	}
 
@@ -410,7 +410,7 @@ public class JasperReportRunner implements IJasperReportRunner
 	 * 
 	 * @throws JRException
 	 */
-	public static JasperPrint getJasperPrint(String inputType, Connection conn, Object dataSource, JasperReport jasperReport, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException
+	public static JasperPrintResult getJasperPrint(String inputType, Connection conn, Object dataSource, JasperReport jasperReport, Map<String, Object> parameters, String repdir, String extraDirs) throws JRException
 	{
 		//  TODO: possible fixes for 'xpath2' query language usage
 //		jasperReport.setProperty(
@@ -509,13 +509,11 @@ public class JasperReportRunner implements IJasperReportRunner
 		}
 		else testDir = null;
 
-		// Virtualizers
-		// cleanup, if virtualizers have been used (NOTE: file virtualizer does	cleanup itself)
-		if (virtualizer != null)
-		{
-			virtualizer.cleanup();
-			virtualizer = null;
-		}
+		// cleanup old virtualizers
+		cleanupVirtualizers(null);
+		
+		JRAbstractLRUVirtualizer virtualizer = null;
+		
 		if (VIRTUALIZER_FILE.equalsIgnoreCase(virtualizerType))
 		{
 			virtualizer = new JRFileVirtualizer(2, pageOutDir);
@@ -619,7 +617,50 @@ public class JasperReportRunner implements IJasperReportRunner
 		if (maxRowsPerSheet == null) jp.setProperty("MAXIMUM_ROWS_PER_SHEET", String.valueOf(65535));
 		else jp.setProperty("MAXIMUM_ROWS_PER_SHEET", String.valueOf(maxRowsPerSheet.intValue()));
 
-		return jp;
+		GarbageMan virtualizerCleaner = null;
+		if (virtualizer != null)
+		{
+			// install garbage man to cleanup virtualizer
+			final UUID uuid = UUID.randomUUID();
+			synchronized (virtualizers) {
+				virtualizers.add(new VirtualizerState(uuid, System.currentTimeMillis(), virtualizer));
+			}
+			virtualizerCleaner = new GarbageMan() {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void cleanup() {
+					cleanupVirtualizers(uuid);
+				}
+			};
+		}
+		
+		return new JasperPrintResult(jp, virtualizerCleaner);
+	}
+
+	protected static void cleanupVirtualizers(UUID uuid) {
+
+		// Virtualizers
+		// cleanup, if virtualizers have been used (NOTE: file virtualizer does	cleanup itself)
+
+		synchronized (virtualizers) {
+			Iterator<VirtualizerState> it = virtualizers.iterator();
+			while (it.hasNext()) {
+				VirtualizerState virt = it.next();
+				// cleanup this virtualizer or old ones (older then 1 hour)
+				if (virt.uuid.equals(uuid) || System.currentTimeMillis() - virt.timestamp > 60*60*1000) {
+					it.remove();
+					try {
+						virt.virtualizer.cleanup();
+					}
+					catch (Exception e) {
+						Debug.error(e);
+					}
+				}
+			}
+
+		}
 	}
 
 	public static String adjustFileUnix(String file)
@@ -631,5 +672,19 @@ public class JasperReportRunner implements IJasperReportRunner
 		}
 		return file;
 	}
+
+	public static class VirtualizerState {
+
+		public final UUID uuid;
+		public final long timestamp;
+		public final JRVirtualizer virtualizer;
+
+		public VirtualizerState(UUID uuid, long timestamp, JRVirtualizer virtualizer) {
+			this.uuid = uuid;
+			this.timestamp = timestamp;
+			this.virtualizer = virtualizer;
+		}
+	}
+
 
 }
