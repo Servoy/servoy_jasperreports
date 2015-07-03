@@ -56,7 +56,7 @@ import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.JRViewer;
 
-import com.servoy.j2db.dataprocessing.JSDataSet;
+import com.servoy.j2db.dataprocessing.IDataSet;
 import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.plugins.IClientPluginAccess;
 import com.servoy.j2db.scripting.IReturnedTypesProvider;
@@ -1526,24 +1526,17 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * 
 	 * @return the JSDataSet with the report parameters
 	 */
-	public JSDataSet js_getReportParameters(String report) throws Exception
+	public IDataSet js_getReportParameters(String report) throws Exception
 	{
-
-		JSDataSet ds = null;
-
 		try
 		{
-			Debug.trace("JasperTrace: getReportParameters starting");
-			ds = plugin.connectJasperService().getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, relativeReportsDir);
-			Debug.trace("JasperTrace: getReportParameters finished");
+			return plugin.connectJasperService().getReportParameters(plugin.getIClientPluginAccess().getClientID(), report, relativeReportsDir);
 		}
 		catch (Exception e)
 		{
 			Debug.error(e);
 			throw new Exception(e.getMessage());
 		}
-
-		return ds;
 	}
 
 	/**

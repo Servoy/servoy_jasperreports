@@ -36,7 +36,7 @@ import net.sf.jasperreports.engine.JRTemplate;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
-import com.servoy.j2db.dataprocessing.JSDataSet;
+import com.servoy.j2db.dataprocessing.IDataSet;
 
 /**
  * RMI interface
@@ -149,7 +149,7 @@ public interface IJasperReportsService extends IJasperReportRunner, Remote {
 	 * @throws RemoteException
 	 * @throws Exception
 	 */
-	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws RemoteException, Exception;
+	public IDataSet getReportParameters(String clientID, String report, String repdir) throws RemoteException, Exception;
 
 	/**
 	 * This method loads the report and compiles it on the server. It returns a compiled document of the 

@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRTemplate;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -66,7 +67,7 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import com.servoy.j2db.dataprocessing.BufferedDataSet;
-import com.servoy.j2db.dataprocessing.JSDataSet;
+import com.servoy.j2db.dataprocessing.IDataSet;
 import com.servoy.j2db.plugins.IServerAccess;
 import com.servoy.j2db.plugins.IServerPlugin;
 import com.servoy.j2db.plugins.PluginException;
@@ -798,11 +799,11 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 		}
 	}
 
-	public JSDataSet getReportParameters(String clientID, String report, String repdir) throws Exception {
+	public IDataSet getReportParameters(String clientID, String report, String repdir) throws Exception {
 
 		JasperReport jasperReport = getJasperReport(clientID, report, repdir);
 
-		BufferedDataSet bds = new BufferedDataSet(new String[]{"Name","Type","Description"}, new ArrayList<Object[]>());
+		BufferedDataSet bds = new BufferedDataSet(new String[]{ "Name", "Type", "Description", "Expression", "ForPrompting", "NestedType" }, new ArrayList<Object[]>());
 
 		JRParameter[] params = jasperReport.getParameters();
 
@@ -811,21 +812,20 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 
 			if (!param.isSystemDefined()) {
 
-				String paramName = param.getName();
-				String paramDesc = param.getDescription();
-				String paramClass = param.getValueClassName();
-
-				Object[] oa = new Object[3];
-				oa[0] = paramName;
-				oa[1] = paramClass;
-				oa[2] = paramDesc;
-				bds.addRow(oa);
-				oa = null;
+				JRExpression paramExpression = param.getDefaultValueExpression();
+				
+				bds.addRow(new Object[] {
+						param.getName(),
+						param.getValueClassName(),
+						param.getDescription(),
+						paramExpression != null ? paramExpression.getText() : null,
+						Boolean.valueOf(param.isForPrompting()),
+						param.getNestedTypeName()
+				});
 			}
 		}
 
-		JSDataSet jsds = new JSDataSet(bds);
-		return jsds;
+		return bds;
 	}
 
 	/**
