@@ -31,7 +31,7 @@ package com.servoy.plugins.jasperreports;
 import java.util.Locale;
 
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JRViewer;
+import net.sf.jasperreports.swing.JRViewer;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**

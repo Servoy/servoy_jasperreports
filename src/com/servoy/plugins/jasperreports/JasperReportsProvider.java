@@ -53,8 +53,9 @@ import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.type.OrientationEnum;
 import net.sf.jasperreports.engine.util.JRClassLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
+import net.sf.jasperreports.swing.JRViewer;
+import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRSaveContributor;
-import net.sf.jasperreports.view.JRViewer;
 
 import com.servoy.j2db.dataprocessing.IDataSet;
 import com.servoy.j2db.documentation.ServoyDocumented;
@@ -1549,7 +1550,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "5.0.0";
+		return "6.0.0";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
@@ -1621,7 +1622,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * @param saveContributors the save contributors to be set; the first one will be the (default) first one in the
 	 * "Save as type" list of the "Save" dialog.
 	 */
-	public static void setViewerSaveContributors(JRViewer jrv, String[] saveContributors)
+	public static void setViewerSaveContributors(javax.swing.JPanel jrv, String[] saveContributors)
 	{
 
 		List<String> defContribs = new ArrayList<String>();
@@ -1661,7 +1662,22 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			}
 		}
 
-		jrv.setSaveContributors(jrSaveContribs);
+		if(jrv instanceof net.sf.jasperreports.view.JRViewer) // old viewer
+		{
+			((net.sf.jasperreports.view.JRViewer)jrv).setSaveContributors(jrSaveContribs);
+		}
+		else
+		{
+			// unfortunately "setSaveContributors" has been moved to the toolbar,
+			// and there is no better way to have access to it, then finding it in the panel
+			for(int i = 0; i < jrv.getComponentCount(); i++)
+			{
+				if(jrv.getComponent(i) instanceof JRViewerToolbar)
+				{
+					((JRViewerToolbar)jrv.getComponent(i)).setSaveContributors(jrSaveContribs);
+				}
+			}
+		}
 	}
 
 	/**

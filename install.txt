@@ -37,8 +37,8 @@ CONTENT:
  	* Jakarta POI: for report XLS output facility
  	* JFreeChart and its required dependency, JCommon: for chart support
  
- This zipfile contains the JasperReports plugin for Servoy, version 5.0.0. 
- It is to be used with Servoy 6.x and/or higher and is consistent with JasperReports version 5.6.1.
+ This zipfile contains the JasperReports plugin for Servoy, version 6.0.0. 
+ It is to be used with Servoy 6.x and/or higher and is consistent with JasperReports version 6.2.0.
  
  For more information about Servoy, visit http://www.servoy.com.
  For more information about JasperReports, visit: http://community.jaspersoft.com/project/jasperreports-library.
