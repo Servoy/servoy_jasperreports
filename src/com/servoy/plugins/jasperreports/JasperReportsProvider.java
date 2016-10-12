@@ -50,9 +50,11 @@ import net.sf.jasperreports.engine.JRPrintText;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.JasperReportsContext;
 import net.sf.jasperreports.engine.type.OrientationEnum;
 import net.sf.jasperreports.engine.util.JRClassLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
+import net.sf.jasperreports.engine.util.JRStyledTextUtil;
 import net.sf.jasperreports.swing.JRViewer;
 import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRSaveContributor;
@@ -487,7 +489,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				String txid = (reportDataSource instanceof String && jasperReportRunner instanceof IJasperReportsService) ? plugin.getIClientPluginAccess().getDatabaseManager().getTransactionID((String) reportDataSource) : null;
 				JasperPrintResult jpResults = jasperReportRunner.getJasperPrint(plugin.getIClientPluginAccess().getClientID(), inputType, reportDataSource, inputOptions, txid, reportName, params, relativeReportsDir, relativeExtraDirs);
 				JasperPrint jp = jpResults.getJasperPrint();
-				
+
 				try {
 					if (moveTableOfContent)
 					{
@@ -1550,7 +1552,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "6.0.0";
+		return "6.3.1";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
@@ -1738,7 +1740,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 								element = it.next();
 								if (element instanceof JRPrintText)
 								{
-									if (key.equals(((JRPrintText) element).getText()))
+									if (key.equals(JRStyledTextUtil.getInstance(DefaultJasperReportsContext.getInstance()).getTruncatedText((JRPrintText) element)))
 									{
 										isFoundPageIndex = true;
 										break;
@@ -1797,7 +1799,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 							element = it.next();
 							if (element instanceof JRPrintText)
 							{
-								if (key.equals(((JRPrintText) element).getText()))
+								if (key.equals(JRStyledTextUtil.getInstance(DefaultJasperReportsContext.getInstance()).getTruncatedText((JRPrintText) element)))
 								{
 									isFound = true;
 									break;

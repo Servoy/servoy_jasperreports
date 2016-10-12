@@ -37,7 +37,7 @@ UPGRADE BASIC OR CHARTNSCRIPT PLUGIN VERSIONS
 If you are using the Basic or the ChartNScript drop-in versions:
 1. Upgrade the version of the JasperReports engine, in the /plugins/servoy_jasperreports directory with the desired one.
 2. Check and synchronize the versions of the libraries used by Servoy with the ones used by JasperReports:
-	2.1 In the current version of Servoy JasperReports plugin, which is 6.0 (that uses the JasperReports engine version 6.2.x), libraries are in sync with required Servoy versions.
+	2.1 In the current version of Servoy JasperReports plugin, which is 6.3.1 (that uses the JasperReports engine version 6.3.1), libraries are in sync with required Servoy versions.
 	2.2 If you are upgrading from the previous version(s) of our plugin (4.x and below), make sure you have the new version of the needed libraries (pay special attention to POI and itext) at the corresponding locations.
 	2.3 Please also refer to the wiki page of project for details: https://www.servoyforge.net/projects/servoy-jasperreports/wiki
 		2.2.1 If more (complex) updates are needed, please double-check and synchronize the library versions of the following folders, in your servoy installation directory: /application_server/lib and application_server/plugins, with the ones used by the version of the JasperReports project you are upgrading to.
