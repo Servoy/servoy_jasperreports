@@ -121,7 +121,7 @@ public class JasperReportRunner implements IJasperReportRunner
 
 		JasperReport jasperReport = jasperReportsService.getJasperReport(clientID, reportName, repdir);
 
-		return getJasperPrint(inputType, null, inputSource, jasperReport, parameters, repdir, jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
+		return getJasperPrint(inputType, null, inputSource, jasperReport, parameters, jasperReportsService.getCheckedRelativeReportsPath(repdir), jasperReportsService.getCheckedExtraDirectoriesRelativePath(extraDirs));
 	}
 	
 	@Override
