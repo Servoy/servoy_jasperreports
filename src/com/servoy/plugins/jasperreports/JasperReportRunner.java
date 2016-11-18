@@ -440,11 +440,20 @@ public class JasperReportRunner implements IJasperReportRunner
 		parameters.put("report_directory", jasperDirectory);
 		if (!jasperDirectory.endsWith("/")) jasperDirectory = jasperDirectory + '/';
 
+		boolean shouldSetSubReportDir = true;
 		String subReportDir = (String) parameters.get("SUBREPORT_DIR");
 		if (subReportDir == null || subReportDir.equals(""))
 		{
+			for(JRParameter p : jasperReport.getParameters())
+			{
+				if("SUBREPORT_DIR".equals(p.getName()))
+				{
+					shouldSetSubReportDir = p.getDefaultValueExpression() == null;
+					break;
+				}
+			}	
 			// if the subreport directory is not set
-			subReportDir = jasperDirectory;
+			if(shouldSetSubReportDir) subReportDir = jasperDirectory;
 		}
 		else
 		{
@@ -459,7 +468,7 @@ public class JasperReportRunner implements IJasperReportRunner
 				throw new JRException("SUBREPORT_DIR cannot be specified as an absolute location; please use a location relative to the reports directory");
 			}
 		}
-		parameters.put("SUBREPORT_DIR", subReportDir);
+		if(shouldSetSubReportDir) parameters.put("SUBREPORT_DIR", subReportDir);
 
 		Debug.trace("JasperTrace: Extra Directories: " + extraDirs);
 		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);
