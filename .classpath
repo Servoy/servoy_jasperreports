@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="servoy_lib/js.jar"/>
 	<classpathentry kind="lib" path="servoy_lib/wicket.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-6.3.1.jar" sourcepath="/home/gabi/Downloads/jasperreports-6.3.1/src"/>
+	<classpathentry kind="lib" path="lib/jasperreports-6.4.1.jar" sourcepath="/home/gabi/Downloads/jasperreports-6.4s.1/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
