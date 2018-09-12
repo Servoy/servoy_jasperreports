@@ -746,7 +746,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		else
 		{
 			exportResult = JasperReportRunner.getJasperBytes(outputType, rawJasperPrint, jasperReportService.getCheckedExtraDirectoriesRelativePath(relativeExtraDirs), exporterParams);
-			if (outputOptions == null)
+			if (outputOptions == null || (outputOptions instanceof Map && ((Map)outputOptions).containsKey("DOWNLOAD")))
 			{
 				JasperReportsWebViewer.show(plugin.getIClientPluginAccess(), exportResult, fileName, outputType, mimeType);
 			}
