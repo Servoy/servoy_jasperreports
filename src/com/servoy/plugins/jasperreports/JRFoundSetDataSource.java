@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -154,6 +154,11 @@ public class JRFoundSetDataSource extends AbstractServoyDataSource {
 		foundSet.rewind();
 	}
 
+	public JRFoundSetDataSource createRelatedJRDataSource(String relationName)
+	{
+		return new JRFoundSetDataSource (pluginAccess, foundSet.getCurrentRecord().getRelatedFoundSet(relationName));
+	}
+	
 	/**
 	 * 	Wrapper for foundset with current index.
 	 * 

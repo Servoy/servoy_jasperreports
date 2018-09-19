@@ -45,7 +45,7 @@ import com.servoy.j2db.util.Utils;
  */
 public abstract class AbstractServoyDataSource implements JRRewindableDataSource {
 
-	private final IClientPluginAccess pluginAccess;
+	protected final IClientPluginAccess pluginAccess;
 
 	public  AbstractServoyDataSource (IClientPluginAccess pluginAccess)
 	{

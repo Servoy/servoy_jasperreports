@@ -114,9 +114,13 @@ public class JasperReportsResourceLoader {
 	 * A datasource is rewindable if it implements net.sf.jasperreports.engine.JRRewindableDataSource.
 	 * This method is needed when using the same datasource for two subreports.
 	 * See also http://community.jaspersoft.com/questions/521291/can-2-subreports-share-same-datasource
+	 * 
+	 * @deprecated see JasperReportsDataSource.rewindJRDataSource
 	 */
+	@Deprecated
 	public static JRRewindableDataSource rewindServoyDataSource(JRRewindableDataSource dataSource) throws JRException {
-		dataSource.moveFirst();
-		return dataSource;
+		return JasperReportsDataSource.rewindJRDataSource(dataSource);
 	}
+	
+
 }
