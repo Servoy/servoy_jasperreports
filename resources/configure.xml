@@ -6,6 +6,7 @@
 	<property name="path2JR" value="${pathToJasperReportsEngineJar}"/>
 	<property name="jasper_reports_project" value="${pathToJasperReportsProject}"/>
 	<property name="lib" value="lib"/>
+	<property name="resources" value="resources"/>
 			
 	
 	<!-- telling ant where to find ant-contrib -->
@@ -25,6 +26,7 @@
 		<mkdir dir="${plugins}/${servoy_jasperreports}"/>
 		<copy todir="${plugins}" file="${lib}/servoy_jasperreports.jar"/>
 		<copy todir="${plugins}/${servoy_jasperreports}" file="${lib}/commons-io.jar"/>
+		<copy todir="${plugins}" file="${resources}/servoy_jasperreports_commons.jar.jnlp"/>
 	</target>
 	
 	<target name="build" depends="init">
@@ -61,8 +63,7 @@
 		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/plugins/servoy_jasperreports/commons-io.jar&quot; download=&quot;lazy&quot; part=&quot;commons-io&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.io.*&quot; part=&quot;commons-io&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		
-		<echo message="&#x0009;&#x0009;&lt;jar href=&quot;/lib/commons-collections.jar&quot; download=&quot;lazy&quot; part=&quot;commons-collections&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
-		<echo message="&#x0009;&#x0009;&#x0009;&lt;package name=&quot;org.apache.commons.collections.*&quot; part=&quot;commons-collections&quot; recursive=&quot;true&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
+		<echo message="&#x0009;&#x0009;&lt;extension href=&quot;/plugins/servoy_jasperreports_commons.jar.jnlp&quot; name=&quot;servoy_jasperreports_commons.jar&quot; version=&quot;%%version%%&quot;/&gt;${line.separator}" file="${plugins}/servoy_jasperreports.jar.jnlp" append="true"/>
 		
 	</target>
 

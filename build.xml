@@ -49,6 +49,7 @@
 		<copy file="${resources}/ant-contrib-1.0b3.jar" todir="${install}/${lib}"/>
 		<copy file="${lib}/commons-io.jar" todir="${install}/${lib}"/>
 		<copy file="${lib}/commons-collections.jar" todir="${install}/${lib}"/>
+		<copy file="${resources}/servoy_jasperreports_commons.jar.jnlp" todir="${install}/${resources}"/>
 		<delete dir="${build}"/>
 	</target>
 
@@ -67,7 +68,7 @@
 	    	</fileset>
 	    </copy>		
 		<!-- compile the java classes  -->
-		<javac encoding="ISO-8859-1" srcdir="${src}" destdir="${build}" target="1.5" source="1.5" debug="on">
+		<javac encoding="ISO-8859-1" srcdir="${src}" destdir="${build}" target="1.6" source="1.6" debug="on">
 			<classpath refid="classpath"/>
 		</javac>		
 		<!-- create server skeletons and stubs  -->

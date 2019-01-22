@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="%%serverURL%%" href="/servoy-client/plugins/servoy_jasperreports_commons.jar.jnlp">
+	<information>
+		<title>Servoy Client Plugins</title>
+		<vendor>Servoy and Others</vendor>
+	</information>
+	<resources> 
+		<j2se version="1.6+"/>
+		<jar href="/lib/commons-collections.jar" download="lazy" part="commons-collections" version="%%version%%"/>
+			<package name="org.apache.commons.collections4.*" part="commons-collections" recursive="true"/>
+	</resources> 
+	<component-desc></component-desc> 
+	<security>
+		<all-permissions/>
+	</security>
+</jnlp>
