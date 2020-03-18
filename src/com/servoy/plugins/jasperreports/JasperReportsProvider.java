@@ -935,7 +935,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		{
 			mimeType = JasperReportsWebViewer.MIME_TYPE_PDF;
 		}
-		else if (exportType.equals(OUTPUT_FORMAT.CSV))
+		else if (exportType.equals(OUTPUT_FORMAT.CSV) || exportType.equals(OUTPUT_FORMAT.CSV_METADATA))
 		{
 			mimeType = JasperReportsWebViewer.MIME_TYPE_CSV;
 		}
@@ -986,6 +986,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		else if (exportType.equals(OUTPUT_FORMAT.XML))
 		{
 			mimeType = JasperReportsWebViewer.MIME_TYPE_XML;
+		}
+		else if (exportType.equals(OUTPUT_FORMAT.JSON_METADATA))
+		{
+			mimeType = JasperReportsWebViewer.MIME_TYPE_JSON;
 		}
 		else
 		{
@@ -1552,7 +1556,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "6.4.1";
+		return "6.12.2";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
@@ -1664,20 +1668,13 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			}
 		}
 
-		if(jrv instanceof net.sf.jasperreports.view.JRViewer) // old viewer
+		// unfortunately "setSaveContributors" has been moved to the toolbar,
+		// and there is no better way to have access to it, then finding it in the panel
+		for(int i = 0; i < jrv.getComponentCount(); i++)
 		{
-			((net.sf.jasperreports.view.JRViewer)jrv).setSaveContributors(jrSaveContribs);
-		}
-		else
-		{
-			// unfortunately "setSaveContributors" has been moved to the toolbar,
-			// and there is no better way to have access to it, then finding it in the panel
-			for(int i = 0; i < jrv.getComponentCount(); i++)
+			if(jrv.getComponent(i) instanceof JRViewerToolbar)
 			{
-				if(jrv.getComponent(i) instanceof JRViewerToolbar)
-				{
-					((JRViewerToolbar)jrv.getComponent(i)).setSaveContributors(jrSaveContribs);
-				}
+				((JRViewerToolbar)jrv.getComponent(i)).setSaveContributors(jrSaveContribs);
 			}
 		}
 	}

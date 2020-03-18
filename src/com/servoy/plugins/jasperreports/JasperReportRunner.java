@@ -54,11 +54,14 @@ import net.sf.jasperreports.engine.export.FileHtmlResourceHandler;
 import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.HtmlResourceHandler;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRCsvMetadataExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRTextExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
+import net.sf.jasperreports.engine.export.JsonExporter;
+import net.sf.jasperreports.engine.export.JsonMetadataExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
@@ -76,6 +79,7 @@ import net.sf.jasperreports.export.ExporterInput;
 import net.sf.jasperreports.export.ExporterOutput;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleJsonExporterOutput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleReportExportConfiguration;
 import net.sf.jasperreports.export.SimpleTextReportConfiguration;
@@ -141,7 +145,9 @@ public class JasperReportRunner implements IJasperReportRunner
 				type.equalsIgnoreCase(OUTPUT_FORMAT.RTF) ||
 				type.equalsIgnoreCase(OUTPUT_FORMAT.CSV) ||
 				type.equalsIgnoreCase(OUTPUT_FORMAT.TXT) ||
-				type.equalsIgnoreCase(OUTPUT_FORMAT.XML));
+				type.equalsIgnoreCase(OUTPUT_FORMAT.XML) ||
+				type.equalsIgnoreCase(OUTPUT_FORMAT.JSON_METADATA) ||
+				type.equalsIgnoreCase(OUTPUT_FORMAT.CSV_METADATA));
 	}
 	
 	/**
@@ -244,6 +250,14 @@ public class JasperReportRunner implements IJasperReportRunner
 				exporter = new JRXmlExporter();
 				exporterOutput = new SimpleXmlExporterOutput(baos,"UTF-8");
 				((SimpleXmlExporterOutput)exporterOutput).setEmbeddingImages(Boolean.TRUE);
+			}
+			else if (type.equalsIgnoreCase(OUTPUT_FORMAT.JSON_METADATA)) 
+			{
+				exporter = new JsonMetadataExporter();
+			}
+			else if (type.equalsIgnoreCase(OUTPUT_FORMAT.CSV_METADATA)) 
+			{
+				exporter = new JRCsvMetadataExporter();
 			}
 			// should not get here
 			else throw new IllegalStateException("unexpected text based report type " + type);

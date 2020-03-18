@@ -27,8 +27,8 @@
  * http://www.servoy.com
  */
  CONTENT:
- This zipfile contains the JasperReports plugin for Servoy, version 6.4.1. 
- It is to be used with Servoy 6.x and/or higher and is consistent with JasperReports version 6.4.1.
+ This zipfile contains the JasperReports plugin for Servoy, version 6.12.2. 
+ It is to be used with Servoy 6.x and/or higher and is consistent with JasperReports version 6.12.2.
  
  For more information about Servoy, visit http://www.servoy.com.
  For more information about JasperReports, visit: http://community.jaspersoft.com/project/jasperreports-library.

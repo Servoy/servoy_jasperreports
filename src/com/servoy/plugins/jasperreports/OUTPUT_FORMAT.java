@@ -50,6 +50,8 @@ public abstract class OUTPUT_FORMAT implements IConstantsObject
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.docx',OUTPUT_FORMAT.DOCX,null);
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.json',OUTPUT_FORMAT.JSON,null);
+	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.csv',OUTPUT_FORMAT.CSV_METADATA,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
 	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);
@@ -135,4 +137,14 @@ public abstract class OUTPUT_FORMAT implements IConstantsObject
 	 * @sampleas XHTML
 	 */
 	public static final String PRINT = "print";
+	
+	/**
+	 * @sampleas XHTML
+	 */
+	public static final String JSON_METADATA = "json_metadata";
+	
+	/**
+	 * @sampleas XHTML
+	 */
+	public static final String CSV_METADATA = "csv_metadata";	
 }

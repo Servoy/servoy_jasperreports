@@ -33,8 +33,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -43,7 +41,7 @@ import javax.swing.border.Border;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JRViewer;
+import net.sf.jasperreports.swing.JRViewer;
 
 import com.servoy.j2db.dataprocessing.IRecord;
 import com.servoy.j2db.dataui.IServoyAwareBean;
@@ -54,7 +52,6 @@ import com.servoy.j2db.scripting.IScriptable;
 import com.servoy.j2db.util.ComponentFactoryHelper;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.PersistHelper;
-import com.servoy.plugins.jasperreports.JR_SVY_VIEWER_DISPLAY_MODE;
 import com.servoy.plugins.jasperreports.JasperReportsPlugin;
 import com.servoy.plugins.jasperreports.JasperReportsProvider;
 
@@ -227,6 +224,8 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	}
 	
 	/**
+	 * @deprecated
+	 * 
 	 * Sets or gets the display mode of the viewer in the Bean.
 	 * 
 	 * @sample
@@ -235,6 +234,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * 
 	 * @return the display mode of the viewer
 	 */
+	
 	public String js_getDisplayMode() {
 		//make a pretty name for the display mode type
 		String disp = "";
@@ -245,7 +245,11 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 		}
 		return disp.substring(0, disp.length() - 1);
 	}
-	
+
+	/**
+	 * @deprecated
+	 *
+	 */
 	public void js_setDisplayMode(String displayMode) {
 		this.currentDisplayMode = displayMode;
 	}
@@ -513,61 +517,61 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 			super(jp);
 		}
 		
-		public void btnFitPagePressed()
-		{
-			btnFitPage.setSelected(true);
-			btnActualSize.setSelected(false);
-			btnFitWidth.setSelected(false);
-			cmbZoom.setSelectedIndex(-1);
-		}
-		
-		public boolean isBtnFitPagePressed()
-		{
-			return btnFitPage.isSelected();
-		}
-		
-		public void selectBtnFitPage()
-		{
-			btnFitPage.setSelected(true);
-		}
-		
-		
-		public void btnFitWidthPressed()
-		{
-			btnFitWidth.setSelected(true);
-			btnFitPage.setSelected(false);
-			btnActualSize.setSelected(false);
-			cmbZoom.setSelectedIndex(-1);
-		}
-		
-		public boolean isBtnFitWidthPressed()
-		{
-			return btnFitWidth.isSelected();
-		}
-		
-		public void selectBtnFitWidth()
-		{
-			btnFitWidth.setSelected(true);
-		}
-		
-		public void btnActualSizePressed()
-		{
-			btnActualSize.setSelected(true);
-			btnFitPage.setSelected(false);
-			btnFitWidth.setSelected(false);
-			cmbZoom.setSelectedIndex(-1);
-			setZoomRatio(1);
-		}
-		
-		public boolean isBtnActualSizePressed()
-		{
-			return btnActualSize.isSelected();
-		}
-		
-		public void selectBtnActualSize()
-		{
-			btnActualSize.setSelected(true);
-		}
+//		public void btnFitPagePressed()
+//		{
+//			btnFitPage.setSelected(true);
+//			btnActualSize.setSelected(false);
+//			btnFitWidth.setSelected(false);
+//			cmbZoom.setSelectedIndex(-1);
+//		}
+//		
+//		public boolean isBtnFitPagePressed()
+//		{
+//			return btnFitPage.isSelected();
+//		}
+//		
+//		public void selectBtnFitPage()
+//		{
+//			btnFitPage.setSelected(true);
+//		}
+//		
+//		
+//		public void btnFitWidthPressed()
+//		{
+//			btnFitWidth.setSelected(true);
+//			btnFitPage.setSelected(false);
+//			btnActualSize.setSelected(false);
+//			cmbZoom.setSelectedIndex(-1);
+//		}
+//		
+//		public boolean isBtnFitWidthPressed()
+//		{
+//			return btnFitWidth.isSelected();
+//		}
+//		
+//		public void selectBtnFitWidth()
+//		{
+//			btnFitWidth.setSelected(true);
+//		}
+//		
+//		public void btnActualSizePressed()
+//		{
+//			btnActualSize.setSelected(true);
+//			btnFitPage.setSelected(false);
+//			btnFitWidth.setSelected(false);
+//			cmbZoom.setSelectedIndex(-1);
+//			setZoomRatio(1);
+//		}
+//		
+//		public boolean isBtnActualSizePressed()
+//		{
+//			return btnActualSize.isSelected();
+//		}
+//		
+//		public void selectBtnActualSize()
+//		{
+//			btnActualSize.setSelected(true);
+//		}
 	}
 	
 	// main functionality
@@ -581,42 +585,42 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 		if (getComponents().length > 0) removeAll();
 		add(jrv, BorderLayout.CENTER);
 		
-		jrv.addComponentListener(new ComponentListener() {
-			public void componentResized(ComponentEvent e) { 
-				// no buttons selected (yet)
-				if (!jrv.isBtnActualSizePressed() && !jrv.isBtnFitPagePressed() && !jrv.isBtnFitWidthPressed())
-				{ 
-					if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE.equals(currentDisplayMode)) jrv.selectBtnFitPage();
-					else if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH.equals(currentDisplayMode)) jrv.selectBtnFitWidth();
-					else if (JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE.equals(currentDisplayMode)) jrv.selectBtnActualSize();
-				}
-
-				// if display mode set via scripting && button has been pressed, we resize accordingly
-				// else we resize with respect to the button pressed (we let the viewer do its job alone) 
-				if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE.equals(currentDisplayMode) && jrv.isBtnFitPagePressed())
-				{
-					jrv.setFitPageZoomRatio();
-					jrv.btnFitPagePressed();
-				}
-				else if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH.equals(currentDisplayMode) && jrv.isBtnFitWidthPressed())
-				{
-					jrv.setFitWidthZoomRatio();
-					jrv.btnFitWidthPressed();
-				}
-				else if (JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE.equals(currentDisplayMode) && jrv.isBtnActualSizePressed())
-				{
-					jrv.btnActualSizePressed();
-				}
-			}
-
-			public void componentMoved(ComponentEvent e) {
-			}
-
-			public void componentShown(ComponentEvent e) {
-			}
-
-			public void componentHidden(ComponentEvent e) {
-			}});
+//		jrv.addComponentListener(new ComponentListener() {
+//			public void componentResized(ComponentEvent e) { 
+//				// no buttons selected (yet)
+//				if (!jrv.isBtnActualSizePressed() && !jrv.isBtnFitPagePressed() && !jrv.isBtnFitWidthPressed())
+//				{ 
+//					if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE.equals(currentDisplayMode)) jrv.selectBtnFitPage();
+//					else if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH.equals(currentDisplayMode)) jrv.selectBtnFitWidth();
+//					else if (JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE.equals(currentDisplayMode)) jrv.selectBtnActualSize();
+//				}
+//
+//				// if display mode set via scripting && button has been pressed, we resize accordingly
+//				// else we resize with respect to the button pressed (we let the viewer do its job alone) 
+//				if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_PAGE.equals(currentDisplayMode) && jrv.isBtnFitPagePressed())
+//				{
+//					jrv.setFitPageZoomRatio();
+//					jrv.btnFitPagePressed();
+//				}
+//				else if (JR_SVY_VIEWER_DISPLAY_MODE.FIT_WIDTH.equals(currentDisplayMode) && jrv.isBtnFitWidthPressed())
+//				{
+//					jrv.setFitWidthZoomRatio();
+//					jrv.btnFitWidthPressed();
+//				}
+//				else if (JR_SVY_VIEWER_DISPLAY_MODE.ACTUAL_PAGE_SIZE.equals(currentDisplayMode) && jrv.isBtnActualSizePressed())
+//				{
+//					jrv.btnActualSizePressed();
+//				}
+//			}
+//
+//			public void componentMoved(ComponentEvent e) {
+//			}
+//
+//			public void componentShown(ComponentEvent e) {
+//			}
+//
+//			public void componentHidden(ComponentEvent e) {
+//			}});
 		
 		if (beanViewerExportFormats != null)
 			JasperReportsProvider.setViewerSaveContributors(jrv, beanViewerExportFormats);

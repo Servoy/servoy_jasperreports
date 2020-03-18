@@ -49,6 +49,7 @@ public class JasperReportsWebViewer {
 	public static final String MIME_TYPE_TXT = "text/plain";
 	public static final String MIME_TYPE_CSV = "text/comma-separated-values";
 	public static final String MIME_TYPE_XML = "text/xml";
+	public static final String MIME_TYPE_JSON = "text/json";
 	public static final String MIME_TYPE_PDF = "application/pdf";
 	public static final String MIME_TYPE_XLS = "application/vnd.ms-excel";
 	public static final String MIME_TYPE_ODS = "application/x-vnd.oasis.opendocument.spreadsheet";
