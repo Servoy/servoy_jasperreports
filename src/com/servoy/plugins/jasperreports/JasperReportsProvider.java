@@ -1556,7 +1556,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "6.16.0";
+		return "6.17.0";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
