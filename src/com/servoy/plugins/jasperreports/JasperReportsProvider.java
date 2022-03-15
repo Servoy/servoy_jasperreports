@@ -457,6 +457,10 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		{
 			throw new Exception("No data source <null> has been provided");
 		}
+		if(reportDataSource instanceof String)
+		{
+			reportDataSource = plugin.getIClientPluginAccess().getDatabaseManager().getSwitchedToServerName((String)reportDataSource);
+		}
 		Debug.trace("JasperTrace: JasperReport initialize");
 
 		IJasperReportsService jasperReportService = plugin.connectJasperService();
