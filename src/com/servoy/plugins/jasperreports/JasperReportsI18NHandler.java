@@ -69,11 +69,18 @@ public class JasperReportsI18NHandler {
 			l = stringToLocale(localeString);
 			parameters.put("REPORT_LOCALE", l);
 		} else if (!parameters.containsKey("REPORT_LOCALE")) {
-			l = Locale.getDefault();
-			if (isWebClient) {
-				//Get Webclient locale settings (Returns incorrect value < 3.5.1)
-				//<= 3.5.2 the resourcebundle only contains the Default Language when called in the Webclient
-				l = Session.get().getLocale();
+			if(application.getReleaseNumber() > 3742)
+			{
+				l = getClientLocale(application);
+			}
+			else
+			{
+				l = Locale.getDefault();
+				if (isWebClient) {
+					//Get Webclient locale settings (Returns incorrect value < 3.5.1)
+					//<= 3.5.2 the resourcebundle only contains the Default Language when called in the Webclient
+					l = Session.get().getLocale();
+				}	
 			}
 			parameters.put("REPORT_LOCALE", l);
 		}
@@ -81,5 +88,10 @@ public class JasperReportsI18NHandler {
 		ResourceBundle rb = application.getResourceBundle(l);
 		parameters.put("REPORT_RESOURCE_BUNDLE", rb);
 		return parameters;
+	}
+	
+	private static Locale getClientLocale(IClientPluginAccess application)
+	{
+		return application.getLocale();
 	}
 }
