@@ -6,8 +6,24 @@
 	</information>
 	<resources> 
 		<j2se version="1.6+"/>
+        <jar href="/lib/org.apache.commons.lang3_3.12.0.jar" download="lazy" part="commons-lang" version="%%version%%"/> 
+            <package name="org.apache.commons.lang3.*" part="commons-lang" recursive="true"/> 
+        <jar href="/lib/commons-io.jar" download="lazy" part="commons-io" version="%%version%%"/>
+            <package name="org.apache.commons.io.*" part="commons-io" recursive="true"/>		
 		<jar href="/lib/commons-collections.jar" download="lazy" part="commons-collections" version="%%version%%"/>
 			<package name="org.apache.commons.collections4.*" part="commons-collections" recursive="true"/>
+        <jar href="/plugins/jakarta-poi/commons-math3.jar" download="lazy" part="commons-math3" version="%%version%%"/> 
+            <package name="org.apache.commons.math3.*" part="commons-math3" recursive="true"/>
+        <jar href="/plugins/jakarta-poi/jakarta-poi.jar" download="lazy" part="poi" version="%%version%%"/> 
+            <package name="org.apache.poi.*" part="poi" recursive="true"/>
+        <jar href="/plugins/pdf_output/itext.jar" download="lazy" part="itext" version="%%version%%"/> 
+            <package name="com.lowagie.*" part="itext" recursive="true"/>
+        <jar href="/plugins/jackson/jackson-annotations.jar" download="lazy" part="jackson-annotations" version="%%version%%"/> 
+            <package name="com.fasterxml.jackson.annotation.*" part="jackson-annotations" recursive="true"/> 
+        <jar href="/plugins/jackson/jackson-core.jar" download="lazy" part="jackson-core" version="%%version%%"/> 
+            <package name="com.fasterxml.jackson.core.*" part="jackson-core" recursive="true"/> 
+        <jar href="/plugins/jackson/jackson-databind.jar" download="lazy" part="jackson-databind" version="%%version%%"/> 
+            <package name="com.fasterxml.jackson.databind.*" part="jackson-databind" recursive="true"/>
 	</resources> 
 	<component-desc></component-desc> 
 	<security>

@@ -47,7 +47,7 @@
 		    </fileset>
 	    </copy>
 		<copy file="${resources}/ant-contrib-1.0b3.jar" todir="${install}/${lib}"/>
-		<copy file="${lib}/commons-io.jar" todir="${install}/${lib}"/>
+		<!-- copy file="${lib}/commons-io.jar" todir="${install}/${lib}"/ -->
 		<copy file="${lib}/commons-collections.jar" todir="${install}/${lib}"/>
 		<copy file="${resources}/servoy_jasperreports_commons.jar.jnlp" todir="${install}/${resources}"/>
 		<delete dir="${build}"/>
