@@ -8,16 +8,24 @@
 		<j2se version="1.6+"/>
         <jar href="/lib/org.apache.commons.lang3_3.12.0.jar" download="lazy" part="commons-lang" version="%%version%%"/> 
             <package name="org.apache.commons.lang3.*" part="commons-lang" recursive="true"/> 
+        <jar href="/lib/commons-codec.jar" download="lazy" part="codec" version="%%version%%"/>      
+            <package name="org.apache.commons.codec.*" part="codec" recursive="true"/>
         <jar href="/lib/commons-io.jar" download="lazy" part="commons-io" version="%%version%%"/>
             <package name="org.apache.commons.io.*" part="commons-io" recursive="true"/>		
 		<jar href="/lib/commons-collections.jar" download="lazy" part="commons-collections" version="%%version%%"/>
 			<package name="org.apache.commons.collections4.*" part="commons-collections" recursive="true"/>
+        <jar href="/lib/log4j-api.jar" download="lazy" part="log4j" version="%%version%%"/>
+            <package name="org.apache.logging.log4j.*" part="log4j" recursive="true"/>
         <jar href="/plugins/jakarta-poi/commons-math3.jar" download="lazy" part="commons-math3" version="%%version%%"/> 
             <package name="org.apache.commons.math3.*" part="commons-math3" recursive="true"/>
+        <jar href="/plugins/jakarta-poi/SparseBitSet.jar" download="lazy" part="sparse-bit-set" version="%%version%%"/> 
+            <package name="com.zaxxer.*" part="sparse-bit-set" recursive="true"/>
         <jar href="/plugins/jakarta-poi/jakarta-poi.jar" download="lazy" part="poi" version="%%version%%"/> 
-            <package name="org.apache.poi.*" part="poi" recursive="true"/>
+            <package name="org.apache.poi.*" part="poi" recursive="true"/>                        
         <jar href="/plugins/pdf_output/itext.jar" download="lazy" part="itext" version="%%version%%"/> 
             <package name="com.lowagie.*" part="itext" recursive="true"/>
+        <jar href="/plugins/pdf_output/bcprov.jar" download="lazy" part="bouncycastle" version="%%version%%"/>
+            <package name="org.bouncycastle.*" part="bouncycastle" recursive="true"/>
         <jar href="/plugins/jackson/jackson-annotations.jar" download="lazy" part="jackson-annotations" version="%%version%%"/> 
             <package name="com.fasterxml.jackson.annotation.*" part="jackson-annotations" recursive="true"/> 
         <jar href="/plugins/jackson/jackson-core.jar" download="lazy" part="jackson-core" version="%%version%%"/> 
