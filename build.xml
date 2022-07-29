@@ -54,6 +54,10 @@
 	</target>
 
 	<target name="jar" depends="compile">
+        <mkdir dir="${build}/META-INF/services"/>
+        <copy overwrite="true" todir="${build}/META-INF/services">
+            <fileset file="${resources}/com.servoy.j2db.plugins.IPlugin"/>
+        </copy>		
 		<jar jarfile="${install}/${lib}/${jar}" 
 			basedir="${build}"
 			excludes="${bean}/**"/>
