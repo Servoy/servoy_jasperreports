@@ -526,7 +526,10 @@ public class JasperReportRunner implements IJasperReportRunner
 		File testDir = new File(pageOutDir);
 		if (!testDir.exists())
 		{
-			virtErrMsg = "The indicated PAGE_OUT_DIR path: '" + pageOutDir + "' is not a valid path.";
+			virtErrMsg = "The indicated PAGE_OUT_DIR path: '" + pageOutDir + "' is not a valid path. This folder is used, when" +
+				" the VIRTUALIZER_TYPE is set to 'file' or 'swapFile' in the params of the 'runReport' api call, as a temporary" +
+				" folder - so it needs to exist and be writable. If PAGE_OUT_DIR is not set in the params, it uses as default the temp folder" +
+				" of the JVM (java.io.tmpdir).";
 			Debug.error(virtErrMsg);
 			throw new JRException(virtErrMsg);
 		}
