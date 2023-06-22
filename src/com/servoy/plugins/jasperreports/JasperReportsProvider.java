@@ -344,8 +344,11 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 * 
 	 * // Pass exporter parameters to the export process in runReport 
 	 * //var params = new Object();
-	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_TITLE"] =  "Test title"; 
-	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.engine.export.JRPdfExporterParameter.METADATA_AUTHOR" ] = "Test Author";
+	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.export.pdf.metadata.title"] =  "Test title"; 
+	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.export.pdf.metadata.author" ] = "Test Author";
+	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.export.pdf.metadata.creator"] =  "Test creator"; 
+	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.export.pdf.metadata.keywords" ] = "Test keywords";
+	 * //params["EXPORTER_PARAMETER:net.sf.jasperreports.export.pdf.metadata.subject"] =  "Test subject";
 	 * //var r = plugins.jasperPluginRMI.runReport("myServer","someReport.jrxml","path/to/someReportExported.pdf",OUTPUT_FORMAT.PDF,params);
 	 * 
 	 * // Using an XML/CSV file as the datasource of the report.
