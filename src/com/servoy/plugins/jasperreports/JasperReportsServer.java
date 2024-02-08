@@ -764,8 +764,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			String filepath = files.get(i).getPath();
 			String filen = filepath.substring(reportsdir.length());
 
-			if (filen.startsWith("\\"))
-				filen = filen.substring(1);
+			if (filen.startsWith(File.separator)) filen = filen.substring(File.separator.length());
 			
 			list[i] = filen;
 		}
