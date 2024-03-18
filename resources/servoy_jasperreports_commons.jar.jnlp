@@ -22,8 +22,8 @@
             <package name="com.zaxxer.*" part="sparse-bit-set" recursive="true"/>
         <jar href="/plugins/jakarta-poi/jakarta-poi.jar" download="lazy" part="poi" version="%%version%%"/> 
             <package name="org.apache.poi.*" part="poi" recursive="true"/>                        
-        <jar href="/plugins/pdf_output/itext.jar" download="lazy" part="itext" version="%%version%%"/> 
-            <package name="com.lowagie.*" part="itext" recursive="true"/>
+        <jar href="/plugins/pdf_output/openpdf.jar" download="lazy" part="openpdf" version="%%version%%"/> 
+            <package name="com.lowagie.*" part="openpdf" recursive="true"/>
         <jar href="/plugins/pdf_output/bcprov.jar" download="lazy" part="bouncycastle" version="%%version%%"/>
             <package name="org.bouncycastle.*" part="bouncycastle" recursive="true"/>
         <jar href="/plugins/jackson/jackson-annotations.jar" download="lazy" part="jackson-annotations" version="%%version%%"/> 
