@@ -72,7 +72,7 @@ import com.servoy.j2db.plugins.IServerAccess;
 import com.servoy.j2db.plugins.IServerPlugin;
 import com.servoy.j2db.plugins.PluginException;
 import com.servoy.j2db.preference.PreferencePanel;
-import com.servoy.j2db.server.main.ApplicationServer;
+import com.servoy.j2db.server.shared.ApplicationServerRegistry;
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
@@ -467,7 +467,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 			Debug.log("Report directory has not being set. Default location will be now set to /application_server/server/reports");
 			try
 			{
-				String appServerDir = adjustFile(ApplicationServer.getInstance().getServoyApplicationServerDirectory());
+				String appServerDir = adjustFile(ApplicationServerRegistry.get().getServoyApplicationServerDirectory());
 				if (appServerDir != null)
 				{
 					repDir = absolutePathFormatting(appServerDir + (appServerDir.endsWith("/") ? "" : (appServerDir.endsWith("\\") ? "" : "/" )) + "server/reports");

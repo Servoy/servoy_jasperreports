@@ -7,11 +7,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
-	<classpathentry kind="lib" path="servoy_lib/j2db.jar"/>
-	<classpathentry kind="lib" path="servoy_lib/j2dbdev.jar"/>
-	<classpathentry kind="lib" path="servoy_lib/js.jar"/>
-	<classpathentry kind="lib" path="servoy_lib/wicket.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io.jar"/>
 	<classpathentry kind="lib" path="lib/jasperreports-6.21.0.jar"/>
+	<classpathentry kind="lib" path="servoy_lib/servoy_shared_2024.9.0.4001_rc2.jar" sourcepath="/servoy_shared"/>
+	<classpathentry kind="lib" path="servoy_lib/servoy_smart_client_2024.9.0.4001_rc2.jar"/>
+	<classpathentry kind="lib" path="servoy_lib/org.eclipse.dltk.javascript.rhino_1.7.15.s1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

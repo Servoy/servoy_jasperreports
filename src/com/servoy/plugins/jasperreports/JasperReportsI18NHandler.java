@@ -32,7 +32,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.apache.wicket.Session;
 
 /**
  * Created on Aug 3, 2007
@@ -79,7 +78,7 @@ public class JasperReportsI18NHandler {
 				if (isWebClient) {
 					//Get Webclient locale settings (Returns incorrect value < 3.5.1)
 					//<= 3.5.2 the resourcebundle only contains the Default Language when called in the Webclient
-					l = Session.get().getLocale();
+					//l = Session.get().getLocale();
 				}	
 			}
 			parameters.put("REPORT_LOCALE", l);
