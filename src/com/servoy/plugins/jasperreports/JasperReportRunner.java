@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -55,13 +56,9 @@ import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.HtmlResourceHandler;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRCsvMetadataExporter;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRTextExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
-import net.sf.jasperreports.engine.export.JsonExporter;
-import net.sf.jasperreports.engine.export.JsonMetadataExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
@@ -73,13 +70,11 @@ import net.sf.jasperreports.engine.fill.JRSwapFileVirtualizer;
 import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.util.JRSwapFile;
 import net.sf.jasperreports.engine.util.LocalJasperReportsContext;
-import net.sf.jasperreports.engine.util.SimpleFileResolver;
 import net.sf.jasperreports.export.Exporter;
 import net.sf.jasperreports.export.ExporterInput;
 import net.sf.jasperreports.export.ExporterOutput;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
-import net.sf.jasperreports.export.SimpleJsonExporterOutput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleReportExportConfiguration;
 import net.sf.jasperreports.export.SimpleTextReportConfiguration;
@@ -87,6 +82,13 @@ import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
+import net.sf.jasperreports.json.export.JsonMetadataExporter;
+import net.sf.jasperreports.pdf.JRPdfExporter;
+import net.sf.jasperreports.poi.export.JRXlsExporter;
+import net.sf.jasperreports.repo.FileRepositoryPersistenceServiceFactory;
+import net.sf.jasperreports.repo.FileRepositoryService;
+import net.sf.jasperreports.repo.PersistenceServiceFactory;
+import net.sf.jasperreports.repo.RepositoryService;
 
 import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.UUID;
@@ -241,8 +243,8 @@ public class JasperReportRunner implements IJasperReportRunner
 			{
 				exporter = new JRTextExporter();
 				reportExportConfiguration = new SimpleTextReportConfiguration();
-				((SimpleTextReportConfiguration)reportExportConfiguration).setPageWidthInChars(new Integer(TEXT_PAGE_WIDTH_IN_CHARS));
-				((SimpleTextReportConfiguration)reportExportConfiguration).setPageHeightInChars( new Integer(TEXT_PAGE_HEIGHT_IN_CHARS));
+				((SimpleTextReportConfiguration)reportExportConfiguration).setPageWidthInChars(Integer.valueOf(TEXT_PAGE_WIDTH_IN_CHARS));
+				((SimpleTextReportConfiguration)reportExportConfiguration).setPageHeightInChars( Integer.valueOf(TEXT_PAGE_HEIGHT_IN_CHARS));
 				exporter.setConfiguration(reportExportConfiguration);
 			} 
 			else if (type.equalsIgnoreCase(OUTPUT_FORMAT.XML)) 
@@ -393,15 +395,16 @@ public class JasperReportRunner implements IJasperReportRunner
 		ArrayList<String> al = JasperReportsUtil.StringToArrayList(extraDirs);
 		if (al != null)
 		{
-			ArrayList<File> dirList = new ArrayList<File>();
+			LocalJasperReportsContext localJasperReportsContext = new LocalJasperReportsContext(DefaultJasperReportsContext.getInstance());
+			ArrayList<FileRepositoryService> dirList = new ArrayList<FileRepositoryService>();
 			String aux = null;
 			for (String st : al)
 			{
 				aux = adjustFileUnix(st);
-				dirList.add(new File(aux));
+				dirList.add(new FileRepositoryService(localJasperReportsContext, aux, false));
 			}
-			LocalJasperReportsContext localJasperReportsContext = new LocalJasperReportsContext(DefaultJasperReportsContext.getInstance());
-			localJasperReportsContext.setFileResolver(new SimpleFileResolver(dirList));
+			localJasperReportsContext.setExtensions(RepositoryService.class, dirList);
+			localJasperReportsContext.setExtensions(PersistenceServiceFactory.class, Collections.singletonList(FileRepositoryPersistenceServiceFactory.getInstance()));
 		}
 
 		exporter.exportReport();
@@ -578,7 +581,7 @@ public class JasperReportRunner implements IJasperReportRunner
 				Object value = parameters.get(paramName);
 				if ((value != null) && (value.getClass().getName().equalsIgnoreCase("java.lang.Double")) && (paramClass.equalsIgnoreCase("java.lang.Integer")))
 				{
-					value = new Integer(((Double) value).intValue());
+					value = Integer.valueOf(((Double) value).intValue());
 					parameters.put(paramName, value);
 				}
 				if (value != null)

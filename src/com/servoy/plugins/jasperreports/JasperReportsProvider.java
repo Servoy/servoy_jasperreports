@@ -1563,7 +1563,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "6.21.0";
+		return "7.0.1";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
@@ -1868,11 +1868,11 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 		Map<String, Object> aux = new HashMap<String, Object>();
 
 		// leaving these in just for legacy purposes
-		if (parameters.containsKey(EXPORTER_PARAMETERS.OFFSET_X)) aux.put(EXPORTER_PARAMETERS.OFFSET_X, new Integer(((Double) parameters.get(EXPORTER_PARAMETERS.OFFSET_X)).intValue()));
-		if (parameters.containsKey(EXPORTER_PARAMETERS.OFFSET_Y)) aux.put(EXPORTER_PARAMETERS.OFFSET_Y, new Integer(((Double) parameters.get(EXPORTER_PARAMETERS.OFFSET_Y)).intValue()));
-		if (parameters.containsKey(EXPORTER_PARAMETERS.PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.PAGE_INDEX, new Integer(((Double) parameters.get(EXPORTER_PARAMETERS.PAGE_INDEX)).intValue()));
-		if (parameters.containsKey(EXPORTER_PARAMETERS.START_PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.START_PAGE_INDEX, new Integer(((Double) parameters.get(EXPORTER_PARAMETERS.START_PAGE_INDEX)).intValue()));
-		if (parameters.containsKey(EXPORTER_PARAMETERS.END_PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.END_PAGE_INDEX, new Integer(((Double) parameters.get(EXPORTER_PARAMETERS.END_PAGE_INDEX)).intValue()));
+		if (parameters.containsKey(EXPORTER_PARAMETERS.OFFSET_X)) aux.put(EXPORTER_PARAMETERS.OFFSET_X, Integer.valueOf(((Double) parameters.get(EXPORTER_PARAMETERS.OFFSET_X)).intValue()));
+		if (parameters.containsKey(EXPORTER_PARAMETERS.OFFSET_Y)) aux.put(EXPORTER_PARAMETERS.OFFSET_Y, Integer.valueOf(((Double) parameters.get(EXPORTER_PARAMETERS.OFFSET_Y)).intValue()));
+		if (parameters.containsKey(EXPORTER_PARAMETERS.PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.PAGE_INDEX, Integer.valueOf(((Double) parameters.get(EXPORTER_PARAMETERS.PAGE_INDEX)).intValue()));
+		if (parameters.containsKey(EXPORTER_PARAMETERS.START_PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.START_PAGE_INDEX, Integer.valueOf(((Double) parameters.get(EXPORTER_PARAMETERS.START_PAGE_INDEX)).intValue()));
+		if (parameters.containsKey(EXPORTER_PARAMETERS.END_PAGE_INDEX)) aux.put(EXPORTER_PARAMETERS.END_PAGE_INDEX, Integer.valueOf(((Double) parameters.get(EXPORTER_PARAMETERS.END_PAGE_INDEX)).intValue()));
 
 		// copy over only the exporter parameters
 		for (Map.Entry<String, Object> entry : parameters.entrySet())

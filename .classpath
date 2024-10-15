@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -11,7 +11,10 @@
 	<classpathentry kind="lib" path="servoy_lib/j2dbdev.jar"/>
 	<classpathentry kind="lib" path="servoy_lib/js.jar"/>
 	<classpathentry kind="lib" path="servoy_lib/wicket.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-6.21.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-7.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-excel-poi-7.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-json-7.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-pdf-7.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

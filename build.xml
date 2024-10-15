@@ -1,7 +1,8 @@
 <?xml version='1.0'?>
-<project name="servoy_jasperreports" default="plugin" basedir=".">
+<project name="servoy_jasperreports" default="plugin_new" basedir=".">
 
 	<property file="servoy.properties"/>
+	<property name="jasper_project" value="/home/gabi/jasper/jasperreports-7.0.1"/>
 	<property name="project_name" value="${ant.project.name}"/>  
 	<property name="src" value="src"/>
 	<property name="lib" value="lib"/>
@@ -53,6 +54,67 @@
 		<delete dir="${build}"/>
 	</target>
 
+	<!--
+	        - download jasperreports-project.zip from https://github.com/TIBCOSoftware/jasperreports/releases
+	        - mvn clean install
+	        - mvn dependency:copy-dependencies -DoutputDirectory=./alllibs
+	        - remove index.lst from groovy.jar  
+	    -->
+    <target name="plugin_new" depends="jar">
+        <copy todir="${install}/lib/servoy_jasperreports" overwrite="true">
+              <fileset dir="${jasper_project}/core/alllibs"/> <!-- core -->
+              <fileset dir="${jasper_project}/ext/jaxen"> <!-- jaxen -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-jaxen-*.jar"/>
+              </fileset>
+              <fileset dir="${jasper_project}/ext/jdt"> <!-- jdt -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-jdt-*.jar"/>
+              </fileset>            
+              <fileset dir="${jasper_project}/ext/groovy"> <!-- groovy -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-groovy-*.jar"/>
+              </fileset>                        
+              <fileset dir="${jasper_project}/ext/pdf"> <!-- pdf -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-pdf-*.jar"/>
+              </fileset>
+              <fileset dir="${jasper_project}/ext/json"> <!-- json -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-json-*.jar"/>
+              </fileset>            
+              <fileset dir="${jasper_project}/ext/excel-poi"> <!-- excel-poi -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-excel-poi-*.jar"/>
+              </fileset>                        
+              <fileset dir="${jasper_project}/ext/barbecue"> <!-- barbecue -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-barbecue-*.jar"/>
+              </fileset>            
+              <fileset dir="${jasper_project}/ext/barcode4j"> <!-- barcode4j -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-barcode4j-*.jar"/>
+              </fileset>                        
+              <fileset dir="${jasper_project}/ext/charts"> <!-- charts -->
+                <include name="alllibs/*"/>
+                <include name="target/jasperreports-charts-*.jar"/>
+              </fileset>            
+              <mapper type="flatten"/>
+        </copy>
+        <!-- libs already in Servoy core -->
+        <delete>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="antlr-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-collections4-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-annotations-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-core-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-databind-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="log4j-api-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="openpdf-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="slf4j-api-*.jar"/>
+        </delete>
+    </target>	
+	
 	<target name="jar" depends="compile">
         <mkdir dir="${build}/META-INF/services"/>
         <copy overwrite="true" todir="${build}/META-INF/services">
@@ -72,13 +134,13 @@
 	    	</fileset>
 	    </copy>		
 		<!-- compile the java classes  -->
-		<javac encoding="ISO-8859-1" srcdir="${src}" destdir="${build}" target="1.6" source="1.6" debug="on">
+		<javac encoding="ISO-8859-1" srcdir="${src}" destdir="${build}" target="1.8" source="1.8" debug="on">
 			<classpath refid="classpath"/>
 		</javac>		
 		<!-- create server skeletons and stubs  -->
-		<rmic classname="com.servoy.plugins.jasperreports.JasperReportsServer" base="${build}/">
+		<!--rmic classname="com.servoy.plugins.jasperreports.JasperReportsServer" base="${build}/">
 			<classpath refid="classpath"/> 
-		</rmic>
+		</rmic -->
 	</target>
 	
 	<target name="jrbean.jar" depends="compile">
