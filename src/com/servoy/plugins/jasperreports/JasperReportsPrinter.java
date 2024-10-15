@@ -80,7 +80,7 @@ public class JasperReportsPrinter implements Printable {
 
 	printJob.setJobName("JasperReports - " + jasperPrint.getName());
 
-	switch (jasperPrint.getOrientationValue()) {
+	switch (jasperPrint.getOrientation()) {
 	case LANDSCAPE: {
 	    pageFormat.setOrientation(PageFormat.LANDSCAPE);
 	    paper.setSize(jasperPrint.getPageHeight(), jasperPrint.getPageWidth());
@@ -131,7 +131,7 @@ public class JasperReportsPrinter implements Printable {
 	    exporter.setExporterOutput(exporterOutput);
 
 	    SimpleGraphics2DReportConfiguration exporterReportConfiguration = new SimpleGraphics2DReportConfiguration();
-	    exporterReportConfiguration.setPageIndex(new Integer(pageIndex));
+	    exporterReportConfiguration.setPageIndex(Integer.valueOf(pageIndex));
 	    exporter.setConfiguration(exporterReportConfiguration);
 	    
 	    exporter.exportReport();
