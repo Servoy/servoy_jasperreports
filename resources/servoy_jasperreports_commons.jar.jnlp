@@ -26,11 +26,11 @@
             <package name="com.lowagie.*" part="openpdf" recursive="true"/>
         <jar href="/plugins/pdf_output/bcprov.jar" download="lazy" part="bouncycastle" version="%%version%%"/>
             <package name="org.bouncycastle.*" part="bouncycastle" recursive="true"/>
-        <jar href="/plugins/jackson/jackson-annotations.jar" download="lazy" part="jackson-annotations" version="%%version%%"/> 
+        <jar href="/lib/com.fasterxml.jackson.core.jackson-annotations_2.16.1.jar" download="lazy" part="jackson-annotations" version="%%version%%"/> 
             <package name="com.fasterxml.jackson.annotation.*" part="jackson-annotations" recursive="true"/> 
-        <jar href="/plugins/jackson/jackson-core.jar" download="lazy" part="jackson-core" version="%%version%%"/> 
+        <jar href="/lib/com.fasterxml.jackson.core.jackson-core_2.16.1.jar" download="lazy" part="jackson-core" version="%%version%%"/> 
             <package name="com.fasterxml.jackson.core.*" part="jackson-core" recursive="true"/> 
-        <jar href="/plugins/jackson/jackson-databind.jar" download="lazy" part="jackson-databind" version="%%version%%"/> 
+        <jar href="/lib/com.fasterxml.jackson.core.jackson-databind_2.16.1.jar" download="lazy" part="jackson-databind" version="%%version%%"/> 
             <package name="com.fasterxml.jackson.databind.*" part="jackson-databind" recursive="true"/>
 	</resources> 
 	<component-desc></component-desc> 
