@@ -85,9 +85,17 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	private String relativeReportsDir;
 	private String relativeExtraDirs;
 
-	JasperReportsProvider(JasperReportsPlugin p) throws Exception
+	JasperReportsProvider(JasperReportsPlugin p)
 	{
 		plugin = p;
+		relativeReportsDir = "";
+		relativeExtraDirs = "";
+	}
+
+    // default constructor, used for documentation generation only
+	public JasperReportsProvider()
+	{
+		plugin = null;
 		relativeReportsDir = "";
 		relativeExtraDirs = "";
 	}
