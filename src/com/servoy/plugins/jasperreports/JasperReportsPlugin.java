@@ -46,7 +46,7 @@ import com.servoy.j2db.util.Debug;
  */
 public class JasperReportsPlugin implements IClientPlugin {
 
-	public static final String PLUGIN_NAME = "JasperReports";
+	public static final String PLUGIN_NAME = "jasperReports";
 	
 	private IClientPluginAccess application;
 
@@ -115,7 +115,7 @@ public class JasperReportsPlugin implements IClientPlugin {
 	}
 
 	public String getName() {
-		return "jasperPluginRMI";
+		return "jasperReports";
 	}
 
 	public Icon getImage() {

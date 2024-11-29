@@ -61,7 +61,7 @@ public interface IJasperReportRunner {
 	 /**
 	  * Cleanup anything after jasper print has been used to create a report.
 	  * 
-	  * @param garbageMan
+	  * @param garbageMan garbage man
 	  */
 	void cleanupJasperPrint(GarbageMan garbageMan) throws RemoteException;
 }

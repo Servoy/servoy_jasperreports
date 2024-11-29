@@ -36,25 +36,25 @@ public abstract class OUTPUT_FORMAT implements IConstantsObject
 {
 	/**
 	 * @sample
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.XHTML,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.csv',OUTPUT_FORMAT.CSV,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xml',OUTPUT_FORMAT.XML,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.docx',OUTPUT_FORMAT.DOCX,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.json',OUTPUT_FORMAT.JSON,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.csv',OUTPUT_FORMAT.CSV_METADATA,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
-	 * //plugins.jasperPluginRMI.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.XHTML,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.html',OUTPUT_FORMAT.HTML,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.rtf',OUTPUT_FORMAT.RTF,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.txt',OUTPUT_FORMAT.TXT,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.csv',OUTPUT_FORMAT.CSV,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xml',OUTPUT_FORMAT.XML,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.pdf',OUTPUT_FORMAT.PDF,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.XLS_1_SHEET,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xlsx',OUTPUT_FORMAT.XLSX,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.xls',OUTPUT_FORMAT.EXCEL,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.odt',OUTPUT_FORMAT.ODT,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.ods',OUTPUT_FORMAT.ODS,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.docx',OUTPUT_FORMAT.DOCX,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.json',OUTPUT_FORMAT.JSON,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.csv',OUTPUT_FORMAT.CSV_METADATA,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml','c:/myReport.jrprint',OUTPUT_FORMAT.JRPRINT,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.VIEW,null);
+	 * //plugins.jasperReports.runReport(myServer,'myCustomerReport.jrxml',null,OUTPUT_FORMAT.PRINT,null);
 	 */
 	public static final String XHTML = "xhtml";
 	

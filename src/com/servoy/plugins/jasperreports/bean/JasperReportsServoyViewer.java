@@ -90,7 +90,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 
 	public void initialize(IClientPluginAccess app) {
 		try {
-			provider = (JasperReportsProvider)((JasperReportsPlugin)app.getPluginManager().getPlugin(IClientPlugin.class,"jasperPluginRMI")).getScriptObject();
+			provider = (JasperReportsProvider)((JasperReportsPlugin)app.getPluginManager().getPlugin(IClientPlugin.class,"jasperReports")).getScriptObject();
 		} catch (Exception e) {
 			Debug.error(e);
 		}
@@ -247,7 +247,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated removed
 	 *
 	 */
 	public void js_setDisplayMode(String displayMode) {
@@ -363,7 +363,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated replaced by the relativeReportsDirectory property
 	 */
 	@Deprecated
 	public void js_setReportsDirectory(String reportsDirectory) throws Exception {
@@ -422,7 +422,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	
 	
 	/**
-	 * @deprecated
+	 * @deprecated replaced by the relativeExtraDirectories property
 	 */
 	@Deprecated
 	public void js_setExtraDirectories(String extraDirectories) throws Exception {
@@ -496,7 +496,7 @@ public class JasperReportsServoyViewer extends JPanel implements IScriptable, IS
 	 * Gets or gets the file save/export formats of the Bean's viewer.
 	 * 
 	 * @sample
-	 * //also see plugins.jasperPluginRMI.viewerExportFormats
+	 * //also see plugins.jasperReports.viewerExportFormats
 	 * %%elementName%%.beanViewerExportFormats=[OUTPUT_FORMAT.PDF, OUTPUT_FORMAT.XLS];
 	 * 
 	 * @return the file save/export formats of the viewer

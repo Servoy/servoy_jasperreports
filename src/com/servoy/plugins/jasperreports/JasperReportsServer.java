@@ -90,7 +90,7 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	
 	public Properties getProperties() {
 		Properties props = new Properties();
-		props.put(DISPLAY_NAME, "jasperPluginRMI");
+		props.put(DISPLAY_NAME, "jasperReports");
 		return props;
 	}
 

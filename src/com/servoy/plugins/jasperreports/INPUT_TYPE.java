@@ -40,8 +40,8 @@ public abstract class INPUT_TYPE implements IConstantsObject {
 	 * var $repfile = 'report.jrxml';
 	 * var $xmlDataCombined = plugins.file.readTXTFile('/path/to/datasource.xml');
 	 * var $locale = 'en';
-	 * plugins.jasperPluginRMI.runReport(
-	 * 			plugins.jasperPluginRMI.INPUT_TYPE.XML,
+	 * plugins.jasperReports.runReport(
+	 * 			plugins.jasperReports.INPUT_TYPE.XML,
 	 * 			$xmlDataCombined,
 	 * 			'/node/to/iterate/on',
 	 * 			$repfile,
@@ -54,16 +54,16 @@ public abstract class INPUT_TYPE implements IConstantsObject {
 	public static final String XML = "xml";
 
 	/**
-	 * @sampleas CSV
+	 * @sampleas XML
 	 */
 	public static final String CSV = "csv";
 	/**
-	 * @sampleas JRD
+	 * @sampleas XML
 	 */
 	public static final String JRD = "jrdatasource";
 	
 	/**
-	 * @sampleas DB
+	 * @sampleas XML
 	 */
 	public static final String DB = "JDBCdatabase";
 }

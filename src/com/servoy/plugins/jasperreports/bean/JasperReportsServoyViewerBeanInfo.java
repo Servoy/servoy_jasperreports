@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,7 @@ import com.servoy.j2db.util.Debug;
  */
 public class JasperReportsServoyViewerBeanInfo extends SimpleBeanInfo 
 {
-	public static final String BEAN_NAME = "JasperReportsServoyViewer";
+	public static final String BEAN_NAME = "jasperReportsServoyViewer";
 	
 	protected Image icon16x16;
 	protected Image icon32x32;

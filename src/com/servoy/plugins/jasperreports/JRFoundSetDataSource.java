@@ -103,7 +103,7 @@ public class JRFoundSetDataSource extends AbstractServoyDataSource {
 
 	/**
 	 * Get the value of the dataProvider, may be prefixed with relation name.
-	 * @param dataProviderId
+	 * @param dataProviderId dataprovider
 	 * @return the dataprovider value for the specified dataprovider id
 	 * @throws ServoyException 
 	 */
