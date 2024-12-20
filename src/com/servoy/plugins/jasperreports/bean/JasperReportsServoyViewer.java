@@ -56,9 +56,18 @@ import com.servoy.plugins.jasperreports.JasperReportsPlugin;
 import com.servoy.plugins.jasperreports.JasperReportsProvider;
 
 /**
- * JasperReportsServoyViewer: the real bean component.
- * 
- * Implements all necessary scripting functions and all get/set methods for indicated properties.
+ * The <code>JasperReportsServoyViewer</code> is a Servoy bean designed to embed and 
+ * display JasperReports within Servoy applications.  It provides scripting capabilities 
+ * for customizing visual properties such as background, foreground, font, size, and borders. 
+ * The bean integrates with the <code>JasperReportsProvider</code> to support dynamic report 
+ * viewing and customization.
+ *
+ * <h2>Functionality</h2>
+ * Reports can be rendered and displayed using the <code>js_showReport</code> method, which accepts 
+ * parameters such as data source, report file, and locale. The viewer supports various export formats, 
+ * configurable through scripting. The bean also facilitates managing paths for report directories and 
+ * extra resource directories, ensuring integration with the JasperReports plugin. The <code>JRViewer</code> 
+ * wrapper enables fine-tuned control of the viewer’s display behavior and export functionality.
  * 
  * @author acostache
  *

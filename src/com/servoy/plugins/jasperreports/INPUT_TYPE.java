@@ -31,6 +31,12 @@ package com.servoy.plugins.jasperreports;
 import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.scripting.IConstantsObject;
 
+/**
+ * This abstract class defines constants for specifying input types in the JasperReports plugin for Servoy, 
+ * supporting formats like XML, CSV, custom datasources, and JDBC. These constants integrate with the 
+ * <code>plugins.jasperReports.runReport</code> method to streamline report generation, enabling dynamic 
+ * data handling and flexible compatibility with various data sources.
+ */
 @ServoyDocumented(category = ServoyDocumented.PLUGINS)
 public abstract class INPUT_TYPE implements IConstantsObject {
 	

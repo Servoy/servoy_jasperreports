@@ -68,7 +68,26 @@ import com.servoy.j2db.util.Debug;
 import com.servoy.j2db.util.Utils;
 
 /**
- * IScriptObject impl. For external library dependencies, see https://community.jaspersoft.com/wiki/jasperreports-library-requirements.
+ * This class serves as the primary implementation for managing JasperReports in a Servoy application. 
+ * It provides functionalities for report generation, data source handling, file operations, and export customization. 
+ * Using these, developers can seamlessly integrate JasperReports into Servoy projects for dynamic report creation and management.
+ *
+ * <h2>Key Functionalities</h2>
+ * The class facilitates running reports with various data sources and input types, including databases, XML, and CSV. 
+ * Developers can define input and output parameters, customize locales, and specify the output format using predefined constants.
+ *
+ * File operations are supported for reading, writing, and deleting report files on the server. Reports can be compiled from 
+ * <code>.jrxml</code> files to <code>.jasper</code> format for optimized performance. Additionally, the class includes methods 
+ * for retrieving available reports, merging multiple reports, and accessing or modifying report parameters.
+ *
+ * The class also supports viewing, printing, and exporting reports in multiple formats such as PDF, HTML, Excel, and XML. 
+ * Export options include setting custom parameters for advanced use cases, like embedding metadata or adjusting resource paths for 
+ * specific output types.
+ *
+ * Advanced features include handling viewer configurations, moving table-of-content pages, and merging reports with consistent 
+ * styles and orientations. Developers can also use locale-based i18n integration to produce reports in different languages.
+ *
+ * For external library dependencies, see https://community.jaspersoft.com/wiki/jasperreports-library-requirements.
  */
 @ServoyDocumented(category = ServoyDocumented.PLUGINS, publicName = JasperReportsPlugin.PLUGIN_NAME, scriptingName = "plugins." + JasperReportsPlugin.PLUGIN_NAME)
 public class JasperReportsProvider implements IScriptable, IReturnedTypesProvider

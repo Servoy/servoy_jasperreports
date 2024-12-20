@@ -31,6 +31,11 @@ package com.servoy.plugins.jasperreports;
 import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.scripting.IConstantsObject;
 
+/**
+ * The <code>OUTPUT_FORMAT</code> class defines constants for various JasperReports export formats, 
+ * including PDF, HTML, XML, XLS, CSV, and JSON. These constants enable developers to specify the 
+ * desired output format when generating reports in Servoy.
+ */
 @ServoyDocumented(category = ServoyDocumented.PLUGINS)
 public abstract class OUTPUT_FORMAT implements IConstantsObject 
 {

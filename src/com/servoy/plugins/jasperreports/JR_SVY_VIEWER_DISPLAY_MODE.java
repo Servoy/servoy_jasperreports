@@ -4,7 +4,7 @@
  * ============================================================================
  *
  * Servoy - Smart Technology For Smart Clients.
- * Copyright © 1997-2012 Servoy BV http://www.servoy.com
+ * Copyright ï¿½ 1997-2012 Servoy BV http://www.servoy.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,6 +31,11 @@ package com.servoy.plugins.jasperreports;
 import com.servoy.j2db.documentation.ServoyDocumented;
 import com.servoy.j2db.scripting.IConstantsObject;
 
+/**
+ * The <code>JR_SVY_VIEWER_DISPLAY_MODE</code> class defines constants for configuring the display 
+ * mode of a JasperReports viewer in Servoy. The modes include <code>FIT_WIDTH</code>, <code>FIT_PAGE</code>, 
+ * and <code>ACTUAL_PAGE_SIZE</code>, allowing developers to control how reports are rendered in the viewer.
+ */
 @ServoyDocumented(category = ServoyDocumented.PLUGINS)
 public abstract class JR_SVY_VIEWER_DISPLAY_MODE implements IConstantsObject 
 {
