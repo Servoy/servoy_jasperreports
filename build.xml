@@ -76,9 +76,9 @@
 			<classpath refid="classpath"/>
 		</javac>		
 		<!-- create server skeletons and stubs  -->
-		<rmic classname="com.servoy.plugins.jasperreports.JasperReportsServer" base="${build}/">
+		<!--rmic classname="com.servoy.plugins.jasperreports.JasperReportsServer" base="${build}/">
 			<classpath refid="classpath"/> 
-		</rmic>
+		</rmic -->
 	</target>
 	
 	<target name="jrbean.jar" depends="compile">
