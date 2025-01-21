@@ -85,23 +85,14 @@ public class JasperReportsPlugin implements IClientPlugin {
 		Debug.trace("JasperTrace: service connection initialize");
 		// create if not yet created
 		if (jasperReportService == null) {
-			ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
-			try
-			{
-				Thread.currentThread().setContextClassLoader(getIClientPluginAccess().getPluginManager().getClassLoader());
+			try {
 				jasperReportService = (IJasperReportsService) application.getServerService("servoy.IJasperReportService");
 				if (jasperReportsDirectory == null) jasperReportsDirectory = jasperReportService.getReportDirectory();
 				if (jasperExtraDirectories == null) jasperExtraDirectories = jasperReportService.getExtraDirectories();
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				Debug.error(ex);
 				throw new RuntimeException(
 						"JasperTrace: Jasper Exception: Cannot connect to service-server");
-			}
-			finally
-			{
-				Thread.currentThread().setContextClassLoader(savedCl);
 			}
 		}
 
