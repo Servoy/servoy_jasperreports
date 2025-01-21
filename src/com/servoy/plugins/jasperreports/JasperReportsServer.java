@@ -256,6 +256,33 @@ public class JasperReportsServer implements IJasperReportsService, IServerPlugin
 	}
 
 	public boolean jasperCompile(String clientID, String report, String destination, String repdir) throws Exception {
+		boolean compiled = false;
+
+		ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
+		try
+		{
+			Thread.currentThread().setContextClassLoader(application.getPluginManager().getClassLoader());
+			compiled = _jasperCompile(clientID, report, destination, repdir);
+		}
+		catch (Error err)
+		{
+			Debug.error(err);
+			throw new Exception(err.getMessage());
+		}
+		catch (Exception ex)
+		{
+			Debug.error(ex);
+			throw new Exception(ex.getMessage());
+		}
+		finally
+		{
+			Thread.currentThread().setContextClassLoader(savedCl);
+		}
+
+		return compiled;		
+	}
+	
+	private boolean _jasperCompile(String clientID, String report, String destination, String repdir) throws Exception {
 
 		repdir = getCheckedRelativeReportsPath(repdir);
 		
