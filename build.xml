@@ -112,6 +112,7 @@
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="openpdf-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="slf4j-api-*.jar"/>
+    		<fileset dir="${install}/lib/servoy_jasperreports" includes="xmlbeans-*.jar"/>
     	</delete>
     </target>
 	
