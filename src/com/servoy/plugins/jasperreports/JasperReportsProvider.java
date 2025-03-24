@@ -1374,24 +1374,14 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 
 	/**
 	 * Property for retrieving the reports directory from the server.
-	 * 
-	 * NOTE: Setting the absolute path for the report directory on the server is no longer supported.
-	 * 
-	 * @deprecated replaced by the relativeReportsDirectory property
 	 */
-	@Deprecated
 	public String js_getReportDirectory() throws Exception
 	{
 		return plugin.getJasperReportsDirectory();
 	}
 
-	/**
-	 * @deprecated replaced by setRelativeReportsDirectory(String)
-	 */
-	@Deprecated
 	public void js_setReportDirectory(String jasperDirectorie) throws Exception
 	{
-		js_setRelativeReportsDirectory(jasperDirectorie);
 	}
 
 	/**
