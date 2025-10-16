@@ -2,7 +2,7 @@
 <project name="servoy_jasperreports" default="plugin_new" basedir=".">
 
 	<property file="servoy.properties"/>
-	<property name="jasper_project" value="/home/gabi/jasper/jasperreports-7.0.1"/>
+	<property name="jasper_project" value="/home/gabi/jasper/jasperreports-7.0.3"/>
 	<property name="project_name" value="${ant.project.name}"/>  
 	<property name="src" value="src"/>
 	<property name="lib" value="lib"/>
