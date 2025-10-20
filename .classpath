@@ -11,9 +11,9 @@
 	<classpathentry kind="lib" path="servoy_lib/servoy_smart_client_2024.9.0.4001_rc2.jar"/>
 	<classpathentry kind="lib" path="servoy_lib/org.eclipse.dltk.javascript.rhino_1.7.15.s1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.11.0.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-7.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-excel-poi-7.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-json-7.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-pdf-7.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-7.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-excel-poi-7.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-json-7.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-pdf-7.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
