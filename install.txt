@@ -61,8 +61,7 @@ DEPENDANCIES:
  
 
 DESIGN CLIENT (REPORT EDITOR):
- As of JasperReports 5.5.0, JasperSoft Studio is the official design client for JasperReports. See http://community.jaspersoft.com/project/ireport-designer. 
- For more information about JasperSoft Studio refer to http://community.jaspersoft.com/project/jaspersoft-studio.
+ JasperSoft Studio is the official design client for JasperReports. See https://community.jaspersoft.com/getting-started/jaspersoft-studio/
  Please note that if using a JasperSoft Studio version lower than the version of the JasperReports engine, conflicts may arise due to the library versions used when building the report in JasperSoft Studio. In such cases, we recommend the updating of JasperSoft Studio to the equivalent version of the JasperReports engine. 
  Also please make sure, to avoid conflicts, that the library versions of the equivalent libraries used in Servoy, JasperReports and JasperSoft Studio are the same.
 

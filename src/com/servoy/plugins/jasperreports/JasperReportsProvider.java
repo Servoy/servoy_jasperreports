@@ -87,7 +87,7 @@ import com.servoy.j2db.util.Utils;
  * Advanced features include handling viewer configurations, moving table-of-content pages, and merging reports with consistent 
  * styles and orientations. Developers can also use locale-based i18n integration to produce reports in different languages.
  *
- * For external library dependencies, see https://community.jaspersoft.com/wiki/jasperreports-library-requirements.
+ * For more informations on how to use it and other useful tips related to the plugin, see https://github.com/Servoy/servoy_jasperreports/wiki.
  */
 @ServoyDocumented(category = ServoyDocumented.PLUGINS, publicName = JasperReportsPlugin.PLUGIN_NAME, scriptingName = "plugins." + JasperReportsPlugin.PLUGIN_NAME)
 public class JasperReportsProvider implements IScriptable, IReturnedTypesProvider
@@ -518,6 +518,9 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 
 				// subreport running own factory setting
 				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "com.servoy.plugins.jasperreports.ServoyThreadSubreportRunnerFactory");
+				
+				// for single threaded report generation with continuations support
+				//DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "net.sf.jasperreports.engine.fill.JRContinuationSubreportRunnerFactory");
 
 				// Fill the report and get the JasperPrint instance; also modify the JasperPrint in case you want to move the table of contents.
 				// we only have a transaction id for the reports run on the server
