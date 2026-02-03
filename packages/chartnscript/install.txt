@@ -68,4 +68,4 @@
  Do note that this step must be handled with great caution. Please keep libraries in sync between Servoy, JasperReports and the plugin.
  
  INFORMATION, FEATURE REQUESTS, BUG REPORTS:
- https://www.servoyforge.net/projects/servoy-jasperreports
+ https://github.com/Servoy/servoy_jasperreports/wiki

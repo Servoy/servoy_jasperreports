@@ -67,4 +67,4 @@ DESIGN CLIENT (REPORT EDITOR):
 
  
 INFORMATION, FEATURE REQUESTS, BUG REPORTS:
- https://www.servoyforge.net/projects/servoy-jasperreports
+ https://github.com/Servoy/servoy_jasperreports/wiki
