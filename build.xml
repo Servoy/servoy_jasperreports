@@ -62,7 +62,10 @@
 	-->
     <target name="plugin_new" depends="jar">
     	<copy todir="${install}/lib/servoy_jasperreports" overwrite="true">
-    		  <fileset dir="${jasper_project}/core/alllibs"/> <!-- core -->
+    		  <fileset dir="${jasper_project}/core/alllibs"/> <!-- core dependencies -->
+    		  <fileset dir="${jasper_project}/core/target-javaflow"> <!-- core javaflow jar -->
+    		    <include name="jasperreports-javaflow-*.jar"/>
+    		  </fileset>
               <fileset dir="${jasper_project}/ext/jaxen"> <!-- jaxen -->
                 <include name="alllibs/*"/>
               	<include name="target/jasperreports-jaxen-*.jar"/>
@@ -113,6 +116,8 @@
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="slf4j-api-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="xmlbeans-*.jar"/>
+    	  <!-- standard core jar copied transitively from ext/*/alllibs; we use the javaflow variant instead -->
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jasperreports-*.jar" excludes="jasperreports-*-*.jar"/>
     	</delete>
     </target>
 	

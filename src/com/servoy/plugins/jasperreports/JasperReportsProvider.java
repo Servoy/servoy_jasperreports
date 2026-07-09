@@ -516,11 +516,8 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 				int applicationType = plugin.getIClientPluginAccess().getApplicationType();
 				JasperReportsI18NHandler.appendI18N(params, applicationType == IClientPluginAccess.WEB_CLIENT, plugin.getIClientPluginAccess(), localeString);
 
-				// subreport running own factory setting
-				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "com.servoy.plugins.jasperreports.ServoyThreadSubreportRunnerFactory");
-				
-				// for single threaded report generation with continuations support
-				//DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "net.sf.jasperreports.engine.fill.JRContinuationSubreportRunnerFactory");
+				// subreport running with continuations (same thread)
+				DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.subreport.runner.factory", "net.sf.jasperreports.engine.fill.JRContinuationSubreportRunnerFactory");
 
 				// Fill the report and get the JasperPrint instance; also modify the JasperPrint in case you want to move the table of contents.
 				// we only have a transaction id for the reports run on the server
@@ -1584,7 +1581,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "2025.3_7.0.7";
+		return "2025.3_7.0.7_javaflow";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->
