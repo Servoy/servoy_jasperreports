@@ -111,6 +111,7 @@
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-annotations-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-core-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-databind-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-dataformat-xml-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="log4j-api-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="openpdf-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
