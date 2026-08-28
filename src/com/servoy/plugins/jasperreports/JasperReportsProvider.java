@@ -507,9 +507,15 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			jasperReportsLocalClientID.set(this.getPluginClientID());
 
 			ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
+			String savedXmlOutputFactory = System.getProperty("javax.xml.stream.XMLOutputFactory");
+			String savedXmlInputFactory = System.getProperty("javax.xml.stream.XMLInputFactory");
 			try
 			{
 				Thread.currentThread().setContextClassLoader(plugin.getIClientPluginAccess().getPluginManager().getClassLoader());
+
+				// force Woodstox as the Stax implementation (JVM default doesn't support Stax2 API)
+				System.setProperty("javax.xml.stream.XMLOutputFactory", "com.ctc.wstx.stax.WstxOutputFactory");
+				System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
 				Debug.trace("JasperTrace: JasperReport service found");
 
 				// handle i18n
@@ -564,6 +570,14 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 			finally
 			{
 				Thread.currentThread().setContextClassLoader(savedCl);
+				if (savedXmlOutputFactory != null)
+					System.setProperty("javax.xml.stream.XMLOutputFactory", savedXmlOutputFactory);
+				else
+					System.clearProperty("javax.xml.stream.XMLOutputFactory");
+				if (savedXmlInputFactory != null)
+					System.setProperty("javax.xml.stream.XMLInputFactory", savedXmlInputFactory);
+				else
+					System.clearProperty("javax.xml.stream.XMLInputFactory");
 				// cleanup
 				jasperReportsLocalService.set(null);
 				jasperReportsLocalClientID.set(null);
@@ -1581,7 +1595,7 @@ public class JasperReportsProvider implements IScriptable, IReturnedTypesProvide
 	 */
 	public String js_getPluginVersion()
 	{
-		return "2025.3_7.0.7_javaflow";
+		return "2025.3.6_7.0.8_javaflow";
 
 		/*
 		 * Added destination optional parameter for compileReport method Renamed jasperReport -> runReport, jasperCompile -> compileReport, readFile ->

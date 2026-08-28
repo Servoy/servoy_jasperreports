@@ -2,7 +2,7 @@
 <project name="servoy_jasperreports" default="plugin_new" basedir=".">
 
 	<property file="servoy.properties"/>
-	<property name="jasper_project" value="/home/gabi/jasper/jasperreports-7.0.7"/>
+	<property name="jasper_project" value="/home/gabi/jasper/jasperreports-7.0.8"/>
 	<property name="project_name" value="${ant.project.name}"/>  
 	<property name="src" value="src"/>
 	<property name="lib" value="lib"/>
@@ -101,6 +101,10 @@
     		  <fileset dir="${jasper_project}/ext/charts"> <!-- charts -->
     		    <include name="alllibs/*"/>
     		    <include name="target/jasperreports-charts-*.jar"/>
+    		  </fileset>
+    		  <fileset dir="${jasper_project}/ext/functions"> <!-- functions -->
+    		    <include name="alllibs/*"/>
+    		    <include name="target/jasperreports-functions-*.jar"/>
     		  </fileset>            
     		  <mapper type="flatten"/>
     	</copy>
@@ -117,6 +121,8 @@
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="slf4j-api-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="xmlbeans-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="stax2-api-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="woodstox-core-*.jar"/>
     	  <!-- standard core jar copied transitively from ext/*/alllibs; we use the javaflow variant instead -->
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jasperreports-*.jar" excludes="jasperreports-*-*.jar"/>
     	</delete>
