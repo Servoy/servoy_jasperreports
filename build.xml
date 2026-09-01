@@ -112,17 +112,33 @@
     	<delete>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="antlr-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-collections4-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-codec-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-io-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-compress-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-logging-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-lang3-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-annotations-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-core-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-databind-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jackson-dataformat-xml-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="log4j-api-*.jar"/>
-    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="openpdf-*.jar"/>
-    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="slf4j-api-*.jar"/>
-    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="xmlbeans-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="stax2-api-*.jar"/>
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="woodstox-core-*.jar"/>
+    	  <!-- start from pdf_output plugin -->
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="openpdf-*.jar"/>
+    	  <!-- end from pdf_output plugin -->
+    	  <!-- start from images plugin -->
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="metadata-extractor-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="xmpcore-*.jar"/>
+    	  <!-- end from images plugin -->
+    	  <!-- start from jakarta-poi plugin -->
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="commons-math3-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="curvesapi-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="poi-*.jar"/>
+    	  <fileset dir="${install}/lib/servoy_jasperreports" includes="SparseBitSet-*.jar"/>
+          <fileset dir="${install}/lib/servoy_jasperreports" includes="xmlbeans-*.jar"/>
+    	  <!-- end from jakarta-poi plugin -->
     	  <!-- standard core jar copied transitively from ext/*/alllibs; we use the javaflow variant instead -->
     	  <fileset dir="${install}/lib/servoy_jasperreports" includes="jasperreports-*.jar" excludes="jasperreports-*-*.jar"/>
     	</delete>
